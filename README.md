@@ -6,6 +6,7 @@ Personal portfolio website for [oceanmallik.com](https://www.oceanmallik.com/), 
 
 - Main site: [https://www.oceanmallik.com/](https://www.oceanmallik.com/)
 - Blog: [https://blog.oceanmallik.com/](https://blog.oceanmallik.com/)
+- Link: [https://link.oceanmallik.com/](https://link.oceanmallik.com/)
 
 ## Overview
 
