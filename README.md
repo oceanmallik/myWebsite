@@ -1,2 +1,2 @@
-# A repo for my main website
+## My main website repository. 
 Link: https://www.oceanmallik.com/
