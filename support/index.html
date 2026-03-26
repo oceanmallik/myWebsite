@@ -90,7 +90,7 @@
     </section>
 
     <footer>
-        <p>Built with curiosity and too much caffeine.<br>&copy; 2025 Ocean</p>
+        <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean</p>
     </footer>
 
     <!-- Standard Scripts -->
@@ -126,6 +126,12 @@
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
             applyTheme(currentThemeIndex);
         });
+
+        // Dynamic footer year keeps copyright current automatically.
+        const yearEl = document.getElementById('current-year');
+        if (yearEl) {
+            yearEl.textContent = new Date().getFullYear();
+        }
     </script>
 </body>
 </html>
