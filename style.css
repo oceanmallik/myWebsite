@@ -233,16 +233,28 @@ img {
     background: transparent;
     border: 1px solid var(--border-color);
     color: var(--text-title);
-    font-size: 1.1rem;
     cursor: pointer;
-    width: 36px;
+    min-width: 36px;
     height: 36px;
+    padding: 0 10px;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     border-radius: 5px;
     margin-left: 20px;
     transition: var(--transition);
+}
+
+.theme-toggle-btn i {
+    font-size: 1.1rem;
+}
+
+.theme-toggle-btn .theme-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    line-height: 1;
 }
 
 .theme-toggle-btn:hover {
