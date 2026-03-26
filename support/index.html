@@ -101,14 +101,14 @@
         const themeIcon = themeBtn.querySelector('i');
         const body = document.body;
         
-        // UPDATED for 4 Themes
-        const themes = ['', 'theme-black', 'theme-white', 'theme-soft'];
-        const icons = ['fa-adjust', 'fa-moon', 'fa-sun', 'fa-cloud'];
+        // UPDATED for 5 Themes
+        const themes = ['', 'theme-black', 'theme-white', 'theme-soft', 'theme-aurora'];
+        const icons = ['fa-adjust', 'fa-moon', 'fa-sun', 'fa-cloud', 'fa-water'];
         
         let currentThemeIndex = parseInt(localStorage.getItem('themeIndex')) || 0;
 
         function applyTheme(index) {
-            body.classList.remove('theme-black', 'theme-white', 'theme-soft');
+            body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora');
             if (themes[index]) body.classList.add(themes[index]);
             themeIcon.className = `fas ${icons[index]}`;
             localStorage.setItem('themeIndex', index);

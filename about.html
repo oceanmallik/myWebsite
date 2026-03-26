@@ -127,20 +127,20 @@
             });
         }
 
-        // 2. UPDATED 4-THEME LOGIC
+        // 2. UPDATED 5-THEME LOGIC
         const themeBtn = document.getElementById('theme-toggle');
         const themeIcon = themeBtn.querySelector('i');
         const body = document.body;
 
         // This array MUST match the index.html array exactly
-        const themes = ['', 'theme-black', 'theme-white', 'theme-soft'];
-        const icons = ['fa-adjust', 'fa-moon', 'fa-sun', 'fa-cloud'];
+        const themes = ['', 'theme-black', 'theme-white', 'theme-soft', 'theme-aurora'];
+        const icons = ['fa-adjust', 'fa-moon', 'fa-sun', 'fa-cloud', 'fa-water'];
 
         let currentThemeIndex = parseInt(localStorage.getItem('themeIndex')) || 0;
 
         function applyTheme(index) {
             // Clear all theme classes
-            body.classList.remove('theme-black', 'theme-white', 'theme-soft');
+            body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora');
             
             // Add new class if applicable
             if (themes[index]) body.classList.add(themes[index]);

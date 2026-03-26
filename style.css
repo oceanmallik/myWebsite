@@ -80,6 +80,23 @@ body.theme-soft {
     --border-color: #ebd5c1;
 }
 
+/* === THEME 5: AURORA MINT (Fresh/Calm) === */
+body.theme-aurora {
+    --primary-color: #06b6d4;
+    --primary-hover: #22d3ee;
+
+    --bg-main: #e8fff8;
+    --bg-secondary: #d9f7ee;
+    --bg-card: #f7fffc;
+    --nav-bg: rgba(232, 255, 248, 0.9);
+
+    --text-main: #1f3a3d;
+    --text-title: #102427;
+    --text-muted: #4f6d70;
+
+    --border-color: #b9e4da;
+}
+
 /* --- 2. Global Reset --- */
 * {
     margin: 0;
