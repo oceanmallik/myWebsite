@@ -60,11 +60,11 @@
     <!-- Theme Fallback Script (No button on this page) -->
     <script>
         const body = document.body;
-        const themes = ['', 'theme-black', 'theme-white', 'theme-soft'];
+        const themes = ['', 'theme-black', 'theme-white', 'theme-soft', 'theme-aurora'];
         let currentThemeIndex = parseInt(localStorage.getItem('themeIndex')) || 0;
         
         // Clear old classes
-        body.classList.remove('theme-black', 'theme-white', 'theme-soft');
+        body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora');
         
         // Apply current theme if valid
         if (themes[currentThemeIndex]) {
