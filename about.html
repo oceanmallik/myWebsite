@@ -34,6 +34,7 @@
 
                 <button id="theme-toggle" class="theme-toggle-btn" title="Switch Theme">
                     <i class="fas fa-adjust"></i>
+                    <span class="theme-name">Default</span>
                 </button>
 
                 <button id="mobile-menu-btn" class="menu-btn">
@@ -130,11 +131,13 @@
         // 2. UPDATED 5-THEME LOGIC
         const themeBtn = document.getElementById('theme-toggle');
         const themeIcon = themeBtn.querySelector('i');
+        const themeName = themeBtn.querySelector('.theme-name');
         const body = document.body;
 
         // This array MUST match the index.html array exactly
         const themes = ['', 'theme-black', 'theme-white', 'theme-soft', 'theme-aurora'];
         const icons = ['fa-adjust', 'fa-moon', 'fa-sun', 'fa-cloud', 'fa-water'];
+        const themeLabels = ['Default', 'Black', 'White', 'Soft', 'Aurora'];
 
         let currentThemeIndex = parseInt(localStorage.getItem('themeIndex')) || 0;
 
@@ -147,6 +150,7 @@
             
             // Update Icon
             themeIcon.className = `fas ${icons[index]}`;
+            themeName.textContent = themeLabels[index];
             
             // Save to Local Storage so other pages know the theme
             localStorage.setItem('themeIndex', index);
