@@ -113,7 +113,11 @@ body {
     background-color: var(--bg-main);
     color: var(--text-main);
     line-height: 1.6;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.25s ease;
+}
+
+body.theme-fading {
+    opacity: 0.72;
 }
 
 a {

@@ -112,19 +112,32 @@
         
         let currentThemeIndex = parseInt(localStorage.getItem('themeIndex')) || 0;
 
-        function applyTheme(index) {
-            body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora');
-            if (themes[index]) body.classList.add(themes[index]);
-            themeIcon.className = `fas ${icons[index]}`;
-            themeName.textContent = themeLabels[index];
-            localStorage.setItem('themeIndex', index);
+        function applyTheme(index, shouldFade = true) {
+            const updateTheme = () => {
+                body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora');
+                if (themes[index]) body.classList.add(themes[index]);
+                themeIcon.className = `fas ${icons[index]}`;
+                themeName.textContent = themeLabels[index];
+                localStorage.setItem('themeIndex', index);
+            };
+
+            if (!shouldFade) {
+                updateTheme();
+                return;
+            }
+
+            body.classList.add('theme-fading');
+            requestAnimationFrame(() => {
+                updateTheme();
+                requestAnimationFrame(() => body.classList.remove('theme-fading'));
+            });
         }
         
-        applyTheme(currentThemeIndex);
+        applyTheme(currentThemeIndex, false);
         
         themeBtn.addEventListener('click', () => {
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-            applyTheme(currentThemeIndex);
+            applyTheme(currentThemeIndex, true);
         });
 
         // Dynamic footer year keeps copyright current automatically.

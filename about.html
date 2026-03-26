@@ -141,28 +141,41 @@
 
         let currentThemeIndex = parseInt(localStorage.getItem('themeIndex')) || 0;
 
-        function applyTheme(index) {
-            // Clear all theme classes
-            body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora');
-            
-            // Add new class if applicable
-            if (themes[index]) body.classList.add(themes[index]);
-            
-            // Update Icon
-            themeIcon.className = `fas ${icons[index]}`;
-            themeName.textContent = themeLabels[index];
-            
-            // Save to Local Storage so other pages know the theme
-            localStorage.setItem('themeIndex', index);
+        function applyTheme(index, shouldFade = true) {
+            const updateTheme = () => {
+                // Clear all theme classes
+                body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora');
+
+                // Add new class if applicable
+                if (themes[index]) body.classList.add(themes[index]);
+
+                // Update Icon
+                themeIcon.className = `fas ${icons[index]}`;
+                themeName.textContent = themeLabels[index];
+
+                // Save to Local Storage so other pages know the theme
+                localStorage.setItem('themeIndex', index);
+            };
+
+            if (!shouldFade) {
+                updateTheme();
+                return;
+            }
+
+            body.classList.add('theme-fading');
+            requestAnimationFrame(() => {
+                updateTheme();
+                requestAnimationFrame(() => body.classList.remove('theme-fading'));
+            });
         }
 
         // Apply theme immediately on load
-        applyTheme(currentThemeIndex);
+        applyTheme(currentThemeIndex, false);
 
         // Click Handler
         themeBtn.addEventListener('click', () => {
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-            applyTheme(currentThemeIndex);
+            applyTheme(currentThemeIndex, true);
         });
 
         // 3. Dynamic Footer Year
