@@ -461,6 +461,10 @@ body.theme-cyberpunk .theme-list-item.active i {
     color: var(--text-main);
 }
 
+.nav-links a.highlight {
+    color: var(--primary-color);
+}
+
 .nav-links a:hover {
     color: var(--primary-color);
 }
