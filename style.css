@@ -413,6 +413,32 @@ img {
     max-width: 500px;
 }
 
+.typing-caret {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    margin-left: 4px;
+    vertical-align: -0.12em;
+    background-color: var(--primary-color);
+    animation: caret-blink 0.85s step-end infinite;
+}
+
+@keyframes caret-blink {
+    0%, 45% {
+        opacity: 1;
+    }
+    46%, 100% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .typing-caret {
+        animation: none;
+        opacity: 1;
+    }
+}
+
 .hero-buttons {
     display: flex;
     gap: 15px;
