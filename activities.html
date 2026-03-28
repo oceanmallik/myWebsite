@@ -55,6 +55,7 @@
                 - status-finished => Red light (Finished)
                 - status-idle     => Gray light (Not Active)
                 To update a card: change the class and the label text inside .project-status.
+                Auntyr meye gaja khay btw :')
             -->
 
             <div class="projects-grid">
@@ -121,12 +122,35 @@
                 </div>
 
                 <div class="card project-card">
+                    <div class="card-image"><i class="fas fa-calculator"></i></div>
+                    <div class="card-content">
+                        <!-- Change class here when project stage changes -->
+                        <div class="project-status status-finished">
+                            <span class="status-light" aria-hidden="true"></span>
+                            <span>Finished</span>
+                        </div>
+                        <h3>Polyglot Calculator</h3>
+                        <p>This project seamlessly links Python, C, C#, and Rust through a master C++ orchestrator. An experimental project to test polyglot programming amongst popular software.</p>
+                        <div class="tech-badges">
+                            <small>Python</small>
+                            <small>C</small>
+                            <small>C#</small>
+                            <small>Rust</small>
+                            <small>C++</small>
+                        </div>
+                        <div class="card-links">
+                            <a href="https://github.com/oceanmallik/polyglotCalculator" target="_blank"><i class="fab fa-github"></i> Code</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card project-card">
                     <div class="card-image"><i class="fas fa-bell"></i></div>
                     <div class="card-content">
                         <!-- Change class here when project stage changes -->
                         <div class="project-status status-idle">
                             <span class="status-light" aria-hidden="true"></span>
-                            <span>Not Working Anymore</span>
+                            <span>Archived</span>
                         </div>
                         <h3>GitHub Notification Tracker</h3>
                         <p>A lightweight Python script that fetches and displays unread GitHub notifications directly in the terminal.</p>
@@ -136,7 +160,7 @@
                             <small>GitHub API</small>
                         </div>
                         <div class="card-links">
-                            <a href="https://github.com/oceanmallik/githubNotificationTracker" target="_blank"><i class="fab fa-github"></i> Code</a>
+                            <a href="https://github.com/oceanmallik/polyglotCalculator" target="_blank"><i class="fab fa-github"></i> Code</a>
                         </div>
                     </div>
                 </div>
