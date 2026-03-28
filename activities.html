@@ -43,10 +43,23 @@
         <div class="container">
             <h2 class="section-title">My <span class="highlight">Activities</span></h2>
 
+            <!--
+                Status classes you can set per project card:
+                - status-active   => Green light (Actively Working)
+                - status-finished => Red light (Finished)
+                - status-idle     => Gray light (Not Active)
+                To update a card: change the class and the label text inside .project-status.
+            -->
+
             <div class="projects-grid">
                 <div class="card project-card">
                     <div class="card-image"><i class="fas fa-globe"></i></div>
                     <div class="card-content">
+                        <!-- Change class here when project stage changes -->
+                        <div class="project-status status-active">
+                            <span class="status-light" aria-hidden="true"></span>
+                            <span>Actively Working</span>
+                        </div>
                         <h3>Personal Portfolio Website</h3>
                         <p>My current personal website project built from scratch. Features five different themes.</p>
                         <div class="tech-badges">
@@ -63,6 +76,11 @@
                 <div class="card project-card">
                     <div class="card-image"><i class="fas fa-pen"></i></div>
                     <div class="card-content">
+                        <!-- Change class here when project stage changes -->
+                        <div class="project-status status-active">
+                            <span class="status-light" aria-hidden="true"></span>
+                            <span>Actively Working</span>
+                        </div>
                         <h3>Ocean Mallik Talks</h3>
                         <p>My blog site where I post updates about my projects.</p>
                         <div class="tech-badges">
@@ -79,6 +97,11 @@
                 <div class="card project-card">
                     <div class="card-image"><i class="fas fa-calculator"></i></div>
                     <div class="card-content">
+                        <!-- Change class here when project stage changes -->
+                        <div class="project-status status-finished">
+                            <span class="status-light" aria-hidden="true"></span>
+                            <span>Finished</span>
+                        </div>
                         <h3>Meme Calculator</h3>
                         <p>A fun open-source project hosted on GitHub. 2 + 2 = 5, 1 + 1 = 11 and lot more!</p>
                         <div class="tech-badges">
@@ -87,6 +110,26 @@
                         </div>
                         <div class="card-links">
                             <a href="https://github.com/oceanmallik/memeCalculator" target="_blank"><i class="fab fa-github"></i> Code</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card project-card">
+                    <div class="card-image"><i class="fas fa-bell"></i></div>
+                    <div class="card-content">
+                        <!-- Change class here when project stage changes -->
+                        <div class="project-status status-idle">
+                            <span class="status-light" aria-hidden="true"></span>
+                            <span>Not Working Anymore</span>
+                        </div>
+                        <h3>GitHub Notification Tracker</h3>
+                        <p>A lightweight Python script that fetches and displays unread GitHub notifications directly in the terminal.</p>
+                        <div class="tech-badges">
+                            <small>Python</small>
+                            <small>CLI</small>
+                        </div>
+                        <div class="card-links">
+                            <a href="https://github.com/oceanmallik/githubNotificationTracker" target="_blank"><i class="fab fa-github"></i> Code</a>
                         </div>
                     </div>
                 </div>
