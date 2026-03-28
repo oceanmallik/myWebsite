@@ -854,6 +854,13 @@ body.theme-cyberpunk .theme-list-item.active i {
     transform: scale(1.1);
 }
 
+.support-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 /* --- 10. Footer --- */
 footer {
     background-color: var(--bg-main);
