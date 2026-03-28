@@ -3,42 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me - Ocean Mallik</title>
-    
-    <!-- FAVICON -->
+    <title>My Activities | Ocean Mallik</title>
     <link rel="icon" type="image/png" href="favicon.png">
-
-    <!-- Link to your CSS file -->
     <link rel="stylesheet" href="style.css">
-    
-    <!-- FontAwesome (Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="container nav-container">
             <a href="index.html" class="logo">Ocean <span class="highlight">Mallik</span></a>
-            
+
             <div class="nav-right">
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="activities.html">My Activities</a></li>
                     <li><a href="achievements/">My Achievements</a></li>
                     <li><a href="support/">Support Me</a></li>
-                    <!-- Active Link -->
-                    <li><a href="about.html" class="highlight">About Me</a></li>
+                    <li><a href="about.html">About Me</a></li>
                 </ul>
 
                 <button id="theme-toggle" class="theme-toggle-btn" title="Switch Theme">
                     <i class="fas fa-adjust"></i>
                     <span class="theme-name">Default</span>
                 </button>
-
-                <button id="mobile-menu-btn" class="menu-btn">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <button id="mobile-menu-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
             </div>
         </div>
 
@@ -51,88 +39,77 @@
         </div>
     </nav>
 
-    <!-- Main About Content -->
-    <section class="section" style="padding-top: 120px; min-height: 100vh;">
+    <section id="activities" class="section bg-secondary">
         <div class="container">
-            
-            <!-- Intro Text -->
-            <div style="margin-bottom: 50px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
-                <h1 class="title">About <span class="highlight">Me</span></h1>
-                <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.8;">
-                    Hello visitor, I’m Ocean, a curious human who loves using computers, exploring new ideas, and tinkering with anything that sparks my interest.
-                </p>
-            </div>
+            <h2 class="section-title">My <span class="highlight">Activities</span></h2>
 
-            <!-- Two Column Layout (Aligned) -->
-            <div class="about-grid">
-                
-                <!-- Left Column: Educational Qualification -->
-                <div class="about-text-col">
-                    <h2 class="section-title" style="text-align: left; font-size: 1.8rem; margin-bottom: 25px;">
-                        <i class="fas fa-graduation-cap highlight"></i> My Educational Qualification
-                    </h2>
-
-                    <!-- Education Item 1 -->
-                    <div class="edu-card">
-                        <div class="edu-content">
-                            <h3>Daffodil International University</h3>
-                            <p>BSc in Software Engineering</p>
+            <div class="projects-grid">
+                <div class="card project-card">
+                    <div class="card-image"><i class="fas fa-globe"></i></div>
+                    <div class="card-content">
+                        <h3>Personal Portfolio Website</h3>
+                        <p>My current personal website project built from scratch. Features five different themes.</p>
+                        <div class="tech-badges">
+                            <small>HTML</small>
+                            <small>CSS</small>
                         </div>
-                    </div>
-
-                    <!-- Education Item 2 -->
-                    <div class="edu-card">
-                        <div class="edu-content">
-                            <h3>Mazid Jarina Foundation School and College</h3>
-                            <p>HSC in Science <span class="highlight">(GPA 5.00)</span></p>
-                        </div>
-                    </div>
-
-                    <!-- Education Item 3 -->
-                    <div class="edu-card">
-                        <div class="edu-content">
-                            <h3>Bhedarganj Headquarter Pilot Govt. High School & College</h3>
-                            <p>SSC in Science <span class="highlight">(GPA 5.00)</span></p>
+                        <div class="card-links">
+                            <a href="https://github.com/oceanmallik/myWebsite" target="_blank"><i class="fab fa-github"></i> Code</a>
+                            <a href="https://www.oceanmallik.com" target="_blank"><i class="fas fa-external-link-alt"></i> Live</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column: Image (Alignment handled by CSS) -->
-                <div class="about-image-col">
-                   <div class="image-frame" style="width: 250px; height: 250px;">
-                        <img src="me.jpg" alt="Ocean Mallik">
-                   </div>
+                <div class="card project-card">
+                    <div class="card-image"><i class="fas fa-pen"></i></div>
+                    <div class="card-content">
+                        <h3>Ocean Mallik Talks</h3>
+                        <p>My blog site where I post updates about my projects.</p>
+                        <div class="tech-badges">
+                            <small>HTML</small>
+                            <small>CSS</small>
+                        </div>
+                        <div class="card-links">
+                            <a href="https://github.com/oceanmallik/blogWebsite" target="_blank"><i class="fab fa-github"></i> Code</a>
+                            <a href="https://blog.oceanmallik.com" target="_blank"><i class="fas fa-external-link-alt"></i> Live</a>
+                        </div>
+                    </div>
                 </div>
 
+                <div class="card project-card">
+                    <div class="card-image"><i class="fas fa-calculator"></i></div>
+                    <div class="card-content">
+                        <h3>Meme Calculator</h3>
+                        <p>A fun open-source project hosted on GitHub. 2 + 2 = 5, 1 + 1 = 11 and lot more!</p>
+                        <div class="tech-badges">
+                            <small>Godot</small>
+                            <small>Dotnet C#</small>
+                        </div>
+                        <div class="card-links">
+                            <a href="https://github.com/oceanmallik/memeCalculator" target="_blank"><i class="fab fa-github"></i> Code</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean</p>
     </footer>
 
-    <!-- Scripts -->
     <script>
-        // 1. Mobile Menu Logic
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
-
-        if(btn && menu) {
-            btn.addEventListener('click', () => {
-                menu.classList.toggle('hidden');
-            });
+        if (btn && menu) {
+            btn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
         }
 
-        // 2. UPDATED 5-THEME LOGIC
         const themeBtn = document.getElementById('theme-toggle');
         const themeIcon = themeBtn.querySelector('i');
         const themeName = themeBtn.querySelector('.theme-name');
         const body = document.body;
 
-        // This array MUST match the index.html array exactly
         const themes = ['', 'theme-black', 'theme-white', 'theme-soft', 'theme-aurora'];
         const icons = ['fa-adjust', 'fa-moon', 'fa-sun', 'fa-cloud', 'fa-water'];
         const themeLabels = ['Default', 'Black', 'White', 'Soft', 'Aurora'];
@@ -141,17 +118,11 @@
 
         function applyTheme(index, shouldFade = true) {
             const updateTheme = () => {
-                // Clear all theme classes
                 body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora');
-
-                // Add new class if applicable
                 if (themes[index]) body.classList.add(themes[index]);
 
-                // Update Icon
                 themeIcon.className = `fas ${icons[index]}`;
                 themeName.textContent = themeLabels[index];
-
-                // Save to Local Storage so other pages know the theme
                 localStorage.setItem('themeIndex', index);
             };
 
@@ -167,16 +138,13 @@
             });
         }
 
-        // Apply theme immediately on load
         applyTheme(currentThemeIndex, false);
 
-        // Click Handler
         themeBtn.addEventListener('click', () => {
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
             applyTheme(currentThemeIndex, true);
         });
 
-        // 3. Dynamic Footer Year
         const yearEl = document.getElementById('current-year');
         if (yearEl) {
             yearEl.textContent = new Date().getFullYear();
