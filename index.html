@@ -437,6 +437,30 @@
             typingEl.textContent = '';
             tick();
         }
+
+        // --- Hero Button Pointer Light Effect ---
+        const heroButtons = document.querySelectorAll('.hero-buttons .btn');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (heroButtons.length && !reduceMotion) {
+            heroButtons.forEach((buttonEl) => {
+                const setPointerLight = (event) => {
+                    const rect = buttonEl.getBoundingClientRect();
+                    const x = ((event.clientX - rect.left) / rect.width) * 100;
+                    const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+                    buttonEl.style.setProperty('--mx', `${Math.max(0, Math.min(100, x))}%`);
+                    buttonEl.style.setProperty('--my', `${Math.max(0, Math.min(100, y))}%`);
+                };
+
+                buttonEl.addEventListener('pointermove', setPointerLight);
+                buttonEl.addEventListener('pointerenter', setPointerLight);
+                buttonEl.addEventListener('pointerleave', () => {
+                    buttonEl.style.setProperty('--mx', '50%');
+                    buttonEl.style.setProperty('--my', '50%');
+                });
+            });
+        }
     </script>
 </body>
 </html>

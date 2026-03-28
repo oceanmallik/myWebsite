@@ -1,5 +1,5 @@
 /* --- 1. Fonts & Variables --- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
     /* === MAC THEME VARIABLES === */
@@ -9,8 +9,10 @@
     --mac-gold-dark: #d98d1a;
     --mac-dark-grey: #2d2d2d; 
     --text-main: #e2e2e2;
-    --btn-radius: 5px; 
-    --btn-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --btn-radius: 999px;
+    --btn-font: 'Space Grotesk', 'Inter', sans-serif;
+    --btn-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
+    --btn-shadow-hover: 0 14px 28px rgba(0, 0, 0, 0.34);
 
     /* === THEME 1: CYBERPUNK (Neon Night) === */
     --primary-color: #ffd400;
@@ -185,109 +187,137 @@ img {
 
 /* --- 3. Buttons (MAC THEME) --- */
 .btn {
-    display: inline-block;
-    padding: 6px 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 24px;
     border-radius: var(--btn-radius);
     font-family: var(--btn-font);
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.4;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.25px;
+    line-height: 1;
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.1s ease;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transform: translateY(0);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease, border-color 0.25s ease;
+    box-shadow: var(--btn-shadow);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 50%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.btn > * {
+    position: relative;
+    z-index: 1;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--btn-shadow-hover);
+}
+
+.btn:hover::before {
+    opacity: 1;
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: var(--btn-shadow-hover), 0 0 0 3px rgba(255, 255, 255, 0.22);
 }
 
 .btn:active {
-    transform: translateY(0.5px);
-    filter: brightness(0.95);
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    transform: translateY(0) scale(0.985);
+    filter: brightness(0.98);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
 }
 
 .btn-primary {
-    background: linear-gradient(180deg, var(--mac-blue-start) 0%, var(--mac-blue-end) 100%);
+    background: linear-gradient(135deg, #6ec1ff 0%, var(--mac-blue-end) 55%, #0063d4 100%);
     background-color: var(--mac-blue-end);
     color: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-color: rgba(140, 212, 255, 0.45);
 }
 
 .btn-primary:hover {
-    filter: brightness(1.05);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    filter: brightness(1.03);
     text-decoration: none;
-    transform: translateY(-1px);
 }
 
 /* --- NEW RED BUTTON (Mac Style) --- */
 .btn-red {
-    /* Mac Red Gradient */
-    background: linear-gradient(180deg, #FF6B6B 0%, #FF2D2D 100%);
+    background: linear-gradient(135deg, #ff8a8a 0%, #ff3c5f 52%, #d91538 100%);
     background-color: #FF2D2D;
     color: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-color: rgba(255, 175, 188, 0.4);
 }
 
 .btn-red:hover {
-    filter: brightness(1.05);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    filter: brightness(1.03);
     text-decoration: none;
-    transform: translateY(-1px);
 }
 
 .btn-cyan {
-    background: linear-gradient(180deg, #4dd7ff 0%, #009ecf 100%);
+    background: linear-gradient(135deg, #67f7ff 0%, #00b9d9 55%, #0088b7 100%);
     background-color: #009ecf;
     color: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-color: rgba(153, 247, 255, 0.42);
 }
 
 .btn-cyan:hover {
-    filter: brightness(1.05);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    filter: brightness(1.03);
     text-decoration: none;
-    transform: translateY(-1px);
 }
 
 .btn-amber {
-    background: linear-gradient(180deg, #ffd166 0%, #f39c12 100%);
+    background: linear-gradient(135deg, #ffe294 0%, #ffb347 58%, #f08700 100%);
     background-color: #f39c12;
-    color: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #281a00 !important;
+    border-color: rgba(255, 228, 159, 0.58);
 }
 
 .btn-amber:hover {
-    filter: brightness(1.05);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    filter: brightness(1.02);
     text-decoration: none;
-    transform: translateY(-1px);
 }
 
 .btn-outline {
-    background: transparent;
-    color: var(--text-main);
-    border: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0));
+    color: var(--text-title);
+    border: 1px solid color-mix(in srgb, var(--primary-color) 38%, var(--border-color));
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .btn-outline:hover {
-    background: var(--mac-dark-grey);
-    border-color: var(--mac-blue-end);
-    color: var(--mac-blue-end);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--primary-color) 24%, transparent), rgba(255, 255, 255, 0.06));
+    border-color: var(--primary-color);
+    color: var(--text-title);
 }
 
 .btn-gold {
-    background: var(--mac-gold);
+    background: linear-gradient(135deg, #ffd769 0%, var(--mac-gold) 62%, #d68613 100%);
     border-color: var(--mac-gold-dark);
-    color: #ffffff !important;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    color: #2d1b00 !important;
+    text-shadow: none;
 }
 
 .btn-gold:hover {
-    background: #f5a623;
-    border-color: #f5a623;
-    filter: brightness(1.05);
+    filter: brightness(1.02);
 }
 
 .theme-switcher {
@@ -472,12 +502,22 @@ body.theme-cyberpunk .theme-list-item.active i {
 
 .menu-btn {
     display: none; /* Hidden on Desktop */
-    background: none;
-    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0));
     color: var(--text-title);
-    font-size: 1.5rem;
+    font-size: 1.15rem;
     cursor: pointer;
     margin-left: 15px;
+    transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.menu-btn:hover {
+    transform: translateY(-1px);
+    border-color: var(--primary-color);
+    background-color: color-mix(in srgb, var(--primary-color) 16%, transparent);
 }
 
 /* Mobile Menu */
@@ -571,6 +611,51 @@ body.theme-cyberpunk .theme-list-item.active i {
 .hero-buttons {
     display: flex;
     gap: 15px;
+}
+
+/* Homepage hero buttons: richer mouse hover feedback */
+.hero-buttons .btn {
+    transform-origin: center;
+    --mx: 50%;
+    --my: 50%;
+}
+
+.hero-buttons .btn::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    background: radial-gradient(170px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.16) 26%, rgba(255, 255, 255, 0) 62%);
+    transition: opacity 0.18s ease;
+}
+
+.hero-buttons .btn:hover {
+    transform: translateY(-3px) scale(1.03);
+}
+
+.hero-buttons .btn:hover::after {
+    opacity: 1;
+}
+
+.hero-buttons .btn-red:hover {
+    box-shadow: 0 16px 32px rgba(217, 21, 56, 0.38);
+}
+
+.hero-buttons .btn-cyan:hover {
+    box-shadow: 0 16px 32px rgba(0, 185, 217, 0.35);
+}
+
+.hero-buttons .btn-amber:hover {
+    box-shadow: 0 16px 32px rgba(240, 135, 0, 0.38);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-buttons .btn::after {
+        transition: none;
+    }
 }
 
 /* Hero Image & Animation */
@@ -1038,51 +1123,71 @@ body.theme-black .edu-card:hover {
 }
 
 .support-btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 10px 28px;
     border-radius: var(--btn-radius);
     font-family: var(--btn-font);
-    font-weight: 600;
-    transition: all 0.1s ease;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease, background-color 0.25s ease;
     min-width: 180px;
     margin: 10px;
     color: white;
     text-align: center;
-    border: 1px solid transparent;
-    font-size: 14px;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.9rem;
+    box-shadow: var(--btn-shadow);
 }
 
 .support-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    box-shadow: var(--btn-shadow-hover);
 }
 
 .btn-social {
-    background: transparent;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
     border: 1px solid var(--primary-color);
     color: var(--primary-color);
 }
 .btn-social:hover {
-    background: var(--primary-color);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--primary-color) 80%, #ffffff), var(--primary-color));
     color: #fff;
     border-color: var(--primary-color);
 }
 
 .btn-patreon {
-    background: #FF424D;
-    border-color: #E63B45;
+    background: linear-gradient(135deg, #ff6874 0%, #ff424d 60%, #d82731 100%);
+    border-color: #ff8c95;
 }
 .btn-patreon:hover {
-    filter: brightness(1.05);
+    filter: brightness(1.03);
 }
 
 .btn-bkash {
-    background: #E2136E;
-    border-color: #C00E5C;
+    background: linear-gradient(135deg, #ff4ea1 0%, #e2136e 58%, #b20f55 100%);
+    border-color: #f37cb8;
 }
 .btn-bkash:hover {
-    filter: brightness(1.05);
+    filter: brightness(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    .support-btn,
+    .menu-btn {
+        transition: none;
+    }
+
+    .btn:hover,
+    .support-btn:hover,
+    .menu-btn:hover,
+    .btn:active,
+    .support-btn:active {
+        transform: none;
+    }
 }
 
 .payment-box {
