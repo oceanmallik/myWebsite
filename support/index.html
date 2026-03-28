@@ -180,7 +180,7 @@
             body.classList.add('theme-fading');
             requestAnimationFrame(() => {
                 updateTheme();
-                requestAnimationFrame(() => body.classList.remove('theme-fading'));
+                setTimeout(() => body.classList.remove('theme-fading'), 300);
             });
         }
         
