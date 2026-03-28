@@ -12,16 +12,16 @@
     --btn-radius: 5px; 
     --btn-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-    /* === THEME 1: DEFAULT (Ocean Dark - Blue/Grey) === */
-    --primary-color: #10b981;       
-    --primary-hover: #34d399;
-    --bg-main: #0f172a;             
-    --bg-secondary: #020617;        
-    --bg-card: #1e293b;
-    --nav-bg: rgba(15, 23, 42, 0.9);
-    --text-title: #ffffff;          
-    --text-muted: #9ca3af;
-    --border-color: #333333; 
+    /* === THEME 1: CYBERPUNK (Neon Night) === */
+    --primary-color: #ffd400;
+    --primary-hover: #ffea70;
+    --bg-main: #0a0615;
+    --bg-secondary: #120a24;
+    --bg-card: #1a1033;
+    --nav-bg: rgba(10, 6, 21, 0.9);
+    --text-title: #ffffff;
+    --text-muted: #a7a1d1;
+    --border-color: #3a2a66;
     
     /* Spacing & Layout */
     --container-width: 1200px;
@@ -95,6 +95,34 @@ body.theme-aurora {
     --text-muted: #4f6d70;
 
     --border-color: #b9e4da;
+}
+
+/* === CYBERPUNK CLASS ALIAS (matches base theme) === */
+body.theme-cyberpunk {
+    --primary-color: #ffd400;
+    --primary-hover: #ffea70;
+
+    --bg-main: #0a0615;
+    --bg-secondary: #120a24;
+    --bg-card: #1a1033;
+    --nav-bg: rgba(10, 6, 21, 0.9);
+
+    --text-main: #e8e6ff;
+    --text-title: #ffffff;
+    --text-muted: #a7a1d1;
+
+    --border-color: #3a2a66;
+}
+
+body.theme-cyberpunk .highlight {
+    color: #ffd400;
+    text-shadow: 0 0 14px rgba(255, 212, 0, 0.45);
+}
+
+body.theme-cyberpunk .tags span {
+    background-color: rgba(255, 212, 0, 0.14);
+    border-color: rgba(255, 212, 0, 0.35);
+    color: #ffd400;
 }
 
 /* --- 2. Global Reset --- */
@@ -380,6 +408,15 @@ img {
 
 .theme-list-item.active i {
     color: var(--primary-color);
+}
+
+body.theme-cyberpunk .theme-list-item.active {
+    background: rgba(255, 212, 0, 0.2);
+    color: #ffd400;
+}
+
+body.theme-cyberpunk .theme-list-item.active i {
+    color: #ffd400;
 }
 
 /* --- 4. Navigation --- */

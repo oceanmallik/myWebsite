@@ -33,8 +33,8 @@
 
                 <div class="theme-switcher">
                     <button id="theme-toggle" class="theme-toggle-btn" title="Switch Theme">
-                        <i class="fas fa-adjust theme-icon"></i>
-                        <span class="theme-name">Default</span>
+                        <i class="fas fa-bolt theme-icon"></i>
+                        <span class="theme-name">Cyberpunk</span>
                     </button>
                     <button id="theme-list-toggle" class="theme-list-toggle-btn" title="Show theme list" aria-label="Show theme list" aria-expanded="false">
                         <i class="fas fa-chevron-down"></i>
@@ -282,12 +282,14 @@
         const themeList = document.getElementById('theme-list');
         const body = document.body;
 
-        // Added 'theme-aurora' and 'fa-water'
-        const themes = ['', 'theme-black', 'theme-white', 'theme-soft', 'theme-aurora'];
-        const icons = ['fa-adjust', 'fa-moon', 'fa-sun', 'fa-cloud', 'fa-water'];
-        const themeLabels = ['Default', 'Black', 'White', 'Soft', 'Aurora'];
+        const themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
+        const icons = ['fa-bolt', 'fa-sun', 'fa-cloud', 'fa-water', 'fa-moon'];
+        const themeLabels = ['Cyberpunk', 'White', 'Soft', 'Aurora', 'Black'];
         
         let currentThemeIndex = parseInt(localStorage.getItem('themeIndex')) || 0;
+        if (currentThemeIndex < 0 || currentThemeIndex >= themes.length) {
+            currentThemeIndex = 0;
+        }
 
         function renderThemeList() {
             themeList.innerHTML = '';
@@ -333,9 +335,9 @@
         function applyTheme(index, shouldFade = true) {
             const updateTheme = () => {
                 // Remove all theme classes first
-                body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora');
+                body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-cyberpunk');
 
-                // Add the new class if it's not the default
+                // Apply selected theme class
                 if (themes[index]) body.classList.add(themes[index]);
 
                 // Update Icon
