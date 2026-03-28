@@ -31,10 +31,16 @@
                     <li><a href="about.html">About Me</a></li>
                 </ul>
 
-                <button id="theme-toggle" class="theme-toggle-btn" title="Switch Theme">
-                    <i class="fas fa-adjust"></i>
-                    <span class="theme-name">Default</span>
-                </button>
+                <div class="theme-switcher">
+                    <button id="theme-toggle" class="theme-toggle-btn" title="Switch Theme">
+                        <i class="fas fa-adjust theme-icon"></i>
+                        <span class="theme-name">Default</span>
+                    </button>
+                    <button id="theme-list-toggle" class="theme-list-toggle-btn" title="Show theme list" aria-label="Show theme list" aria-expanded="false">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="theme-list" class="theme-list hidden" role="listbox" aria-label="Theme list"></div>
+                </div>
                 <button id="mobile-menu-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
             </div>
         </div>
@@ -270,8 +276,10 @@
 
         // --- Theme Logic (UPDATED for 5 Themes) ---
         const themeBtn = document.getElementById('theme-toggle');
-        const themeIcon = themeBtn.querySelector('i');
+        const themeIcon = themeBtn.querySelector('.theme-icon');
         const themeName = themeBtn.querySelector('.theme-name');
+        const themeListToggleBtn = document.getElementById('theme-list-toggle');
+        const themeList = document.getElementById('theme-list');
         const body = document.body;
 
         // Added 'theme-aurora' and 'fa-water'
@@ -280,6 +288,47 @@
         const themeLabels = ['Default', 'Black', 'White', 'Soft', 'Aurora'];
         
         let currentThemeIndex = parseInt(localStorage.getItem('themeIndex')) || 0;
+
+        function renderThemeList() {
+            themeList.innerHTML = '';
+
+            themeLabels.forEach((label, index) => {
+                const option = document.createElement('button');
+                option.type = 'button';
+                option.className = 'theme-list-item';
+                if (index === currentThemeIndex) option.classList.add('active');
+                option.setAttribute('role', 'option');
+                option.setAttribute('aria-selected', index === currentThemeIndex ? 'true' : 'false');
+                option.innerHTML = `<span>${label}</span><i class="fas ${icons[index]}"></i>`;
+
+                option.addEventListener('click', () => {
+                    currentThemeIndex = index;
+                    applyTheme(currentThemeIndex, true);
+                    closeThemeList();
+                });
+
+                themeList.appendChild(option);
+            });
+        }
+
+        function closeThemeList() {
+            themeList.classList.add('hidden');
+            themeListToggleBtn.classList.remove('open');
+            themeListToggleBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        function toggleThemeList() {
+            const isOpen = !themeList.classList.contains('hidden');
+
+            if (isOpen) {
+                closeThemeList();
+            } else {
+                renderThemeList();
+                themeList.classList.remove('hidden');
+                themeListToggleBtn.classList.add('open');
+                themeListToggleBtn.setAttribute('aria-expanded', 'true');
+            }
+        }
 
         function applyTheme(index, shouldFade = true) {
             const updateTheme = () => {
@@ -292,6 +341,7 @@
                 // Update Icon
                 themeIcon.className = `fas ${icons[index]}`;
                 themeName.textContent = themeLabels[index];
+                renderThemeList();
 
                 // Save
                 localStorage.setItem('themeIndex', index);
@@ -316,6 +366,29 @@
         themeBtn.addEventListener('click', () => {
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
             applyTheme(currentThemeIndex, true);
+            closeThemeList();
+        });
+
+        themeListToggleBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            toggleThemeList();
+        });
+
+        document.addEventListener('click', (event) => {
+            if (
+                !themeList.classList.contains('hidden') &&
+                !themeBtn.contains(event.target) &&
+                !themeListToggleBtn.contains(event.target) &&
+                !themeList.contains(event.target)
+            ) {
+                closeThemeList();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeThemeList();
+            }
         });
 
         // --- Dynamic Footer Year ---
