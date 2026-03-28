@@ -106,6 +106,7 @@ body.theme-aurora {
 
 html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
 }
 
 body {
