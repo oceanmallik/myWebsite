@@ -307,43 +307,37 @@
         // --- Hero Typing Animation ---
         const typingEl = document.getElementById('typing-text');
         if (typingEl) {
-            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             const fullText = 'Software Engineer in training - currently powered by curiosity and caffeine.';
+            let charIndex = 0;
+            let isDeleting = false;
 
-            if (prefersReducedMotion) {
-                typingEl.textContent = fullText;
-            } else {
-                let charIndex = 0;
-                let isDeleting = false;
+            const tick = () => {
+                typingEl.textContent = fullText.slice(0, charIndex);
 
-                const tick = () => {
-                    typingEl.textContent = fullText.slice(0, charIndex);
+                if (!isDeleting && charIndex < fullText.length) {
+                    charIndex += 1;
+                    setTimeout(tick, 45);
+                    return;
+                }
 
-                    if (!isDeleting && charIndex < fullText.length) {
-                        charIndex += 1;
-                        setTimeout(tick, 45);
-                        return;
-                    }
+                if (!isDeleting && charIndex === fullText.length) {
+                    isDeleting = true;
+                    setTimeout(tick, 5000);
+                    return;
+                }
 
-                    if (!isDeleting && charIndex === fullText.length) {
-                        isDeleting = true;
-                        setTimeout(tick, 5000);
-                        return;
-                    }
+                if (isDeleting && charIndex > 0) {
+                    charIndex -= 1;
+                    setTimeout(tick, 25);
+                    return;
+                }
 
-                    if (isDeleting && charIndex > 0) {
-                        charIndex -= 1;
-                        setTimeout(tick, 25);
-                        return;
-                    }
+                isDeleting = false;
+                setTimeout(tick, 350);
+            };
 
-                    isDeleting = false;
-                    setTimeout(tick, 350);
-                };
-
-                typingEl.textContent = '';
-                tick();
-            }
+            typingEl.textContent = '';
+            tick();
         }
     </script>
 </body>
