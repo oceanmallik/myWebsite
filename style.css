@@ -442,6 +442,7 @@ body.theme-cyberpunk .theme-list-item.active i {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-title);
+    white-space: nowrap;
 }
 
 .nav-right {
@@ -878,6 +879,9 @@ footer {
 
 /* --- 11. Responsive Design (Mobile) --- */
 @media (max-width: 900px) {
+    .logo {
+        font-size: 1.2rem;
+    }
     .nav-links {
         display: none;
     }
