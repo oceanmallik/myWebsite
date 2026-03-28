@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me - Ocean Mallik</title>
+    <title>Support Me - Ocean Mallik</title>
     
-    <!-- FAVICON -->
-    <link rel="icon" type="image/png" href="favicon.png">
-
-    <!-- Link to your CSS file -->
-    <link rel="stylesheet" href="style.css">
-    
-    <!-- FontAwesome (Icons) -->
+    <!-- Go UP one level (../) -->
+    <link rel="icon" type="image/png" href="../../favicon.png">
+    <link rel="stylesheet" href="../../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -19,16 +15,16 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="logo">Ocean <span class="highlight">Mallik</span></a>
+            <a href="../../index.html" class="logo">Ocean <span class="highlight">Mallik</span></a>
             
             <div class="nav-right">
                 <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="activities.html">My Activities</a></li>
-                    <li><a href="achievements/">My Achievements</a></li>
-                    <li><a href="support/">Support Me</a></li>
+                    <li><a href="../../index.html">Home</a></li>
+                    <li><a href="../activities.html">My Activities</a></li>
+                    <li><a href="../achievements/">My Achievements</a></li>
                     <!-- Active Link -->
-                    <li><a href="about.html" class="highlight">About Me</a></li>
+                    <li><a href="#" class="highlight">Support Me</a></li>
+                    <li><a href="../about.html">About Me</a></li>
                 </ul>
 
                 <div class="theme-switcher">
@@ -41,73 +37,55 @@
                     </button>
                     <div id="theme-list" class="theme-list hidden" role="listbox" aria-label="Theme list"></div>
                 </div>
-
-                <button id="mobile-menu-btn" class="menu-btn">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <button id="mobile-menu-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
             </div>
         </div>
 
         <div id="mobile-menu" class="mobile-menu hidden">
-            <a href="index.html">Home</a>
-            <a href="activities.html">My Activities</a>
-            <a href="achievements/">My Achievements</a>
-            <a href="support/">Support Me</a>
-            <a href="about.html">About Me</a>
+            <a href="../../index.html">Home</a>
+            <a href="../activities.html">My Activities</a>
+            <a href="../achievements/">My Achievements</a>
+            <a href="#">Support Me</a>
+            <a href="../about.html">About Me</a>
         </div>
     </nav>
 
-    <!-- Main About Content -->
+    <!-- Main Support Content -->
     <section class="section" style="padding-top: 120px; min-height: 100vh;">
         <div class="container">
             
-            <!-- Intro Text -->
-            <div style="margin-bottom: 50px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
-                <h1 class="title">About <span class="highlight">Me</span></h1>
-                <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.8;">
-                    Hello visitor, I’m Ocean, a curious human who loves using computers, exploring new ideas, and tinkering with anything that sparks my interest.
-                </p>
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h1 class="title">Support <span class="highlight">My Work</span></h1>
+                <p class="description" style="margin: 0 auto;">Help me create more open source projects and content.</p>
             </div>
 
-            <!-- Two Column Layout (Aligned) -->
-            <div class="about-grid">
+            <div class="support-grid">
                 
-                <!-- Left Column: Educational Qualification -->
-                <div class="about-text-col">
-                    <h2 class="section-title" style="text-align: left; font-size: 1.8rem; margin-bottom: 25px;">
-                        <i class="fas fa-graduation-cap highlight"></i> My Educational Qualification
-                    </h2>
-
-                    <!-- Education Item 1 -->
-                    <div class="edu-card">
-                        <div class="edu-content">
-                            <h3>Daffodil International University</h3>
-                            <p>BSc in Software Engineering</p>
-                        </div>
-                    </div>
-
-                    <!-- Education Item 2 -->
-                    <div class="edu-card">
-                        <div class="edu-content">
-                            <h3>Mazid Jarina Foundation School and College</h3>
-                            <p>HSC in Science <span class="highlight">(GPA 5.00)</span></p>
-                        </div>
-                    </div>
-
-                    <!-- Education Item 3 -->
-                    <div class="edu-card">
-                        <div class="edu-content">
-                            <h3>Bhedarganj Headquarter Pilot Govt. High School & College</h3>
-                            <p>SSC in Science <span class="highlight">(GPA 5.00)</span></p>
-                        </div>
-                    </div>
+                <!-- Left Column: Social Media -->
+                <div class="support-column">
+                    <h2 class="support-title">Follow on Social Media</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Connect with me across platforms</p>
+                    
+                    <a href="https://linktr.ee/oceanmallik" target="_blank" class="support-btn btn-social">
+                        <i class="fas fa-share-alt" style="margin-right: 8px;"></i> Social Media
+                    </a>
                 </div>
 
-                <!-- Right Column: Image (Alignment handled by CSS) -->
-                <div class="about-image-col">
-                   <div class="image-frame" style="width: 250px; height: 250px;">
-                        <img src="me.jpg" alt="Ocean Mallik">
-                   </div>
+                <!-- Right Column: Donation -->
+                <div class="support-column">
+                    <h2 class="support-title">Donation</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">Support directly via</p>
+                    
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                        <a href="https://www.patreon.com/c/oceanmallik" target="_blank" class="support-btn btn-patreon">
+                            <i class="fab fa-patreon" style="margin-right: 8px;"></i> Patreon
+                        </a>
+                        
+                        <!-- Links to the internal payment page -->
+                        <a href="payment.html" class="support-btn btn-bkash">
+                            <i class="fas fa-wallet" style="margin-right: 8px;"></i> bKash / Rocket
+                        </a>
+                    </div>
                 </div>
 
             </div>
@@ -115,36 +93,29 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean</p>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Standard Scripts -->
     <script>
-        // 1. Mobile Menu Logic
+        // Menu & Theme Logic
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
+        if(btn && menu) btn.addEventListener('click', () => menu.classList.toggle('hidden'));
 
-        if(btn && menu) {
-            btn.addEventListener('click', () => {
-                menu.classList.toggle('hidden');
-            });
-        }
-
-        // 2. UPDATED 5-THEME LOGIC
         const themeBtn = document.getElementById('theme-toggle');
         const themeIcon = themeBtn.querySelector('.theme-icon');
         const themeName = themeBtn.querySelector('.theme-name');
         const themeListToggleBtn = document.getElementById('theme-list-toggle');
         const themeList = document.getElementById('theme-list');
         const body = document.body;
-
-        // This array MUST match the index.html array exactly
+        
+        // UPDATED for 5 Themes
         const themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
         const icons = ['fa-bolt', 'fa-sun', 'fa-cloud', 'fa-water', 'fa-moon'];
         const themeLabels = ['Cyberpunk', 'White', 'Soft', 'Aurora', 'Black'];
-
+        
         let currentThemeIndex = parseInt(localStorage.getItem('themeIndex')) || 0;
         if (currentThemeIndex < 0 || currentThemeIndex >= themes.length) {
             currentThemeIndex = 0;
@@ -193,18 +164,11 @@
 
         function applyTheme(index, shouldFade = true) {
             const updateTheme = () => {
-                // Clear all theme classes
                 body.classList.remove('theme-black', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-cyberpunk');
-
-                // Add new class if applicable
                 if (themes[index]) body.classList.add(themes[index]);
-
-                // Update Icon
                 themeIcon.className = `fas ${icons[index]}`;
                 themeName.textContent = themeLabels[index];
                 renderThemeList();
-
-                // Save to Local Storage so other pages know the theme
                 localStorage.setItem('themeIndex', index);
             };
 
@@ -219,11 +183,9 @@
                 setTimeout(() => body.classList.remove('theme-fading'), 300);
             });
         }
-
-        // Apply theme immediately on load
+        
         applyTheme(currentThemeIndex, false);
-
-        // Click Handler
+        
         themeBtn.addEventListener('click', () => {
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
             applyTheme(currentThemeIndex, true);
@@ -252,7 +214,7 @@
             }
         });
 
-        // 3. Dynamic Footer Year
+        // Dynamic footer year keeps copyright current automatically.
         const yearEl = document.getElementById('current-year');
         if (yearEl) {
             yearEl.textContent = new Date().getFullYear();
