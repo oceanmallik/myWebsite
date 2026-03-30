@@ -1311,6 +1311,20 @@ body.theme-black .edu-card:hover {
     justify-content: center;
 }
 
+.about-links-btn {
+    border-radius: 8px;
+    background: transparent;
+    background-color: transparent;
+    color: var(--text-title) !important;
+    border-color: var(--border-color);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
+.about-links-btn:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 14%, transparent);
+    border-color: var(--primary-color);
+}
+
 @media (min-width: 992px) {
     .about-image-col {
         margin-top: 85px; 
