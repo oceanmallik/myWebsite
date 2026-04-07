@@ -911,6 +911,40 @@ body.theme-cyberpunk .theme-list-item.active i {
 
 .card-links .live-link {
     margin-left: auto;
+    color: #ff6b6b;
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(255, 0, 0, 0.35);
+    animation: liveHeartbeat 1.35s ease-in-out infinite;
+    transition: color 0.25s ease, text-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.card-links .live-link:hover {
+    color: #ff8787;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.55);
+    transform: translateY(-1px);
+}
+
+.card-links .live-link:focus-visible {
+    outline: none;
+    text-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
+}
+
+@keyframes liveHeartbeat {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+    }
+    25% {
+        text-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+    }
+    40% {
+        text-shadow: 0 0 7px rgba(255, 0, 0, 0.38);
+    }
+    60% {
+        text-shadow: 0 0 14px rgba(255, 0, 0, 0.68);
+    }
+    100% {
+        text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+    }
 }
 
 .card-links a:hover {
