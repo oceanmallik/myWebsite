@@ -787,6 +787,8 @@ body.theme-cyberpunk .theme-list-item.active i {
 .project-card {
     padding: 0;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     transition: var(--transition);
 }
 
@@ -814,6 +816,9 @@ body.theme-cyberpunk .theme-list-item.active i {
 
 .card-content {
     padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .project-status {
@@ -897,8 +902,15 @@ body.theme-cyberpunk .theme-list-item.active i {
 
 .card-links {
     display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
+    justify-content: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+.card-links .live-link {
+    margin-left: auto;
 }
 
 .card-links a:hover {
