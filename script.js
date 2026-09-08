@@ -205,6 +205,63 @@
         }
     }
 
+    function initDonationQr() {
+
+        const qrButton = document.createElement('button');
+        qrButton.type = 'button';
+        qrButton.className = 'donation-qr-button';
+        qrButton.setAttribute('aria-label', 'Show BanglaQR donation code');
+        qrButton.setAttribute('title', 'Donate via BanglaQR');
+        qrButton.innerHTML = '<i class="fas fa-qrcode" aria-hidden="true"></i>';
+
+        const modal = document.createElement('div');
+        modal.className = 'donation-qr-modal';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-labelledby', 'donation-qr-title');
+        modal.innerHTML = `
+            <div class="donation-qr-panel">
+                <button type="button" class="donation-qr-close" aria-label="Close BanglaQR donation window" title="Close">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+                <h2 id="donation-qr-title">Donate via BanglaQR</h2>
+                <img src="banglaQR.jpg" alt="BanglaQR donation code">
+            </div>
+        `;
+
+        const closeModal = () => {
+            modal.classList.remove('show');
+            qrButton.focus();
+        };
+
+        qrButton.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent document click from immediately closing it
+            const isShown = modal.classList.contains('show');
+            if (!isShown) {
+                modal.classList.add('show');
+                modal.querySelector('.donation-qr-close').focus();
+            } else {
+                closeModal();
+            }
+        });
+        modal.querySelector('.donation-qr-close').addEventListener('click', closeModal);
+        modal.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent clicks inside modal from reaching document
+        });
+        document.addEventListener('click', (event) => {
+            if (modal.classList.contains('show') && event.target !== qrButton) {
+                closeModal();
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.classList.contains('show')) {
+                closeModal();
+            }
+        });
+
+        document.body.append(qrButton, modal);
+    }
+
     function initTypingEffect() {
         const typingElement = document.getElementById('typing-text');
 
@@ -904,6 +961,7 @@
 
     function initSite() {
         initDynamicYear();
+        initDonationQr();
         initMobileMenu();
         initThemeSwitcher();
         initAccordions();
