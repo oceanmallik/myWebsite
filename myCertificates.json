@@ -14,6 +14,13 @@
 		"alt": "Relational Databases Certificate"
 	},
 	{
+		"title": "Responsive Web Design (fCC)",
+		"featured": true,
+		"verifyUrl": "https://www.freecodecamp.org/certification/oceanmallik/responsive-web-design-v9",
+		"image": "web.png",
+		"alt": "Responsive Web Design Certificate"
+	},
+	{
 		"title": "C# Certificate (Hackerrank)",
 		"featured": true,
 		"verifyUrl": "https://www.hackerrank.com/certificates/f0b0cb0d8b10",
