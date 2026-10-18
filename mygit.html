@@ -833,12 +833,38 @@
             }
         }
 
+        // ── Session Cache helpers ─────────────────────────────────────────────
+        const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+        function cacheSet(key, data) {
+            try {
+                sessionStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
+            } catch (_) {}
+        }
+
+        function cacheGet(key) {
+            try {
+                const raw = sessionStorage.getItem(key);
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                if (Date.now() - parsed.ts > CACHE_TTL_MS) {
+                    sessionStorage.removeItem(key);
+                    return null;
+                }
+                return parsed.data;
+            } catch (_) { return null; }
+        }
+
         // ── Profile Strip ─────────────────────────────────────────────────────
         async function loadProfile() {
             try {
-                const res = await fetch(`${GH_API_BASE}/users/${GITHUB_USERNAME}`);
-                if (!res.ok) return;
-                const user = await res.json();
+                let user = cacheGet('gh_profile');
+                if (!user) {
+                    const res = await fetch(`${GH_API_BASE}/users/${GITHUB_USERNAME}`);
+                    if (!res.ok) return;
+                    user = await res.json();
+                    cacheSet('gh_profile', user);
+                }
 
                 document.getElementById('gh-avatar').src = user.avatar_url;
                 document.getElementById('gh-name').textContent = user.name || user.login;
@@ -855,38 +881,63 @@
         // ── Repositories ──────────────────────────────────────────────────────
         async function loadRepos() {
             try {
-                const res = await fetch(
-                    `${GH_API_BASE}/users/${GITHUB_USERNAME}/repos?per_page=${PER_PAGE}&type=public`
-                );
+                let repos = cacheGet('gh_repos');
+                if (!repos) {
+                    const res = await fetch(
+                        `${GH_API_BASE}/users/${GITHUB_USERNAME}/repos?per_page=${PER_PAGE}&type=public`
+                    );
 
-                if (!res.ok) {
-                    throw new Error(`GitHub API responded with ${res.status}`);
+                    if (!res.ok) {
+                        const isRateLimit = res.status === 403 || res.status === 429;
+                        const msg = isRateLimit
+                            ? `GitHub API rate limit reached (${res.status}). You have 60 free requests/hour. Please wait a few minutes and refresh, or visit your profile directly.`
+                            : `GitHub API responded with ${res.status}.`;
+                        throw new Error(msg);
+                    }
+
+                    repos = await res.json();
+                    cacheSet('gh_repos', repos);
                 }
 
-                allRepos = await res.json();
+                allRepos = repos;
 
                 document.getElementById('repo-skeleton').style.display = 'none';
                 document.getElementById('repo-grid').style.display = 'grid';
 
                 renderRepos();
-                prefetchContributors();
+                initLazyContributors();
             } catch (err) {
                 document.getElementById('repo-skeleton').style.display = 'none';
-                document.getElementById('repo-error').style.display = 'block';
+                const errBox = document.getElementById('repo-error');
+                errBox.style.display = 'block';
                 if (err.message) {
                     document.getElementById('repo-error-msg').textContent = err.message;
                 }
             }
         }
 
-        // ── Contributors Pre-fetch ────────────────────────────────────────────
-        async function prefetchContributors() {
-            // Fetch top 6 repos' contributors quietly in background
-            const topRepos = allRepos.slice(0, 20);
-            for (const repo of topRepos) {
-                fetchContributors(repo.full_name);
-            }
+        // ── Lazy Contributors (IntersectionObserver) ──────────────────────────
+        let contributorObserver = null;
+
+        function initLazyContributors() {
+            if (contributorObserver) contributorObserver.disconnect();
+            contributorObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const card = entry.target;
+                    const fullName = card.dataset.repo;
+                    if (fullName && contributorsCache[fullName] === undefined) {
+                        fetchContributors(fullName);
+                    }
+                    contributorObserver.unobserve(card);
+                });
+            }, { rootMargin: '100px' });
+
+            document.querySelectorAll('.repo-card').forEach(card => {
+                contributorObserver.observe(card);
+            });
         }
+
 
         async function fetchContributors(fullName) {
             if (contributorsCache[fullName] !== undefined) return;
@@ -975,6 +1026,9 @@
             repos.forEach(repo => {
                 grid.appendChild(buildRepoCard(repo));
             });
+
+            // Re-attach lazy contributor observer for freshly rendered cards
+            if (typeof initLazyContributors === 'function') initLazyContributors();
         }
 
         function buildRepoCard(repo) {
