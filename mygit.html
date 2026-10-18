@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Git | Ocean Mallik</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+
+        /* Page Header */
+        .git-page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .git-page-header .subtitle {
+            font-size: 0.92rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            margin-bottom: 0.6rem;
+        }
+
+        .git-page-header .title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1rem;
+        }
+
+        .git-page-header .description {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 520px;
+            margin: 0 auto 2rem;
+        }
+
+        /* GitHub Profile Strip */
+        .github-profile-strip {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            max-width: 720px;
+            margin: 0 auto 3rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+            transition: border-color 0.3s ease;
+        }
+
+        .github-profile-strip:hover {
+            border-color: var(--primary-color);
+        }
+
+        .github-profile-strip img {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .profile-strip-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profile-strip-info .name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-title);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profile-strip-info .login {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .profile-strip-stats {
+            display: flex;
+            gap: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        .profile-stat .num {
+            display: block;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-title);
+        }
+
+        .profile-stat .lbl {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-strip-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            white-space: nowrap;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .profile-strip-link:hover {
+            opacity: 0.8;
+            transform: translateX(2px);
+        }
+
+        /* Filters */
+        .git-filters {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .git-filter-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .git-filter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .git-filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .git-filter-btn.active {
+            background: color-mix(in srgb, var(--primary-color) 18%, transparent);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .git-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            padding: 6px 14px;
+            backdrop-filter: blur(8px);
+            transition: border-color 0.2s ease;
+        }
+
+        .git-search:focus-within {
+            border-color: var(--primary-color);
+        }
+
+        .git-search i {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+
+        .git-search input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-title);
+            font-size: 0.84rem;
+            width: 180px;
+        }
+
+        .git-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Stats Summary Bar */
+        .git-summary-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .git-repo-count {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+        }
+
+        .git-repo-count strong {
+            color: var(--text-title);
+        }
+
+        .git-sort-select {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .git-sort-select:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Repo Grid */
+        .repo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Repo Card */
+        .repo-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .repo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .repo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+            border-color: color-mix(in srgb, var(--primary-color) 40%, transparent);
+        }
+
+        .repo-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Card Top Row */
+        .repo-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .repo-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .repo-icon {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            transition: color 0.2s ease;
+        }
+
+        .repo-card:hover .repo-icon {
+            color: var(--primary-color);
+        }
+
+        .repo-name {
+            font-weight: 700;
+            font-size: 0.98rem;
+            color: var(--primary-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: opacity 0.2s ease;
+        }
+
+        .repo-name:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .repo-fork-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: rgba(128,128,128,0.12);
+            border: 1px solid rgba(128,128,128,0.2);
+            border-radius: 4px;
+            padding: 1px 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .repo-card-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+            align-items: center;
+        }
+
+        .repo-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: rgba(128,128,128,0.06);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .repo-action-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+        }
+
+        /* Description */
+        .repo-description {
+            font-size: 0.86rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+
+        .repo-description.empty {
+            font-style: italic;
+            opacity: 0.5;
+        }
+
+        /* Topics / Tags */
+        .repo-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            min-height: 0;
+        }
+
+        .repo-topic {
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+            color: var(--primary-color);
+            border: 1px solid color-mix(in srgb, var(--primary-color) 28%, transparent);
+            transition: background 0.2s ease;
+            cursor: default;
+        }
+
+        .repo-topic:hover {
+            background: color-mix(in srgb, var(--primary-color) 24%, transparent);
+        }
+
+        /* Card Footer */
+        .repo-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--glass-border);
+            margin-top: auto;
+        }
+
+        .repo-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .repo-stat {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            transition: color 0.2s ease;
+        }
+
+        .repo-stat:hover {
+            color: var(--text-title);
+        }
+
+        .repo-stat i {
+            font-size: 0.75rem;
+        }
+
+        .repo-stat.stars i {
+            color: #f59e0b;
+        }
+
+        .repo-stat.forks i {
+            color: #60a5fa;
+        }
+
+        .repo-lang {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.76rem;
+            color: var(--text-muted);
+        }
+
+        .lang-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Contributors */
+        .repo-contributors {
+            display: flex;
+            align-items: center;
+            gap: -4px;
+        }
+
+        .contributor-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--bg-card);
+            object-fit: cover;
+            margin-left: -6px;
+            transition: transform 0.2s ease, z-index 0s;
+            cursor: pointer;
+        }
+
+        .contributor-avatar:first-child {
+            margin-left: 0;
+        }
+
+        .contributor-avatar:hover {
+            transform: scale(1.25);
+            z-index: 10;
+            position: relative;
+        }
+
+        .contributors-more {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.55rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: -6px;
+            border: 2px solid var(--bg-card);
+        }
+
+        /* Website Link */
+        .repo-website-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .repo-website-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.76rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .repo-website-link:hover {
+            opacity: 0.7;
+            text-decoration: underline;
+        }
+
+        /* Loading State */
+        .repo-skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .repo-skeleton {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            height: 220px;
+        }
+
+        .skeleton-line {
+            background: linear-gradient(90deg, var(--border-color) 25%, color-mix(in srgb, var(--border-color) 60%, transparent) 50%, var(--border-color) 75%);
+            background-size: 200% 100%;
+            border-radius: 6px;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-line.title { height: 16px; width: 55%; }
+        .skeleton-line.body  { height: 12px; }
+        .skeleton-line.body.short { width: 75%; }
+        .skeleton-line.tag  { height: 20px; width: 60px; border-radius: 999px; display: inline-block; }
+
+        .skeleton-tags {
+            display: flex;
+            gap: 6px;
+        }
+
+        .skeleton-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .skeleton-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        /* Error State */
+        .git-error-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .git-error-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ef4444;
+            opacity: 0.7;
+        }
+
+        .git-error-state h3 {
+            color: var(--text-title);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Empty State */
+        .git-empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+        }
+
+        .git-empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Language color map is driven by JS */
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .github-profile-strip {
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .profile-strip-info {
+                text-align: center;
+            }
+
+            .profile-strip-stats {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .git-filters {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .git-search input {
+                width: 140px;
+            }
+
+            .repo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .repo-skeleton-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">Ocean <span class="highlight">Mallik</span></a>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="activities.html">My Activities</a></li>
+                    <li><a href="mygit.html" class="highlight">My Git</a></li>
+                    <li><a href="achievements.html">My Achievements</a></li>
+                    <li><a href="about.html">About Me</a></li>
+                </ul>
+
+                <div class="theme-switcher">
+                    <button id="theme-toggle" class="theme-toggle-btn" title="Switch Theme">
+                        <i class="fas fa-bolt theme-icon"></i>
+                        <span class="theme-name">Cyberpunk</span>
+                    </button>
+                    <button id="theme-list-toggle" class="theme-list-toggle-btn" title="Show theme list" aria-label="Show theme list" aria-expanded="false">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="theme-list" class="theme-list hidden" role="listbox" aria-label="Theme list"></div>
+                </div>
+                <button id="mobile-menu-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="mobile-menu hidden">
+            <a href="/">Home</a>
+            <a href="activities.html">My Activities</a>
+            <a href="mygit.html">My Git</a>
+            <a href="achievements.html">My Achievements</a>
+            <a href="about.html">About Me</a>
+        </div>
+    </nav>
+
+    <section id="mygit" class="section bg-secondary" style="padding-top: 120px; min-height: 100vh;">
+        <div class="container">
+
+            <div class="git-page-header">
+                <p class="subtitle"><i class="fab fa-github"></i> &nbsp;Open Source</p>
+                <h1 class="title">My <span class="highlight">Git</span></h1>
+                <p class="description">A live showcase of my public repositories — browse, explore and see what I've been building.</p>
+            </div>
+
+            <!-- GitHub Profile Strip -->
+            <div id="github-profile-strip" class="github-profile-strip" style="display:none;">
+                <img id="gh-avatar" src="" alt="GitHub avatar">
+                <div class="profile-strip-info">
+                    <div class="name" id="gh-name">—</div>
+                    <div class="login" id="gh-login">@oceanmallik</div>
+                </div>
+                <div class="profile-strip-stats">
+                    <div class="profile-stat">
+                        <span class="num" id="gh-repos">—</span>
+                        <span class="lbl">Repos</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="num" id="gh-followers">—</span>
+                        <span class="lbl">Followers</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="num" id="gh-following">—</span>
+                        <span class="lbl">Following</span>
+                    </div>
+                </div>
+                <a id="gh-profile-link" href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="profile-strip-link">
+                    <i class="fab fa-github"></i> View Profile <i class="fas fa-arrow-right" style="font-size:0.7rem;"></i>
+                </a>
+            </div>
+
+            <!-- Filters -->
+            <div class="git-filters">
+                <div class="git-filter-group" id="git-filter-group">
+                    <button class="git-filter-btn active" data-filter="all">All</button>
+                    <button class="git-filter-btn" data-filter="source">
+                        <i class="fas fa-code-branch"></i> Source
+                    </button>
+                    <button class="git-filter-btn" data-filter="fork">
+                        <i class="fas fa-code-fork"></i> Forks
+                    </button>
+                    <button class="git-filter-btn" data-filter="starred">
+                        <i class="fas fa-star"></i> Most Starred
+                    </button>
+                </div>
+
+                <div class="git-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="git-search-input" placeholder="Search repos…" autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Summary Bar -->
+            <div class="git-summary-bar">
+                <p class="git-repo-count" id="git-repo-count">Loading repositories…</p>
+                <select class="git-sort-select" id="git-sort-select">
+                    <option value="updated">Recently Updated</option>
+                    <option value="stars">Most Stars</option>
+                    <option value="forks">Most Forks</option>
+                    <option value="name">Name A→Z</option>
+                    <option value="created">Newest First</option>
+                </select>
+            </div>
+
+            <!-- Loading Skeletons -->
+            <div id="repo-skeleton" class="repo-skeleton-grid">
+                <!-- Skeleton cards rendered by JS -->
+            </div>
+
+            <!-- Repo Grid -->
+            <div id="repo-grid" class="repo-grid" style="display:none;"></div>
+
+            <!-- Error State -->
+            <div id="repo-error" style="display:none;" class="git-error-state">
+                <i class="fas fa-triangle-exclamation"></i>
+                <h3>Couldn't load repositories</h3>
+                <p id="repo-error-msg">There was a problem reaching the GitHub API. Please try again later.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean</p>
+    </footer>
+
+    <script src="https://skr.bd/widget.js" data-id="oceanmallik" data-message="Buy me a coffee" data-color="#FF5F5F" data-position="right"></script>
+    <script src="script.js"></script>
+
+    <script>
+    (function () {
+        const GITHUB_USERNAME = 'oceanmallik';
+        const GH_API_BASE = 'https://api.github.com';
+        const PER_PAGE = 100;
+
+        // Language → colour mapping (GitHub colours)
+        const LANG_COLORS = {
+            JavaScript:  '#f1e05a', TypeScript:   '#3178c6', Python:     '#3572A5',
+            HTML:        '#e34c26', CSS:          '#563d7c', Java:       '#b07219',
+            'C#':        '#178600', 'C++':        '#f34b7d', C:          '#555555',
+            Go:          '#00ADD8', Rust:         '#dea584', Kotlin:     '#A97BFF',
+            Swift:       '#F05138', Ruby:         '#701516', PHP:        '#4F5D95',
+            Dart:        '#00B4AB', Shell:        '#89e051', Vue:        '#41b883',
+            Svelte:      '#ff3e00', SCSS:         '#c6538c', Markdown:   '#083fa1',
+        };
+
+        let allRepos = [];
+        let activeFilter = 'all';
+        let activeSort = 'updated';
+        let searchQuery = '';
+        let contributorsCache = {};
+
+        // ── Skeleton ──────────────────────────────────────────────────────────
+        function renderSkeletons(count = 6) {
+            const skeletonGrid = document.getElementById('repo-skeleton');
+            skeletonGrid.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                skeletonGrid.innerHTML += `
+                    <div class="repo-skeleton">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line body"></div>
+                        <div class="skeleton-line body short"></div>
+                        <div class="skeleton-tags">
+                            <div class="skeleton-line tag"></div>
+                            <div class="skeleton-line tag"></div>
+                            <div class="skeleton-line tag"></div>
+                        </div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-line skeleton-avatar"></div>
+                            <div class="skeleton-line skeleton-avatar"></div>
+                            <div class="skeleton-line body" style="width:80px; margin-left:auto;"></div>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        // ── Profile Strip ─────────────────────────────────────────────────────
+        async function loadProfile() {
+            try {
+                const res = await fetch(`${GH_API_BASE}/users/${GITHUB_USERNAME}`);
+                if (!res.ok) return;
+                const user = await res.json();
+
+                document.getElementById('gh-avatar').src = user.avatar_url;
+                document.getElementById('gh-name').textContent = user.name || user.login;
+                document.getElementById('gh-login').textContent = `@${user.login}`;
+                document.getElementById('gh-repos').textContent = user.public_repos;
+                document.getElementById('gh-followers').textContent = formatNum(user.followers);
+                document.getElementById('gh-following').textContent = user.following;
+                document.getElementById('gh-profile-link').href = user.html_url;
+
+                document.getElementById('github-profile-strip').style.display = 'flex';
+            } catch (_) { /* profile strip is optional */ }
+        }
+
+        // ── Repositories ──────────────────────────────────────────────────────
+        async function loadRepos() {
+            try {
+                const res = await fetch(
+                    `${GH_API_BASE}/users/${GITHUB_USERNAME}/repos?per_page=${PER_PAGE}&type=public`
+                );
+
+                if (!res.ok) {
+                    throw new Error(`GitHub API responded with ${res.status}`);
+                }
+
+                allRepos = await res.json();
+
+                document.getElementById('repo-skeleton').style.display = 'none';
+                document.getElementById('repo-grid').style.display = 'grid';
+
+                renderRepos();
+                prefetchContributors();
+            } catch (err) {
+                document.getElementById('repo-skeleton').style.display = 'none';
+                document.getElementById('repo-error').style.display = 'block';
+                if (err.message) {
+                    document.getElementById('repo-error-msg').textContent = err.message;
+                }
+            }
+        }
+
+        // ── Contributors Pre-fetch ────────────────────────────────────────────
+        async function prefetchContributors() {
+            // Fetch top 6 repos' contributors quietly in background
+            const topRepos = allRepos.slice(0, 20);
+            for (const repo of topRepos) {
+                fetchContributors(repo.full_name);
+            }
+        }
+
+        async function fetchContributors(fullName) {
+            if (contributorsCache[fullName] !== undefined) return;
+            contributorsCache[fullName] = null; // mark as fetching
+            try {
+                const res = await fetch(
+                    `${GH_API_BASE}/repos/${fullName}/contributors?per_page=6&anon=false`
+                );
+                if (!res.ok) {
+                    contributorsCache[fullName] = [];
+                    return;
+                }
+                contributorsCache[fullName] = await res.json();
+                // Re-render only if this repo is currently visible
+                const card = document.querySelector(`[data-repo="${fullName}"]`);
+                if (card) updateContributorsInCard(card, contributorsCache[fullName]);
+            } catch (_) {
+                contributorsCache[fullName] = [];
+            }
+        }
+
+        function updateContributorsInCard(card, contributors) {
+            const placeholder = card.querySelector('.contributors-placeholder');
+            if (!placeholder) return;
+            placeholder.replaceWith(buildContributorAvatars(contributors));
+        }
+
+        // ── Rendering ─────────────────────────────────────────────────────────
+        function getFilteredSortedRepos() {
+            let repos = [...allRepos];
+
+            // Filter
+            if (activeFilter === 'fork') {
+                repos = repos.filter(r => r.fork);
+            } else if (activeFilter === 'source') {
+                repos = repos.filter(r => !r.fork);
+            } else if (activeFilter === 'starred') {
+                repos = repos.filter(r => r.stargazers_count > 0);
+            }
+
+            // Search
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                repos = repos.filter(r =>
+                    r.name.toLowerCase().includes(q) ||
+                    (r.description && r.description.toLowerCase().includes(q)) ||
+                    (r.topics && r.topics.some(t => t.toLowerCase().includes(q)))
+                );
+            }
+
+            // Sort
+            switch (activeSort) {
+                case 'stars':
+                    repos.sort((a, b) => b.stargazers_count - a.stargazers_count); break;
+                case 'forks':
+                    repos.sort((a, b) => b.forks_count - a.forks_count); break;
+                case 'name':
+                    repos.sort((a, b) => a.name.localeCompare(b.name)); break;
+                case 'created':
+                    repos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); break;
+                case 'updated':
+                default:
+                    repos.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at)); break;
+            }
+
+            return repos;
+        }
+
+        function renderRepos() {
+            const repos = getFilteredSortedRepos();
+            const grid = document.getElementById('repo-grid');
+            grid.innerHTML = '';
+
+            const countEl = document.getElementById('git-repo-count');
+            countEl.innerHTML = `Showing <strong>${repos.length}</strong> of <strong>${allRepos.length}</strong> repositories`;
+
+            if (repos.length === 0) {
+                grid.innerHTML = `
+                    <div class="git-empty-state">
+                        <i class="fab fa-github"></i>
+                        <p>No repositories match your filters.</p>
+                    </div>`;
+                return;
+            }
+
+            repos.forEach(repo => {
+                grid.appendChild(buildRepoCard(repo));
+            });
+        }
+
+        function buildRepoCard(repo) {
+            const card = document.createElement('div');
+            card.className = 'repo-card';
+            card.setAttribute('data-repo', repo.full_name);
+
+            const langColor = repo.language ? (LANG_COLORS[repo.language] || '#8b8b8b') : null;
+            const updatedAgo = timeAgo(repo.updated_at);
+
+            // Topics
+            const topicsHTML = (repo.topics && repo.topics.length)
+                ? `<div class="repo-topics">${repo.topics.slice(0, 6).map(t =>
+                    `<span class="repo-topic">${escapeHtml(t)}</span>`).join('')}</div>`
+                : '';
+
+            // Website link
+            const websiteHTML = repo.homepage
+                ? `<a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer" class="repo-website-link" title="${escapeHtml(repo.homepage)}">
+                       <i class="fas fa-globe"></i> ${formatUrl(repo.homepage)}
+                   </a>`
+                : '';
+
+            // Language
+            const langHTML = repo.language
+                ? `<span class="repo-lang">
+                       <span class="lang-dot" style="background:${langColor};"></span>
+                       ${escapeHtml(repo.language)}
+                   </span>`
+                : '';
+
+            // Fork badge
+            const forkBadge = repo.fork
+                ? `<span class="repo-fork-badge"><i class="fas fa-code-fork"></i> Fork</span>`
+                : '';
+
+            // Contributor avatars (uses cache or placeholder)
+            const contributors = contributorsCache[repo.full_name];
+            const contributorsPart = contributors
+                ? buildContributorAvatars(contributors).outerHTML
+                : `<span class="contributors-placeholder"></span>`;
+
+            card.innerHTML = `
+                <div class="repo-card-top">
+                    <div class="repo-name-row">
+                        <i class="fas fa-book-open repo-icon"></i>
+                        <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer"
+                           class="repo-name" title="${escapeHtml(repo.name)}">${escapeHtml(repo.name)}</a>
+                        ${forkBadge}
+                    </div>
+                    <div class="repo-card-actions">
+                        ${repo.homepage ? `<a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer"
+                            class="repo-action-btn" title="Visit live site"><i class="fas fa-arrow-up-right-from-square"></i></a>` : ''}
+                        <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer"
+                           class="repo-action-btn" title="View on GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+
+                <p class="repo-description${repo.description ? '' : ' empty'}">${
+                    repo.description ? escapeHtml(repo.description) : 'No description provided.'
+                }</p>
+
+                ${topicsHTML}
+
+                <div class="repo-card-footer">
+                    <div class="repo-meta">
+                        <span class="repo-stat stars" title="${repo.stargazers_count} stars">
+                            <i class="fas fa-star"></i> ${formatNum(repo.stargazers_count)}
+                        </span>
+                        <span class="repo-stat forks" title="${repo.forks_count} forks">
+                            <i class="fas fa-code-fork"></i> ${formatNum(repo.forks_count)}
+                        </span>
+                        ${langHTML}
+                    </div>
+                    <div class="repo-contributors">${contributorsPart}</div>
+                </div>
+                ${websiteHTML ? `<div class="repo-website-row">${websiteHTML}</div>` : ''}
+
+                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:-0.25rem;">
+                    Updated ${updatedAgo}
+                </div>`;
+
+            // Trigger contributor fetch if not cached
+            if (!contributors) {
+                fetchContributors(repo.full_name);
+            }
+
+            return card;
+        }
+
+        function buildContributorAvatars(contributors) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'repo-contributors';
+
+            if (!contributors || contributors.length === 0) return wrapper;
+
+            const display = contributors.slice(0, 4);
+            const extra = contributors.length - display.length;
+
+            display.forEach(c => {
+                const img = document.createElement('img');
+                img.className = 'contributor-avatar';
+                img.src = c.avatar_url + '&s=48';
+                img.alt = c.login;
+                img.title = `@${c.login}`;
+                img.loading = 'lazy';
+                img.addEventListener('click', () => {
+                    window.open(`https://github.com/${c.login}`, '_blank', 'noopener,noreferrer');
+                });
+                wrapper.appendChild(img);
+            });
+
+            if (extra > 0) {
+                const more = document.createElement('div');
+                more.className = 'contributors-more';
+                more.textContent = `+${extra}`;
+                more.title = `${extra} more contributor${extra > 1 ? 's' : ''}`;
+                wrapper.appendChild(more);
+            }
+
+            return wrapper;
+        }
+
+        // ── Filters & Sort ────────────────────────────────────────────────────
+        document.getElementById('git-filter-group').addEventListener('click', e => {
+            const btn = e.target.closest('.git-filter-btn');
+            if (!btn) return;
+            document.querySelectorAll('.git-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilter = btn.dataset.filter;
+            renderRepos();
+        });
+
+        document.getElementById('git-sort-select').addEventListener('change', e => {
+            activeSort = e.target.value;
+            renderRepos();
+        });
+
+        let searchDebounce;
+        document.getElementById('git-search-input').addEventListener('input', e => {
+            clearTimeout(searchDebounce);
+            searchDebounce = setTimeout(() => {
+                searchQuery = e.target.value.trim();
+                renderRepos();
+            }, 300);
+        });
+
+        // ── Helpers ───────────────────────────────────────────────────────────
+        function formatNum(n) {
+            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+            return n;
+        }
+
+        function formatUrl(url) {
+            try {
+                const u = new URL(url);
+                return (u.hostname + (u.pathname !== '/' ? u.pathname : '')).replace(/\/$/, '');
+            } catch (_) {
+                return url.replace(/^https?:\/\//, '').replace(/\/$/, '').substring(0, 28);
+            }
+        }
+
+        function timeAgo(dateStr) {
+            const diff = Date.now() - new Date(dateStr).getTime();
+            const mins = Math.floor(diff / 60000);
+            if (mins < 60) return `${mins}m ago`;
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return `${hrs}h ago`;
+            const days = Math.floor(hrs / 24);
+            if (days < 30) return `${days}d ago`;
+            const months = Math.floor(days / 30);
+            if (months < 12) return `${months}mo ago`;
+            return `${Math.floor(months / 12)}y ago`;
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // ── Bootstrap ─────────────────────────────────────────────────────────
+        renderSkeletons(6);
+        loadProfile();
+        loadRepos();
+    })();
+    </script>
+</body>
+</html>
+
