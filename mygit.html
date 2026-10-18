@@ -605,6 +605,23 @@
             margin-bottom: 0.5rem;
         }
 
+        .git-error-state p {
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .git-error-state a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: underline;
+            transition: opacity 0.2s ease;
+        }
+
+        .git-error-state a:hover {
+            opacity: 0.8;
+        }
+
         /* Empty State */
         .git-empty-state {
             text-align: center;
@@ -703,23 +720,23 @@
             </div>
 
             <!-- GitHub Profile Strip -->
-            <div id="github-profile-strip" class="github-profile-strip" style="display:none;">
-                <img id="gh-avatar" src="" alt="GitHub avatar">
+            <div id="github-profile-strip" class="github-profile-strip">
+                <img id="gh-avatar" src="https://github.com/oceanmallik.png" alt="Ocean Mallik" onerror="this.onerror=null; this.src='me.jpg';">
                 <div class="profile-strip-info">
-                    <div class="name" id="gh-name">—</div>
+                    <div class="name" id="gh-name">Ocean Mallik</div>
                     <div class="login" id="gh-login">@oceanmallik</div>
                 </div>
                 <div class="profile-strip-stats">
                     <div class="profile-stat">
-                        <span class="num" id="gh-repos">—</span>
+                        <span class="num" id="gh-repos">-</span>
                         <span class="lbl">Repos</span>
                     </div>
                     <div class="profile-stat">
-                        <span class="num" id="gh-followers">—</span>
+                        <span class="num" id="gh-followers">-</span>
                         <span class="lbl">Followers</span>
                     </div>
                     <div class="profile-stat">
-                        <span class="num" id="gh-following">—</span>
+                        <span class="num" id="gh-following">-</span>
                         <span class="lbl">Following</span>
                     </div>
                 </div>
@@ -808,6 +825,8 @@
         let activeSort = 'updated';
         let searchQuery = '';
         let contributorsCache = {};
+        let currentPage = 1;
+        const REPOS_PER_PAGE = 12;
 
         // ── Skeleton ──────────────────────────────────────────────────────────
         function renderSkeletons(count = 6) {
@@ -861,21 +880,26 @@
                 let user = cacheGet('gh_profile');
                 if (!user) {
                     const res = await fetch(`${GH_API_BASE}/users/${GITHUB_USERNAME}`);
-                    if (!res.ok) return;
+                    if (!res.ok) throw new Error(`Status ${res.status}`);
                     user = await res.json();
                     cacheSet('gh_profile', user);
                 }
 
-                document.getElementById('gh-avatar').src = user.avatar_url;
-                document.getElementById('gh-name').textContent = user.name || user.login;
-                document.getElementById('gh-login').textContent = `@${user.login}`;
-                document.getElementById('gh-repos').textContent = user.public_repos;
-                document.getElementById('gh-followers').textContent = formatNum(user.followers);
-                document.getElementById('gh-following').textContent = user.following;
-                document.getElementById('gh-profile-link').href = user.html_url;
-
-                document.getElementById('github-profile-strip').style.display = 'flex';
-            } catch (_) { /* profile strip is optional */ }
+                if (user) {
+                    if (user.avatar_url) document.getElementById('gh-avatar').src = user.avatar_url;
+                    document.getElementById('gh-name').textContent = user.name || user.login || 'Ocean Mallik';
+                    document.getElementById('gh-login').textContent = `@${user.login || GITHUB_USERNAME}`;
+                    document.getElementById('gh-repos').textContent = user.public_repos !== undefined ? user.public_repos : '-';
+                    document.getElementById('gh-followers').textContent = user.followers !== undefined ? formatNum(user.followers) : '-';
+                    document.getElementById('gh-following').textContent = user.following !== undefined ? user.following : '-';
+                    document.getElementById('gh-profile-link').href = user.html_url || `https://github.com/${GITHUB_USERNAME}`;
+                }
+            } catch (_) {
+                // If API is not responding or rate limited, ensure profile card still displays with '-' for stats
+                document.getElementById('gh-repos').textContent = '-';
+                document.getElementById('gh-followers').textContent = '-';
+                document.getElementById('gh-following').textContent = '-';
+            }
         }
 
         // ── Repositories ──────────────────────────────────────────────────────
@@ -889,10 +913,13 @@
 
                     if (!res.ok) {
                         const isRateLimit = res.status === 403 || res.status === 429;
+                        const profileUrl = `https://github.com/${GITHUB_USERNAME}?tab=repositories`;
                         const msg = isRateLimit
-                            ? `GitHub API rate limit reached (${res.status}). You have 60 free requests/hour. Please wait a few minutes and refresh, or visit your profile directly.`
+                            ? `GitHub API rate limit reached (${res.status}). You have 60 free requests/hour. Please wait a few minutes and refresh, or <a href="${profileUrl}" target="_blank" rel="noopener noreferrer">visit my profile directly</a>.`
                             : `GitHub API responded with ${res.status}.`;
-                        throw new Error(msg);
+                        const err = new Error(msg);
+                        err.isHtml = isRateLimit;
+                        throw err;
                     }
 
                     repos = await res.json();
@@ -910,8 +937,15 @@
                 document.getElementById('repo-skeleton').style.display = 'none';
                 const errBox = document.getElementById('repo-error');
                 errBox.style.display = 'block';
-                if (err.message) {
-                    document.getElementById('repo-error-msg').textContent = err.message;
+                const msgEl = document.getElementById('repo-error-msg');
+                if (err.isHtml) {
+                    msgEl.innerHTML = err.message;
+                } else if (err.message) {
+                    msgEl.textContent = err.message;
+                }
+                const countEl = document.getElementById('git-repo-count');
+                if (countEl) {
+                    countEl.innerHTML = '<strong>-</strong> repositories';
                 }
             }
         }
@@ -1007,28 +1041,114 @@
         }
 
         function renderRepos() {
-            const repos = getFilteredSortedRepos();
+            const allFiltered = getFilteredSortedRepos();
+            const totalPages = Math.max(1, Math.ceil(allFiltered.length / REPOS_PER_PAGE));
+
+            // Clamp currentPage in case filters reduced the total
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const start = (currentPage - 1) * REPOS_PER_PAGE;
+            const pageRepos = allFiltered.slice(start, start + REPOS_PER_PAGE);
+
             const grid = document.getElementById('repo-grid');
             grid.innerHTML = '';
 
             const countEl = document.getElementById('git-repo-count');
-            countEl.innerHTML = `Showing <strong>${repos.length}</strong> of <strong>${allRepos.length}</strong> repositories`;
+            const from = allFiltered.length === 0 ? 0 : start + 1;
+            const to = Math.min(start + REPOS_PER_PAGE, allFiltered.length);
+            countEl.innerHTML = allFiltered.length === 0
+                ? `<strong>0</strong> repositories`
+                : `Showing <strong>${from}–${to}</strong> of <strong>${allFiltered.length}</strong> repositories`;
 
-            if (repos.length === 0) {
+            if (allFiltered.length === 0) {
                 grid.innerHTML = `
                     <div class="git-empty-state">
                         <i class="fab fa-github"></i>
                         <p>No repositories match your filters.</p>
                     </div>`;
+                renderPagination(0, 1);
                 return;
             }
 
-            repos.forEach(repo => {
+            pageRepos.forEach(repo => {
                 grid.appendChild(buildRepoCard(repo));
             });
 
+            renderPagination(allFiltered.length, totalPages);
+
             // Re-attach lazy contributor observer for freshly rendered cards
             if (typeof initLazyContributors === 'function') initLazyContributors();
+        }
+
+        function renderPagination(total, totalPages) {
+            let pager = document.getElementById('repo-pagination');
+            if (!pager) {
+                pager = document.createElement('div');
+                pager.id = 'repo-pagination';
+                pager.className = 'repo-pagination';
+                document.getElementById('repo-grid').insertAdjacentElement('afterend', pager);
+            }
+            pager.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            // Prev button
+            const prev = document.createElement('button');
+            prev.className = 'page-btn page-arrow' + (currentPage === 1 ? ' disabled' : '');
+            prev.disabled = currentPage === 1;
+            prev.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prev.title = 'Previous page';
+            prev.addEventListener('click', () => { currentPage--; renderRepos(); scrollToGrid(); });
+            pager.appendChild(prev);
+
+            // Page number buttons
+            const range = getPageRange(currentPage, totalPages);
+            range.forEach(item => {
+                if (item === '…') {
+                    const dots = document.createElement('span');
+                    dots.className = 'page-dots';
+                    dots.textContent = '…';
+                    pager.appendChild(dots);
+                } else {
+                    const btn = document.createElement('button');
+                    btn.className = 'page-btn' + (item === currentPage ? ' active' : '');
+                    btn.textContent = item;
+                    btn.addEventListener('click', () => { currentPage = item; renderRepos(); scrollToGrid(); });
+                    pager.appendChild(btn);
+                }
+            });
+
+            // Next button
+            const next = document.createElement('button');
+            next.className = 'page-btn page-arrow' + (currentPage === totalPages ? ' disabled' : '');
+            next.disabled = currentPage === totalPages;
+            next.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            next.title = 'Next page';
+            next.addEventListener('click', () => { currentPage++; renderRepos(); scrollToGrid(); });
+            pager.appendChild(next);
+        }
+
+        // Smart ellipsis page range: always show first, last, current ±1
+        function getPageRange(cur, total) {
+            if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+            const pages = new Set([1, total, cur]);
+            if (cur > 1) pages.add(cur - 1);
+            if (cur < total) pages.add(cur + 1);
+            const sorted = [...pages].sort((a, b) => a - b);
+            const result = [];
+            let prev = 0;
+            for (const p of sorted) {
+                if (p - prev > 1) result.push('…');
+                result.push(p);
+                prev = p;
+            }
+            return result;
+        }
+
+        function scrollToGrid() {
+            const section = document.getElementById('mygit');
+            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function buildRepoCard(repo) {
@@ -1159,11 +1279,13 @@
             document.querySelectorAll('.git-filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             activeFilter = btn.dataset.filter;
+            currentPage = 1;
             renderRepos();
         });
 
         document.getElementById('git-sort-select').addEventListener('change', e => {
             activeSort = e.target.value;
+            currentPage = 1;
             renderRepos();
         });
 
@@ -1172,6 +1294,7 @@
             clearTimeout(searchDebounce);
             searchDebounce = setTimeout(() => {
                 searchQuery = e.target.value.trim();
+                currentPage = 1;
                 renderRepos();
             }, 300);
         });
