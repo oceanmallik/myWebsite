@@ -636,10 +636,138 @@
             opacity: 0.5;
         }
 
-        /* Language color map is driven by JS */
+        /* ===== PAGINATION STYLES ===== */
+        .repo-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 3.5rem auto 1.5rem;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 999px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: fit-content;
+            max-width: 100%;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+        }
+
+        .repo-pagination:hover {
+            border-color: color-mix(in srgb, var(--primary-color) 40%, transparent);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+        }
+
+        .page-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: var(--btn-font, 'Space Grotesk', sans-serif);
+            font-size: 0.92rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            outline: none;
+            user-select: none;
+        }
+
+        .page-btn:hover:not(:disabled):not(.active) {
+            background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+            color: var(--primary-color);
+            border-color: color-mix(in srgb, var(--primary-color) 35%, transparent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+        }
+
+        .page-btn.active {
+            background: var(--primary-color);
+            color: #0a0615;
+            font-weight: 700;
+            border-color: var(--primary-color);
+            transform: scale(1.08);
+            box-shadow: 0 4px 20px color-mix(in srgb, var(--primary-color) 50%, transparent);
+        }
+
+        body.theme-white .page-btn.active,
+        body.theme-soft .page-btn.active {
+            color: #ffffff;
+        }
+
+        body.theme-aurora .page-btn.active {
+            color: #0f172a;
+        }
+
+        body.theme-black .page-btn.active {
+            color: #000000;
+        }
+
+        .page-arrow {
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            background: rgba(128, 128, 128, 0.06);
+            color: var(--text-title);
+        }
+
+        .page-arrow:hover:not(:disabled) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+            transform: translateY(-2px);
+        }
+
+        .page-btn:disabled,
+        .page-btn.disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+            pointer-events: none;
+            border-color: transparent;
+            background: transparent;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .page-dots {
+            width: 28px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            user-select: none;
+        }
 
         /* Responsive */
         @media (max-width: 600px) {
+            .repo-pagination {
+                gap: 5px;
+                padding: 6px 10px;
+                margin-top: 2.5rem;
+            }
+
+            .page-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 0.82rem;
+            }
+
+            .page-dots {
+                width: 20px;
+                height: 36px;
+            }
+
             .github-profile-strip {
                 flex-wrap: wrap;
                 justify-content: center;
@@ -1084,22 +1212,36 @@
         function renderPagination(total, totalPages) {
             let pager = document.getElementById('repo-pagination');
             if (!pager) {
-                pager = document.createElement('div');
+                pager = document.createElement('nav');
                 pager.id = 'repo-pagination';
                 pager.className = 'repo-pagination';
+                pager.setAttribute('role', 'navigation');
+                pager.setAttribute('aria-label', 'Repository pagination');
                 document.getElementById('repo-grid').insertAdjacentElement('afterend', pager);
             }
             pager.innerHTML = '';
 
-            if (totalPages <= 1) return;
+            if (totalPages <= 1) {
+                pager.style.display = 'none';
+                return;
+            }
+            pager.style.display = 'flex';
 
             // Prev button
             const prev = document.createElement('button');
+            prev.type = 'button';
             prev.className = 'page-btn page-arrow' + (currentPage === 1 ? ' disabled' : '');
             prev.disabled = currentPage === 1;
-            prev.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prev.setAttribute('aria-label', 'Previous page');
+            prev.innerHTML = '<i class="fas fa-chevron-left" aria-hidden="true"></i>';
             prev.title = 'Previous page';
-            prev.addEventListener('click', () => { currentPage--; renderRepos(); scrollToGrid(); });
+            prev.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderRepos();
+                    scrollToGrid();
+                }
+            });
             pager.appendChild(prev);
 
             // Page number buttons
@@ -1108,24 +1250,44 @@
                 if (item === '…') {
                     const dots = document.createElement('span');
                     dots.className = 'page-dots';
+                    dots.setAttribute('aria-hidden', 'true');
                     dots.textContent = '…';
                     pager.appendChild(dots);
                 } else {
                     const btn = document.createElement('button');
+                    btn.type = 'button';
                     btn.className = 'page-btn' + (item === currentPage ? ' active' : '');
                     btn.textContent = item;
-                    btn.addEventListener('click', () => { currentPage = item; renderRepos(); scrollToGrid(); });
+                    btn.setAttribute('aria-label', `Go to page ${item}`);
+                    if (item === currentPage) {
+                        btn.setAttribute('aria-current', 'page');
+                    }
+                    btn.addEventListener('click', () => {
+                        if (currentPage !== item) {
+                            currentPage = item;
+                            renderRepos();
+                            scrollToGrid();
+                        }
+                    });
                     pager.appendChild(btn);
                 }
             });
 
             // Next button
             const next = document.createElement('button');
+            next.type = 'button';
             next.className = 'page-btn page-arrow' + (currentPage === totalPages ? ' disabled' : '');
             next.disabled = currentPage === totalPages;
-            next.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            next.setAttribute('aria-label', 'Next page');
+            next.innerHTML = '<i class="fas fa-chevron-right" aria-hidden="true"></i>';
             next.title = 'Next page';
-            next.addEventListener('click', () => { currentPage++; renderRepos(); scrollToGrid(); });
+            next.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderRepos();
+                    scrollToGrid();
+                }
+            });
             pager.appendChild(next);
         }
 
