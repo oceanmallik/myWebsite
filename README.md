@@ -12,7 +12,7 @@ This repository holds a small, multi-page personal website for oceanmallik.com b
 	<tr>
 		<td>
 			<picture>
-				<img src="./pages/myWebsite.png" alt="DIU Notes Buddy" width="100%" />
+				<img src="./assets/images/myWebsite.png" alt="Ocean Mallik Website" width="100%" />
 			</picture>
 		</td>
 	</tr>
@@ -26,9 +26,10 @@ This repository holds a small, multi-page personal website for oceanmallik.com b
 
 ## What you'll find
 
-- Static pages: `index.html`, `pages/about.html`, `pages/activities.html`, `pages/achievements/index.html`, `pages/support/index.html`, `pages/support/payment.html`
-- Styling in `style.css` and behavior in `script.js`
-- `myWorks.json` contains structured data used by the site
+- Static pages: `index.html`, `about.html`, `activities.html`, `achievements.html`, `mygit.html`
+- Styles & Scripts in `assets/`: `assets/css/style.css`, `assets/js/script.js`
+- Media & Images in `assets/images/`: avatars, badges, and certificate assets
+- Structured data in `data/`: `data/myWorks.json`, `data/myCertificates.json`, `data/mySkills.json`, `data/myEducation.json`
 - `CNAME` for the custom domain
 
 ## Features

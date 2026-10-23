@@ -289,7 +289,7 @@
                     <i class="fas fa-times" aria-hidden="true"></i>
                 </button>
                 <h2 id="donation-qr-title">Donate via BanglaQR</h2>
-                <img src="banglaQR.jpg" alt="BanglaQR donation code">
+                <img src="assets/images/banglaQR.jpg" alt="BanglaQR donation code">
             </div>
         `;
 
@@ -642,7 +642,7 @@
             });
         };
 
-        fetchJsonWithFallback(['myWorks.json', './myWorks.json', '../myWorks.json'])
+        fetchJsonWithFallback(['data/myWorks.json', './data/myWorks.json', 'myWorks.json', './myWorks.json', '../myWorks.json'])
             .then((data) => {
                 const allActivities = Array.isArray(data) ? data : data.works;
                 if (!Array.isArray(allActivities) || allActivities.length === 0) {
@@ -742,7 +742,8 @@
         const accordionContainer = document.getElementById('certificates-accordion');
         if (!accordionContainer) return;
 
-        const imageBasePath = accordionContainer.dataset.certificatesImageBase || 'pages/achievements/';
+        const imageBasePath = accordionContainer.dataset.certificatesImageBase || 'assets/images/achievements/';
+        const sourceFile = accordionContainer.dataset.certificatesSource || 'data/myCertificates.json';
         const limitValue = parseInt(accordionContainer.dataset.certificatesLimit, 10);
         const certificatesLimit = Number.isNaN(limitValue) ? null : Math.max(0, limitValue);
         const featuredOnly = accordionContainer.dataset.certificatesFeaturedOnly === 'true';
@@ -889,7 +890,7 @@
             });
         };
 
-        fetchJsonWithFallback(['myCertificates.json', './myCertificates.json', '../../myCertificates.json'])
+        fetchJsonWithFallback([sourceFile, 'data/myCertificates.json', './data/myCertificates.json', 'myCertificates.json', './myCertificates.json', '../../myCertificates.json'])
             .then((data) => {
                 const allCertificates = Array.isArray(data) ? data : data.certificates;
                 if (!Array.isArray(allCertificates) || allCertificates.length === 0) {
@@ -941,9 +942,9 @@
         const container = document.getElementById('skills-container');
         if (!container) return;
 
-        const sourcePath = container.dataset.skillsSource || 'mySkills.json';
+        const sourcePath = container.dataset.skillsSource || 'data/mySkills.json';
 
-        fetchJsonWithFallback([sourcePath, './mySkills.json', '../mySkills.json', 'mySkills.json'])
+        fetchJsonWithFallback([sourcePath, 'data/mySkills.json', './data/mySkills.json', './mySkills.json', 'mySkills.json'])
             .then((categories) => {
                 if (!Array.isArray(categories) || categories.length === 0) return;
 
@@ -980,9 +981,9 @@
         const container = document.getElementById('education-timeline');
         if (!container) return;
 
-        const sourcePath = container.dataset.educationSource || 'myEducation.json';
+        const sourcePath = container.dataset.educationSource || 'data/myEducation.json';
 
-        fetchJsonWithFallback([sourcePath, './myEducation.json', '../myEducation.json', 'myEducation.json'])
+        fetchJsonWithFallback([sourcePath, 'data/myEducation.json', './data/myEducation.json', './myEducation.json', 'myEducation.json'])
             .then((items) => {
                 if (!Array.isArray(items) || items.length === 0) return;
 
