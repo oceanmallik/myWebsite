@@ -26,7 +26,7 @@ This repository holds a small, multi-page personal website for oceanmallik.com b
 
 ## What you'll find
 
-- Static pages: `index.html`, `about.html`, `activities.html`, `achievements.html`, `mygit.html`
+- Static pages: `index.html`, `about.html`, `activities.html`, `certificates.html`, `mygit.html`
 - Styles & Scripts in `assets/`: `assets/css/style.css`, `assets/js/script.js`
 - Media & Images in `assets/images/`: avatars, badges, and certificate assets
 - Structured data in `data/`: `data/myWorks.json`, `data/myCertificates.json`, `data/mySkills.json`, `data/myEducation.json`

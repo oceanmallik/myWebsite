@@ -996,7 +996,7 @@
                     return;
                 }
 
-                // If on achievements.html, support category filter pills
+                // If on certificates.html, support category filter pills
                 const filterButtons = document.querySelectorAll('#cert-filter-group .filter-pill');
                 if (filterButtons.length > 0) {
                     let activeCategory = 'all';
