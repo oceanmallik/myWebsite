@@ -336,7 +336,7 @@
         const typingElement = document.getElementById('typing-text');
         if (!typingElement) return;
 
-        const fullText = 'Software Engineer in training - currently powered by curiosity and caffeine.';
+        const fullText = 'Software Engineer in training, currently powered by curiosity and caffeine.';
         let charIndex = 0;
         let isDeleting = false;
 
@@ -759,8 +759,21 @@
             `;
         };
 
+        const categoryMap = {
+            programming: { label: 'Programming', icon: 'fas fa-code' },
+            database: { label: 'Database', icon: 'fas fa-database' },
+            web: { label: 'Web Design', icon: 'fas fa-laptop-code' },
+            contest: { label: 'Contest', icon: 'fas fa-trophy' },
+            productivity: { label: 'Productivity', icon: 'fas fa-file-alt' }
+        };
+
         const renderCertificates = (certificates) => {
             accordionContainer.innerHTML = '';
+
+            if (!certificates || certificates.length === 0) {
+                renderInfoCard('No certificates match your current filter.');
+                return;
+            }
 
             certificates.forEach((certificate) => {
                 const certificateItemElement = document.createElement('div');
@@ -770,19 +783,17 @@
                     certificateItemElement.classList.add('featured-card');
                 }
 
-                const imageCardElement = document.createElement('div');
-                imageCardElement.className = 'certificate-image-card';
-
                 const imageWrapper = document.createElement('div');
                 imageWrapper.className = 'certificate-image-wrapper';
                 imageWrapper.setAttribute('role', 'button');
                 imageWrapper.setAttribute('tabindex', '0');
-                imageWrapper.setAttribute('title', 'Click to view full certificate');
+                imageWrapper.setAttribute('title', 'Click to inspect full certificate');
 
                 const imageElement = document.createElement('img');
                 imageElement.src = certificate.image ? `${imageBasePath}${certificate.image}` : '';
                 imageElement.alt = certificate.alt || `${certificate.title || 'Certificate'} image`;
                 imageElement.className = 'cert-img';
+                imageElement.loading = 'lazy';
 
                 const zoomOverlay = document.createElement('div');
                 zoomOverlay.className = 'cert-zoom-overlay';
@@ -791,7 +802,24 @@
                 imageWrapper.appendChild(imageElement);
                 imageWrapper.appendChild(zoomOverlay);
 
-                // Clicking thumbnail opens Lightbox
+                // Category pill on top-left
+                if (certificate.category && categoryMap[certificate.category]) {
+                    const cat = categoryMap[certificate.category];
+                    const catBadge = document.createElement('span');
+                    catBadge.className = 'cert-category-badge';
+                    catBadge.innerHTML = `<i class="${cat.icon}"></i> ${cat.label}`;
+                    imageWrapper.appendChild(catBadge);
+                }
+
+                // Featured badge on top-right
+                if (certificate.featured) {
+                    const featuredBadge = document.createElement('span');
+                    featuredBadge.className = 'cert-featured-badge';
+                    featuredBadge.innerHTML = '<i class="fas fa-star"></i> Featured';
+                    imageWrapper.appendChild(featuredBadge);
+                }
+
+                // Lightbox trigger helper
                 const triggerLightbox = (event) => {
                     event.preventDefault();
                     openCertificateLightbox(certificate, imageBasePath);
@@ -805,31 +833,57 @@
                     }
                 });
 
+                certificateItemElement.appendChild(imageWrapper);
+
                 const cardContentElement = document.createElement('div');
                 cardContentElement.className = 'certificate-card-content';
 
-                const headerElement = document.createElement('div');
-                headerElement.className = 'certificate-header-row';
+                // Meta row: Issuer & Verified badge
+                const metaRow = document.createElement('div');
+                metaRow.className = 'cert-meta-row';
 
+                const issuerEl = document.createElement('span');
+                issuerEl.className = 'cert-issuer';
+                issuerEl.innerHTML = `<i class="fas fa-shield-alt"></i> ${certificate.issuer || 'Verified Credential'}`;
+                metaRow.appendChild(issuerEl);
+
+                const verifiedPill = document.createElement('span');
+                verifiedPill.className = 'cert-verified-pill';
+                verifiedPill.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+                metaRow.appendChild(verifiedPill);
+
+                cardContentElement.appendChild(metaRow);
+
+                // Certificate title
                 const titleElement = document.createElement('h3');
                 titleElement.className = 'certificate-title';
                 titleElement.textContent = certificate.title || 'Untitled Certificate';
-                headerElement.appendChild(titleElement);
+                cardContentElement.appendChild(titleElement);
 
-                if (certificate.featured) {
-                    const highlightElement = document.createElement('div');
-                    highlightElement.className = 'card-highlight';
-                    const highlightTextElement = document.createElement('span');
-                    highlightTextElement.className = 'card-highlight-text';
-                    highlightTextElement.textContent = 'Featured';
-                    highlightElement.appendChild(highlightTextElement);
-                    imageCardElement.appendChild(highlightElement);
+                // Action row: Inspect & Verify Online buttons
+                const actionRow = document.createElement('div');
+                actionRow.className = 'cert-action-row';
+
+                const inspectBtn = document.createElement('button');
+                inspectBtn.type = 'button';
+                inspectBtn.className = 'cert-btn-preview';
+                inspectBtn.innerHTML = '<i class="fas fa-expand"></i> Inspect';
+                inspectBtn.setAttribute('title', 'Inspect certificate in high resolution');
+                inspectBtn.addEventListener('click', triggerLightbox);
+                actionRow.appendChild(inspectBtn);
+
+                if (certificate.verifyUrl && certificate.verifyUrl !== '#') {
+                    const verifyBtn = document.createElement('a');
+                    verifyBtn.className = 'cert-btn-verify';
+                    verifyBtn.href = certificate.verifyUrl;
+                    verifyBtn.target = '_blank';
+                    verifyBtn.rel = 'noopener noreferrer';
+                    verifyBtn.innerHTML = '<i class="fas fa-external-link-alt"></i> Verify Online';
+                    verifyBtn.setAttribute('title', 'Verify certificate on issuer website');
+                    actionRow.appendChild(verifyBtn);
                 }
 
-                cardContentElement.appendChild(headerElement);
-
-                imageCardElement.appendChild(imageWrapper);
-                certificateItemElement.appendChild(imageCardElement);
+                cardContentElement.appendChild(actionRow);
                 certificateItemElement.appendChild(cardContentElement);
                 accordionContainer.appendChild(certificateItemElement);
             });

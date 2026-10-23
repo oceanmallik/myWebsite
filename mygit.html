@@ -49,7 +49,7 @@
             max-width: 720px;
             margin: 0 auto 3rem;
             box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
         }
 
         .github-profile-strip:hover {
@@ -230,6 +230,11 @@
             cursor: pointer;
             outline: none;
             transition: border-color 0.2s ease;
+        }
+
+        .git-sort-select option {
+            background-color: var(--bg-secondary);
+            color: var(--text-title);
         }
 
         .git-sort-select:focus {
@@ -812,6 +817,7 @@
     </script>
 </head>
 <body class="theme-black">
+    <div class="scroll-progress-bar" id="scroll-progress"></div>
     <script>
         (function() {
             var themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
@@ -823,7 +829,6 @@
     </script>
 
     <nav class="navbar">
-        <div class="scroll-progress-bar" id="scroll-progress"></div>
         <div class="container nav-container">
             <a href="/" class="logo">Ocean <span class="highlight">Mallik</span></a>
             <div class="nav-right">
@@ -878,14 +883,14 @@
     <section id="mygit" class="section bg-secondary" style="padding-top: 120px; min-height: 100vh;">
         <div class="container">
 
-            <div class="git-page-header">
+            <div class="git-page-header reveal">
                 <p class="subtitle"><i class="fab fa-github"></i> &nbsp;Open Source</p>
                 <h1 class="title">My <span class="highlight">Git</span></h1>
-                <p class="description">A live showcase of my public repositories — browse, explore and see what I've been building.</p>
+                <p class="description">A live showcase of my public repositories, browse, explore and see what I've been building.</p>
             </div>
 
             <!-- GitHub Profile Strip -->
-            <div id="github-profile-strip" class="github-profile-strip">
+            <div id="github-profile-strip" class="github-profile-strip reveal">
                 <img id="gh-avatar" src="https://github.com/oceanmallik.png" alt="Ocean Mallik" onerror="this.onerror=null; this.src='me.jpg';">
                 <div class="profile-strip-info">
                     <div class="name" id="gh-name">Ocean Mallik</div>
@@ -911,7 +916,7 @@
             </div>
 
             <!-- Filters -->
-            <div class="git-filters">
+            <div class="git-filters reveal">
                 <div class="git-filter-group" id="git-filter-group">
                     <button class="git-filter-btn active" data-filter="all">All</button>
                     <button class="git-filter-btn" data-filter="source">
