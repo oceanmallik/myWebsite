@@ -3,10 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ocean Mallik</title>
+    <title>Ocean Mallik — Software Engineer in Training</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            var themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
+            var idx = parseInt(localStorage.getItem('themeIndex'), 10);
+            if (!isNaN(idx) && idx >= 0 && idx < themes.length) {
+                document.documentElement.className = themes[idx];
+            }
+        })();
+    </script>
 </head>
 <body class="theme-black">
     <script>
@@ -18,7 +27,9 @@
             }
         })();
     </script>
+
     <nav class="navbar">
+        <div class="scroll-progress-bar" id="scroll-progress"></div>
         <div class="container nav-container">
             <a href="/" class="logo">Ocean <span class="highlight">Mallik</span></a>
             
@@ -41,16 +52,33 @@
                     </button>
                     <div id="theme-list" class="theme-list hidden" role="listbox" aria-label="Theme list"></div>
                 </div>
-                <button id="mobile-menu-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
+                <button id="mobile-menu-btn" class="menu-btn" aria-label="Open mobile navigation menu"><i class="fas fa-bars"></i></button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="mobile-menu hidden">
-            <a href="/">Home</a>
-            <a href="activities.html">My Activities</a>
-            <a href="mygit.html">My Git</a>
-            <a href="achievements.html">My Achievements</a>
-            <a href="about.html">About Me</a>
+        <div id="mobile-menu-overlay" class="mobile-menu-overlay hidden"></div>
+        <div id="mobile-menu" class="mobile-menu-drawer hidden" aria-label="Mobile Navigation">
+            <div class="mobile-menu-header">
+                <a href="/" class="logo">Ocean <span class="highlight">Mallik</span></a>
+                <button id="mobile-menu-close" class="mobile-menu-close-btn" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile-menu-links">
+                <a href="/" class="highlight"><i class="fas fa-home"></i> Home</a>
+                <a href="activities.html"><i class="fas fa-cubes"></i> My Activities</a>
+                <a href="mygit.html"><i class="fab fa-github"></i> My Git</a>
+                <a href="achievements.html"><i class="fas fa-award"></i> My Achievements</a>
+                <a href="about.html"><i class="fas fa-user-astronaut"></i> About Me</a>
+            </div>
+            <div class="mobile-menu-footer">
+                <p class="mobile-menu-tagline">Software Engineer in training &bull; DIU</p>
+                <div class="mobile-menu-socials">
+                    <a href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://link.oceanmallik.com" target="_blank" rel="noopener noreferrer" title="All Links"><i class="fas fa-link"></i></a>
+                    <a href="https://blog.oceanmallik.com" target="_blank" rel="noopener noreferrer" title="Blog"><i class="fas fa-feather-alt"></i></a>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -58,25 +86,50 @@
         <div id="ambient-glow"></div>
         <div class="container hero-container">
             <div class="hero-text reveal">
+                <div class="hero-badge">
+                    <span class="status-pulse-dot"></span>
+                    <span>Available for Projects &amp; Collaborations</span>
+                </div>
                 <p class="subtitle">¡Hola visitante! Thanks for visiting.</p>
                 <h1 class="title">Ocean <span class="highlight">Mallik</span></h1>
                 <p class="description">
                     <span id="typing-text">Software Engineer in training - currently powered by curiosity and caffeine.</span><span class="typing-caret" aria-hidden="true"></span>
                 </p>
+
+                <div class="hero-socials">
+                    <a href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="hero-social-pill" title="GitHub Profile">
+                        <i class="fab fa-github"></i> <span>GitHub</span>
+                    </a>
+                    <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="hero-social-pill" title="All Links Hub">
+                        <i class="fas fa-link"></i> <span>My Links</span>
+                    </a>
+                    <a href="https://blog.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="hero-social-pill" title="Dev Blog">
+                        <i class="fas fa-feather-alt"></i> <span>Blog</span>
+                    </a>
+                    <a href="about.html" class="hero-social-pill" title="About Ocean">
+                        <i class="fas fa-user-astronaut"></i> <span>About</span>
+                    </a>
+                </div>
                 
                 <div class="hero-buttons">
-                    <a href="achievements.html" class="btn btn-cyan">Achievements</a>
-                    <a href="activities.html" class="btn btn-red">All My Projects</a>
-                    <a href="https://link.oceanmallik.com/" target="_blank" class="btn btn-amber">All Links</a>
+                    <a href="activities.html" class="btn btn-primary"><i class="fas fa-layer-group"></i> All My Projects</a>
+                    <a href="achievements.html" class="btn btn-outline"><i class="fas fa-award"></i> Achievements</a>
+                    <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="btn btn-accent"><i class="fas fa-external-link-alt"></i> All Links</a>
                 </div>
             </div>
             
             <div class="hero-image reveal">
-                <div class="blob"></div>
-                <div class="image-frame">
-                    <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer">
+                <div class="hero-aura-glow"></div>
+                <div class="image-frame-squircle">
+                    <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" title="Ocean Mallik — Explore Links">
                         <img src="me.jpg" alt="Ocean Mallik">
                     </a>
+                </div>
+                <div class="avatar-tag avatar-tag-top">
+                    <i class="fab fa-react"></i> <span>React Native &bull; TS</span>
+                </div>
+                <div class="avatar-tag avatar-tag-bottom">
+                    <i class="fas fa-gamepad"></i> <span>Godot &bull; C#</span>
                 </div>
             </div>
         </div>
@@ -86,42 +139,33 @@
         <div class="container">
             <h2 class="section-title">Featured <span class="highlight">Activities</span></h2>
 
-            <!--
-                Status classes you can set per preview card:
-                - status-active   => Green light (Actively Working)
-                - status-finished => Red light (Finished)
-                - status-idle     => Gray light (Not Active)
-            -->
-
             <div id="activities-preview-grid" class="projects-grid"></div>
 
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="activities.html" class="btn btn-outline">View More...</a>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="activities.html" class="btn btn-outline"><i class="fas fa-arrow-right"></i> View All Activities</a>
             </div>
         </div>
     </section>
 
     <!-- Achievements Section -->
     <section id="achievements" class="section reveal">
-        <div class="container">
+        <div class="container" style="max-width: 1400px;">
             <h2 class="section-title">My <span class="highlight">Certificates</span></h2>
             
-            <div id="certificates-accordion" data-certificates-source="myCertificates.json" data-certificates-image-base="pages/achievements/" data-certificates-limit="3" style="max-width: 1400px; margin: 0 auto;"></div>
+            <div id="certificates-accordion" data-certificates-source="myCertificates.json" data-certificates-image-base="pages/achievements/" data-certificates-limit="3"></div>
 
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="achievements.html" class="btn btn-outline">View More...</a>
-                </div>
-
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="achievements.html" class="btn btn-outline"><i class="fas fa-arrow-right"></i> View All Achievements</a>
             </div>
+        </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean</p>
+        <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean Mallik</p>
     </footer>
 
     <script src="https://skr.bd/widget.js" data-id="oceanmallik" data-message="Buy me a coffee" data-color="#FF5F5F" data-position="right"></script>
-
     <script src="script.js"></script>
 </body>
 </html>
