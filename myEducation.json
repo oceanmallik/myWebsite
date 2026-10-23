@@ -1,0 +1,33 @@
+[
+	{
+		"institution": "Daffodil International University",
+		"degree": "BSc in Software Engineering",
+		"date": "1 Sep 2025 to 31 Aug 2029",
+		"result": ""
+	},
+	{
+		"institution": "Mazid Jarina Foundation School and College",
+		"degree": "HSC in Science",
+		"date": "Jun 2024 to Oct 2025",
+		"result": "GPA 5.00"
+	},
+	{
+		"institution": "Bhedarganj Headquarter Pilot Govt. High School & College",
+		"degree": "SSC in Science",
+		"date": "Jan 2020 to Jun 2022",
+		"result": "GPA 5.00"
+	},
+	{
+		"institution": "Bhedarganj Headquarter Pilot Govt. High School & College",
+		"degree": "JSC",
+		"date": "Jan 2017 to Dec 2019",
+		"result": "GPA 5.00"
+	},
+	{
+		"institution": "16 Gaidda Board Model Government Primary School",
+		"degree": "PSC",
+		"date": "Jan 2012 to Dec 2016",
+		"result": "GPA 5.00"
+	}
+]
+

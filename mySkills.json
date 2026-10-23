@@ -1,0 +1,39 @@
+[
+	{
+		"category": "Programming Languages",
+		"icon": "fas fa-code",
+		"skills": [
+			{ "name": "C#", "icon": "fas fa-hashtag" },
+			{ "name": "C", "icon": "fas fa-c" },
+			{ "name": "Python", "icon": "fab fa-python" },
+			{ "name": "JavaScript", "icon": "fab fa-js-square" },
+			{ "name": "TypeScript", "icon": "fas fa-file-code" },
+			{ "name": "C++", "icon": "fas fa-microchip" },
+			{ "name": "Rust (Exploring)", "icon": "fas fa-gear" },
+			{ "name": "SQL", "icon": "fas fa-database" },
+			{ "name": "HTML5 / CSS3", "icon": "fab fa-html5" }
+		]
+	},
+	{
+		"category": "Frameworks & Engines",
+		"icon": "fas fa-cubes",
+		"skills": [
+			{ "name": "React Native", "icon": "fab fa-react" },
+			{ "name": "Godot Engine", "icon": "fas fa-gamepad" },
+			{ "name": "Node.js", "icon": "fab fa-node-js" }
+		]
+	},
+	{
+		"category": "Tools & Environment",
+		"icon": "fas fa-tools",
+		"skills": [
+			{ "name": "Git", "icon": "fab fa-git-alt" },
+			{ "name": "GitHub", "icon": "fab fa-github" },
+			{ "name": "Linux / Bash", "icon": "fab fa-linux" },
+			{ "name": "Android Studio", "icon": "fas fa-mobile-alt" },
+			{ "name": "VS Code", "icon": "fas fa-code" },
+			{ "name": "Play Console", "icon": "fab fa-google-play" }
+		]
+	}
+]
+
