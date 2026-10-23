@@ -3,15 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Achievements - Ocean Mallik</title>
+    <title>My Achievements &amp; Certificates | Ocean Mallik</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            var themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
+            var idx = parseInt(localStorage.getItem('themeIndex'), 10);
+            if (!isNaN(idx) && idx >= 0 && idx < themes.length) {
+                document.documentElement.className = themes[idx];
+            }
+        })();
+    </script>
 </head>
-<body>
+<body class="theme-black">
+    <script>
+        (function() {
+            var themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
+            var idx = parseInt(localStorage.getItem('themeIndex'), 10);
+            if (!isNaN(idx) && idx >= 0 && idx < themes.length) {
+                document.body.className = themes[idx];
+            }
+        })();
+    </script>
+
     <nav class="navbar">
+        <div class="scroll-progress-bar" id="scroll-progress"></div>
         <div class="container nav-container">
             <a href="/" class="logo">Ocean <span class="highlight">Mallik</span></a>
+            
             <div class="nav-right">
                 <ul class="nav-links">
                     <li><a href="/">Home</a></li>
@@ -31,37 +52,62 @@
                     </button>
                     <div id="theme-list" class="theme-list hidden" role="listbox" aria-label="Theme list"></div>
                 </div>
-
-                <button id="mobile-menu-btn" class="menu-btn">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <button id="mobile-menu-btn" class="menu-btn" aria-label="Open mobile navigation menu"><i class="fas fa-bars"></i></button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="mobile-menu hidden">
-            <a href="/">Home</a>
-            <a href="activities.html">My Activities</a>
-            <a href="mygit.html">My Git</a>
-            <a href="achievements.html">My Achievements</a>
-            <a href="support.html">Support Me</a>
-            <a href="about.html">About Me</a>
+        <div id="mobile-menu-overlay" class="mobile-menu-overlay hidden"></div>
+        <div id="mobile-menu" class="mobile-menu-drawer hidden" aria-label="Mobile Navigation">
+            <div class="mobile-menu-header">
+                <a href="/" class="logo">Ocean <span class="highlight">Mallik</span></a>
+                <button id="mobile-menu-close" class="mobile-menu-close-btn" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile-menu-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="activities.html"><i class="fas fa-cubes"></i> My Activities</a>
+                <a href="mygit.html"><i class="fab fa-github"></i> My Git</a>
+                <a href="achievements.html" class="highlight"><i class="fas fa-award"></i> My Achievements</a>
+                <a href="about.html"><i class="fas fa-user-astronaut"></i> About Me</a>
+            </div>
+            <div class="mobile-menu-footer">
+                <p class="mobile-menu-tagline">Software Engineer in training &bull; DIU</p>
+                <div class="mobile-menu-socials">
+                    <a href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://link.oceanmallik.com" target="_blank" rel="noopener noreferrer" title="All Links"><i class="fas fa-link"></i></a>
+                    <a href="https://blog.oceanmallik.com" target="_blank" rel="noopener noreferrer" title="Blog"><i class="fas fa-feather-alt"></i></a>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <section class="section" style="padding-top: 120px; height: auto;">
+    <section class="section" style="padding-top: 110px; min-height: 100vh;">
         <div class="container" style="max-width: 1400px;">
-            <h1 class="title" style="text-align: center; margin-bottom: 1.5rem;">My <span class="highlight">Certificates</span></h1>
-            <p class="description" style="text-align: center; max-width: 820px; margin: 0 auto 1.25rem; font-size: 1rem; color: var(--text-muted);">Featured certificates indicate examinations I have completed and passed, certifying verified proficiency from the issuing organizations.</p>
+            <div class="certificates-header reveal">
+                <p class="subtitle"><i class="fas fa-award"></i> &nbsp;Verified Credentials</p>
+                <h1 class="title">My <span class="highlight">Certificates</span></h1>
+                <p class="description">Verified certifications and competitive programming recognitions validating proficiency in algorithms, software engineering, databases, and web design. Click any certificate to inspect full-size or verify online.</p>
+
+                <div class="certificate-filter-pills" id="cert-filter-group">
+                    <button type="button" class="filter-pill active" data-filter="all">All Certificates</button>
+                    <button type="button" class="filter-pill" data-filter="programming"><i class="fas fa-code"></i> Programming</button>
+                    <button type="button" class="filter-pill" data-filter="database"><i class="fas fa-database"></i> Databases</button>
+                    <button type="button" class="filter-pill" data-filter="web"><i class="fas fa-laptop-code"></i> Web Design</button>
+                    <button type="button" class="filter-pill" data-filter="contest"><i class="fas fa-trophy"></i> Contests</button>
+                    <button type="button" class="filter-pill" data-filter="productivity"><i class="fas fa-file-alt"></i> Productivity</button>
+                </div>
+            </div>
+
             <div id="certificates-accordion" data-certificates-source="myCertificates.json" data-certificates-image-base="pages/achievements/"></div>
         </div>
     </section>
 
     <footer>
-        <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean</p>
+        <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean Mallik</p>
     </footer>
 
     <script src="https://skr.bd/widget.js" data-id="oceanmallik" data-message="Buy me a coffee" data-color="#FF5F5F" data-position="right"></script>
-
     <script src="script.js"></script>
 </body>
 </html>
