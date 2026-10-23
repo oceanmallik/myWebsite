@@ -269,66 +269,157 @@
         }
     }
 
-    /* --- BanglaQR Donation Modal --- */
-    function initDonationQr() {
-        const qrButton = document.createElement('button');
-        qrButton.type = 'button';
-        qrButton.className = 'donation-qr-button';
-        qrButton.setAttribute('aria-label', 'Show BanglaQR donation code');
-        qrButton.setAttribute('title', 'Donate via BanglaQR');
-        qrButton.innerHTML = '<i class="fas fa-qrcode" aria-hidden="true"></i>';
+    /* --- Support & Donation Modal (BanglaQR + Buy Me a Coffee) --- */
+    function initSupportModal() {
+        const trigger = document.createElement('button');
+        trigger.type = 'button';
+        trigger.className = 'support-capsule-trigger';
+        trigger.setAttribute('aria-label', 'Support Ocean');
+        trigger.setAttribute('title', 'Support My Work');
+        trigger.innerHTML = `
+            <span class="support-capsule-icon" aria-hidden="true"><i class="fas fa-heart"></i></span>
+            <span class="support-capsule-label">Support</span>
+        `;
 
-        const modal = document.createElement('div');
-        modal.className = 'donation-qr-modal';
-        modal.setAttribute('role', 'dialog');
-        modal.setAttribute('aria-modal', 'true');
-        modal.setAttribute('aria-labelledby', 'donation-qr-title');
-        modal.innerHTML = `
-            <div class="donation-qr-panel">
-                <button type="button" class="donation-qr-close" aria-label="Close BanglaQR donation window" title="Close">
-                    <i class="fas fa-times" aria-hidden="true"></i>
-                </button>
-                <h2 id="donation-qr-title">Donate via BanglaQR</h2>
-                <img src="assets/images/banglaQR.jpg" alt="BanglaQR donation code">
+        const backdrop = document.createElement('div');
+        backdrop.className = 'support-modal-backdrop';
+        backdrop.id = 'supportModalBackdrop';
+
+        const dialog = document.createElement('div');
+        dialog.className = 'support-modal-dialog';
+        dialog.setAttribute('role', 'dialog');
+        dialog.setAttribute('aria-modal', 'true');
+        dialog.setAttribute('aria-labelledby', 'supportModalTitle');
+        dialog.innerHTML = `
+            <div class="support-modal-content">
+                <div class="support-modal-header">
+                    <div class="mac-window-dots" aria-hidden="true">
+                        <span class="mac-dot red"></span>
+                        <span class="mac-dot yellow"></span>
+                        <span class="mac-dot green"></span>
+                    </div>
+                    <h3 id="supportModalTitle" class="support-modal-title">Support My Work</h3>
+                    <button type="button" class="support-modal-close" aria-label="Close support dialog" title="Close">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="support-grid-columns">
+                    <!-- Column 1: BanglaQR -->
+                    <div class="support-col-card">
+                        <div class="support-col-header">
+                            <span class="support-col-icon" aria-hidden="true"><i class="fas fa-qrcode"></i></span>
+                            <div class="support-col-titles">
+                                <h4 class="support-col-title">BanglaQR Scan</h4>
+                                <span class="support-col-desc">Instant scan via bKash, Nagad, or Bank</span>
+                            </div>
+                        </div>
+
+                        <div class="qr-scanner-card">
+                            <div class="qr-frame">
+                                <div class="qr-scan-line" aria-hidden="true"></div>
+                                <img src="assets/images/banglaQR.jpg" alt="BanglaQR donation code for Ocean Mallik" class="qr-image">
+                            </div>
+                            <div class="qr-actions">
+                                <a href="assets/images/banglaQR.jpg" download="OceanMallik-BanglaQR.jpg" class="btn btn-primary qr-download-btn">
+                                    <i class="fas fa-download" aria-hidden="true"></i> Download QR Image
+                                </a>
+                            </div>
+                            <div class="qr-instructions">
+                                <div class="qr-step"><span class="step-num">1</span> Download QR or point camera</div>
+                                <div class="qr-step"><span class="step-num">2</span> Open bKash, Nagad, Rocket, or Bank</div>
+                                <div class="qr-step"><span class="step-num">3</span> Scan with camera or pick from Gallery</div>
+                            </div>
+                            <div class="supported-mfs-tags" aria-label="Supported payment apps">
+                                <span class="mfs-tag">bKash</span>
+                                <span class="mfs-tag">Nagad</span>
+                                <span class="mfs-tag">Rocket</span>
+                                <span class="mfs-tag">Cellfin</span>
+                                <span class="mfs-tag">Upay</span>
+                                <span class="mfs-tag">BanglaQR Banks</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: SupportKori / Card & Online Checkout -->
+                    <div class="support-col-card">
+                        <div class="support-col-header">
+                            <span class="support-col-icon coffee-icon" aria-hidden="true"><i class="fas fa-mug-hot"></i></span>
+                            <div class="support-col-titles">
+                                <h4 class="support-col-title">SupportKori &amp; Cards</h4>
+                                <span class="support-col-desc">Cards, mobile wallets, or custom coffee</span>
+                            </div>
+                        </div>
+
+                        <div class="supportkori-frame-card">
+                            <div class="supportkori-iframe-wrapper">
+                                <iframe
+                                    src="https://supportkori.com/widget/oceanmallik"
+                                    class="supportkori-embedded-iframe"
+                                    title="Donate to oceanmallik"
+                                    loading="lazy"
+                                ></iframe>
+                            </div>
+                            <div class="supportkori-footer-note">
+                                <span>Powered by SupportKori</span>
+                                <a href="https://supportkori.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="supportkori-external-link">
+                                    <span>Open in new window</span>
+                                    <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
 
-        const closeModal = () => {
-            modal.classList.remove('show');
-            qrButton.focus();
+        const openModal = () => {
+            backdrop.classList.add('show');
+            dialog.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            const closeBtn = dialog.querySelector('.support-modal-close');
+            if (closeBtn) closeBtn.focus();
         };
 
-        qrButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const isShown = modal.classList.contains('show');
-            if (!isShown) {
-                modal.classList.add('show');
-                const closeBtn = modal.querySelector('.donation-qr-close');
-                if (closeBtn) closeBtn.focus();
-            } else {
-                closeModal();
-            }
-        });
+        const closeModal = () => {
+            backdrop.classList.remove('show');
+            dialog.classList.remove('show');
+            document.body.style.overflow = '';
+            trigger.focus();
+        };
 
-        const closeBtn = modal.querySelector('.donation-qr-close');
+        trigger.addEventListener('click', openModal);
+
+        const closeBtn = dialog.querySelector('.support-modal-close');
         if (closeBtn) closeBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (event) => {
-            event.stopPropagation();
-        });
+        backdrop.addEventListener('click', closeModal);
 
-        document.addEventListener('click', (event) => {
-            if (modal.classList.contains('show') && event.target !== qrButton) {
+        dialog.addEventListener('click', (event) => {
+            if (event.target === dialog) {
                 closeModal();
             }
         });
 
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && modal.classList.contains('show')) {
+            if (event.key === 'Escape' && dialog.classList.contains('show')) {
                 closeModal();
             }
         });
 
-        document.body.append(qrButton, modal);
+        window.addEventListener('message', (event) => {
+            if (event.data === 'close-sk-widget') {
+                closeModal();
+            }
+        });
+
+        try {
+            const pageUrl = new URL(window.location.href);
+            if (pageUrl.searchParams.has('sk_payment')) {
+                openModal();
+            }
+        } catch (e) {}
+
+        document.body.append(trigger, backdrop, dialog);
     }
 
     /* --- Typing Effect in Hero --- */
@@ -1053,7 +1144,7 @@
         initScrollProgress();
         initBackToTop();
         initDynamicYear();
-        initDonationQr();
+        initSupportModal();
         initMobileMenu();
         initThemeSwitcher();
         initTypingEffect();
