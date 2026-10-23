@@ -3,13 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me - Ocean Mallik</title>
+    <title>About Me | Ocean Mallik</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            var themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
+            var idx = parseInt(localStorage.getItem('themeIndex'), 10);
+            if (!isNaN(idx) && idx >= 0 && idx < themes.length) {
+                document.documentElement.className = themes[idx];
+            }
+        })();
+    </script>
 </head>
-<body>
+<body class="theme-black">
+    <script>
+        (function() {
+            var themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
+            var idx = parseInt(localStorage.getItem('themeIndex'), 10);
+            if (!isNaN(idx) && idx >= 0 && idx < themes.length) {
+                document.body.className = themes[idx];
+            }
+        })();
+    </script>
+
     <nav class="navbar">
+        <div class="scroll-progress-bar" id="scroll-progress"></div>
         <div class="container nav-container">
             <a href="/" class="logo">Ocean <span class="highlight">Mallik</span></a>
             <div class="nav-right">
@@ -32,81 +52,123 @@
                     <div id="theme-list" class="theme-list hidden" role="listbox" aria-label="Theme list"></div>
                 </div>
 
-                <button id="mobile-menu-btn" class="menu-btn">
+                <button id="mobile-menu-btn" class="menu-btn" aria-label="Open mobile navigation menu">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="mobile-menu hidden">
-            <a href="/">Home</a>
-            <a href="activities.html">My Activities</a>
-            <a href="mygit.html">My Git</a>
-            <a href="achievements.html">My Achievements</a>
-            <a href="about.html">About Me</a>
+        <div id="mobile-menu-overlay" class="mobile-menu-overlay hidden"></div>
+        <div id="mobile-menu" class="mobile-menu-drawer hidden" aria-label="Mobile Navigation">
+            <div class="mobile-menu-header">
+                <a href="/" class="logo">Ocean <span class="highlight">Mallik</span></a>
+                <button id="mobile-menu-close" class="mobile-menu-close-btn" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile-menu-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="activities.html"><i class="fas fa-cubes"></i> My Activities</a>
+                <a href="mygit.html"><i class="fab fa-github"></i> My Git</a>
+                <a href="achievements.html"><i class="fas fa-award"></i> My Achievements</a>
+                <a href="about.html" class="highlight"><i class="fas fa-user-astronaut"></i> About Me</a>
+            </div>
+            <div class="mobile-menu-footer">
+                <p class="mobile-menu-tagline">Software Engineer in training &bull; DIU</p>
+                <div class="mobile-menu-socials">
+                    <a href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://link.oceanmallik.com" target="_blank" rel="noopener noreferrer" title="All Links"><i class="fas fa-link"></i></a>
+                    <a href="https://blog.oceanmallik.com" target="_blank" rel="noopener noreferrer" title="Blog"><i class="fas fa-feather-alt"></i></a>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <section class="section" style="padding-top: 120px; min-height: 100vh;">
+    <section class="section" style="padding-top: 110px; min-height: 100vh;">
         <div class="container">
-            <div style="margin-bottom: 50px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <div style="margin-bottom: 40px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;" class="reveal">
+                <p class="subtitle" style="letter-spacing: 2px; text-transform: uppercase; font-size: 0.92rem; margin-bottom: 0.5rem;"><i class="fas fa-user-astronaut"></i> &nbsp;Developer Profile</p>
                 <h1 class="title">About <span class="highlight">Me</span></h1>
-                <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.8;">
-                    Hello visitor, I’m Ocean, a curious human who loves using computers, exploring new ideas, and tinkering with anything that sparks my interest. 
-                    Tap on "My Links" button below to explore my online presence and discover more about me.
+                <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.7;">
+                    A quick peek into my background, technical skillset, educational qualifications, and development journey.
                 </p>
             </div>
 
-            <div class="about-grid">
-                <div class="about-text-col">
-                    <h2 class="section-title" style="text-align: left; font-size: 1.8rem; margin-bottom: 25px;">
-                        <i class="fas fa-graduation-cap highlight"></i> My Educational Qualification
-                    </h2>
+            <div class="bento-grid">
+                <!-- Card 1: Main Bio & Intro -->
+                <div class="bento-card bento-bio reveal">
+                    <div>
+                        <div class="bio-header">
+                            <div class="bio-avatar-mini">
+                                <img src="me.jpg" alt="Ocean Mallik">
+                            </div>
+                            <div>
+                                <span class="bio-badge"><i class="fas fa-map-marker-alt"></i> Dhaka, Bangladesh</span>
+                                <h2>Ocean <span class="highlight">Mallik</span></h2>
+                                <p class="bio-role">Software Engineer in Training &bull; DIU</p>
+                            </div>
+                        </div>
 
-                    <div class="edu-card">
-                        <div class="edu-content">
-                            <h3>Daffodil International University</h3>
-                            <p>BSc in Software Engineering</p>
+                        <p class="bio-text">
+                            Hello visitor, I’m Ocean, a Software Engineering student at Daffodil International University. I enjoy using computers, exploring new ideas, and tinkering with anything that sparks my interest. From building cross platform mobile apps like DIU Notes Buddy to experimenting with Godot for indie games and developing open source tools, I am continuously learning and building.
+                        </p>
+
+                        <div class="bio-tags">
+                            <span class="bento-pill"><i class="fas fa-bolt highlight"></i> Fast Learner</span>
+                            <span class="bento-pill"><i class="fas fa-coffee highlight"></i> Caffeine Powered</span>
+                            <span class="bento-pill"><i class="fas fa-terminal highlight"></i> Linux &amp; CLI</span>
+                            <span class="bento-pill"><i class="fas fa-gamepad highlight"></i> Game Dev</span>
+                            <span class="bento-pill"><i class="fas fa-code-branch highlight"></i> Open Source</span>
                         </div>
                     </div>
 
-                    <div class="edu-card">
-                        <div class="edu-content">
-                            <h3>Mazid Jarina Foundation School and College</h3>
-                            <p>HSC in Science <span class="highlight">(GPA 5.00)</span></p>
-                        </div>
-                    </div>
-
-                    <div class="edu-card">
-                        <div class="edu-content">
-                            <h3>Bhedarganj Headquarter Pilot Govt. High School & College</h3>
-                            <p>SSC in Science <span class="highlight">(GPA 5.00)</span></p>
-                        </div>
+                    <div class="bio-cta">
+                        <a href="https://link.oceanmallik.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                            <i class="fas fa-link"></i> All My Links
+                        </a>
+                        <a href="https://blog.oceanmallik.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                            <i class="fas fa-feather-alt"></i> Dev Blog
+                        </a>
+                        <a href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
                     </div>
                 </div>
 
-                <div class="about-image-col">
-                    <div style="display: flex; flex-direction: column; align-items: center; gap: 18px;">
-                        <div class="about-image-frame">
-                            <img src="fcCard.png" alt="Ocean Mallik">
-                        </div>
-                        <a href="https://link.oceanmallik.com" class="btn about-links-btn" target="_blank" rel="noopener noreferrer">
-                            <i class="fas fa-link"></i> My Links
-                        </a>
+                <!-- Card 2: Verified Developer Card -->
+                <div class="bento-card bento-card-media reveal">
+                    <div class="card-media-wrapper">
+                        <img src="fcCard.png" alt="Ocean Mallik Developer Card" class="bento-fc-card">
                     </div>
+                    <div class="card-media-caption">
+                        <span><i class="fas fa-shield-alt highlight"></i> Verified Developer Card</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Technical Skills Matrix -->
+                <div class="bento-card bento-skills reveal">
+                    <div class="bento-card-title">
+                        <i class="fas fa-layer-group highlight"></i> Technical Skills &amp; Stack
+                    </div>
+                    <div id="skills-container" class="skills-categories" data-skills-source="mySkills.json"></div>
+                </div>
+
+                <!-- Card 4: Educational Qualification -->
+                <div class="bento-card bento-timeline reveal">
+                    <div class="bento-card-title">
+                        <i class="fas fa-graduation-cap highlight"></i> Educational Qualification
+                    </div>
+                    <div id="education-timeline" class="timeline" data-education-source="myEducation.json"></div>
                 </div>
             </div>
         </div>
     </section>
 
-
-
     <footer>
-        <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean</p>
+        <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean Mallik</p>
     </footer>
 
     <script src="https://skr.bd/widget.js" data-id="oceanmallik" data-message="Buy me a coffee" data-color="#FF5F5F" data-position="right"></script>
-
     <script src="script.js"></script>
 </body>
 </html>
