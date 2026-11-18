@@ -1164,14 +1164,18 @@
                     { html: `Category: <strong>${cat.label}</strong>` }
                 ];
 
+                const certIcon = (certificate.icon && typeof certificate.icon === 'string' && certificate.icon.trim())
+                    ? certificate.icon.trim()
+                    : (cat.icon || 'fas fa-certificate');
+
                 const card = createBentoCard({
-                    iconClass: cat.icon || 'fas fa-certificate',
+                    iconClass: certIcon,
                     title: certificate.title || 'Untitled Certificate',
                     titleUrl: certificate.verifyUrl || '',
                     descriptionHtml: '', // Removed "Verified credential issued by..." description as requested
                     photoFadeImg: certificate.image ? `${imageBasePath}${certificate.image}` : '',
                     photoFadeAlt: certificate.title || '',
-                    graphicIcon: cat.icon || 'fas fa-certificate',
+                    graphicIcon: certIcon,
                     checklist,
                     className: 'certificate-item',
                     colSpan2: false,

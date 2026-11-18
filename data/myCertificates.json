@@ -4,6 +4,7 @@
 		"featured": true,
 		"issuer": "freeCodeCamp & Microsoft",
 		"category": "programming",
+		"icon": "fa-brands fa-microsoft",
 		"verifyUrl": "https://www.freecodecamp.org/certification/oceanmallik/foundational-c-sharp-with-microsoft",
 		"image": "csharp.jpg",
 		"alt": "Foundational C# Certificate"
@@ -13,6 +14,7 @@
 		"featured": true,
 		"issuer": "freeCodeCamp",
 		"category": "database",
+		"icon": "fas fa-database",
 		"verifyUrl": "https://www.freecodecamp.org/certification/oceanmallik/relational-databases-v9",
 		"image": "sqlfcc.png",
 		"alt": "Relational Databases Certificate"
@@ -22,6 +24,7 @@
 		"featured": true,
 		"issuer": "freeCodeCamp",
 		"category": "web",
+		"icon": "fas fa-laptop-code",
 		"verifyUrl": "https://www.freecodecamp.org/certification/oceanmallik/responsive-web-design-v9",
 		"image": "web.png",
 		"alt": "Responsive Web Design Certificate"
@@ -31,6 +34,7 @@
 		"featured": true,
 		"issuer": "HackerRank",
 		"category": "programming",
+		"icon": "fa-brands fa-hackerrank",
 		"verifyUrl": "https://www.hackerrank.com/certificates/f0b0cb0d8b10",
 		"image": "csharp.png",
 		"alt": "C# (Basic) Certificate from Hackerrank"
@@ -40,6 +44,7 @@
 		"featured": true,
 		"issuer": "HackerRank",
 		"category": "database",
+		"icon": "fa-brands fa-hackerrank",
 		"verifyUrl": "https://www.hackerrank.com/certificates/d0bb2c78a035",
 		"image": "sql.png",
 		"alt": "SQL (Basic) Certificate from Hackerrank"
@@ -49,6 +54,7 @@
 		"featured": false,
 		"issuer": "Nasa",
 		"category": "hackathon",
+		"icon": "fas fa-rocket",
 		"verifyUrl": "https://www.spaceappschallenge.org/2026/find-a-team/the-artemis/",
 		"image": "nasaapp26.png",
 		"alt": "2026 NASA Space Apps Challenge"
@@ -58,6 +64,7 @@
 		"featured": false,
 		"issuer": "DIU & Toph",
 		"category": "contest",
+		"icon": "fas fa-trophy",
 		"verifyUrl": "https://toph.co/c/diu-codetrap-spring-2026/standings",
 		"image": "codetrap-sp26.jpg",
 		"alt": "DIU Code Trap #10th"
@@ -67,6 +74,7 @@
 		"featured": false,
 		"issuer": "10 Minute School / Muktopaath",
 		"category": "productivity",
+		"icon": "fas fa-file-excel",
 		"verifyUrl": "https://muktopaath.gov.bd/learner/oceanmallik?trackingcode=MC-LM409294Y152A",
 		"image": "excel.jpg",
 		"alt": "Microsoft Excel Basics Certificate"
@@ -76,6 +84,7 @@
 		"featured": false,
 		"issuer": "10 Minute School / Muktopaath",
 		"category": "productivity",
+		"icon": "fas fa-file-word",
 		"verifyUrl": "https://muktopaath.gov.bd/learner/oceanmallik?trackingcode=MC-O155931N427054C150A",
 		"image": "word.jpg",
 		"alt": "Microsoft Word Basics Certificate"
@@ -85,6 +94,7 @@
 		"featured": false,
 		"issuer": "Simplilearn",
 		"category": "programming",
+		"icon": "fas fa-code",
 		"verifyUrl": "https://www.simplilearn.com/skillup-certificate-landing?token=eyJjb3Vyc2VfaWQiOiIzMTM3IiwiY2VydGlmaWNhdGVfdXJsIjoiaHR0cHM6XC9cL2NlcnRpZmljYXRlcy5zaW1wbGljZG4ubmV0XC9zaGFyZVwvOTk0ODc0NF8xMDI0MDQ3N18xNzczMjM3MzUzODQwLnBuZyIsInVzZXJuYW1lIjoiT2NlYW4gTWFsbGlrIn0%3D&utm_source=shared-certificate&utm_medium=lms&utm_campaign=shared-certificate-promotion&referrer=https%3A%2F%2Flms.simplilearn.com%2Fcourses%2F5920%2FC-Programming-Basics%2Fcertificate%2Fdownload-skillup&%24web_only=true",
 		"image": "c.png",
 		"alt": "C Programming Basics Certificate"
