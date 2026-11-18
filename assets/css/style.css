@@ -1798,6 +1798,122 @@ body.theme-cyberpunk .theme-list-item.active i {
     color: var(--bento-card-check-strong);
 }
 
+/* Certificate Card Actions (Inspect & Verify Online) */
+.certificate-item .cert-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    position: relative;
+    z-index: 3;
+    flex-wrap: wrap;
+    max-width: 60%;
+}
+
+.cert-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 15px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    font-family: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    line-height: 1.4;
+    transition: all 180ms ease;
+    border: 1px solid var(--border-color);
+}
+
+.cert-btn-inspect {
+    background: var(--bento-card-bg);
+    color: var(--text-title);
+    border-color: var(--border-color);
+}
+
+.cert-btn-inspect:hover {
+    background: var(--text-title);
+    color: var(--bg-main);
+    border-color: var(--text-title);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.cert-btn-verify {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-muted);
+    border-color: var(--border-color);
+}
+
+.cert-btn-verify:hover {
+    color: var(--text-title);
+    border-color: var(--border-hover);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+}
+
+body.theme-white .cert-btn-verify:hover,
+body.theme-soft .cert-btn-verify:hover,
+body.theme-aurora .cert-btn-verify:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Featured Badge on the right down side of the card */
+.cert-featured-badge {
+    position: absolute;
+    bottom: 16px;
+    right: 18px;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fbbf24;
+    background: rgba(18, 18, 22, 0.88);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), 0 0 10px rgba(245, 158, 11, 0.15);
+    pointer-events: auto;
+    transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+
+body.theme-white .cert-featured-badge {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(217, 119, 6, 0.35);
+    color: #d97706;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+body.theme-cyberpunk .cert-featured-badge {
+    background: rgba(18, 10, 36, 0.92);
+    border-color: rgba(255, 212, 0, 0.45);
+    color: #ffd400;
+    box-shadow: 0 0 12px rgba(255, 212, 0, 0.3);
+}
+
+.cert-featured-badge i {
+    font-size: 0.76rem;
+    color: #f59e0b;
+}
+
+body.theme-cyberpunk .cert-featured-badge i {
+    color: #ffd400;
+}
+
+.card:hover .cert-featured-badge {
+    transform: translateY(-2px);
+    border-color: rgba(245, 158, 11, 0.6);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), 0 0 14px rgba(245, 158, 11, 0.3);
+}
+
+/* Backward compatibility for legacy button class if referenced */
 .cert-inspect-btn {
     background: transparent;
     border: none;
@@ -1823,7 +1939,8 @@ body.theme-cyberpunk .theme-list-item.active i {
         max-width: 72%;
     }
     .certificate-item .card-description,
-    .certificate-item .card-checklist {
+    .certificate-item .card-checklist,
+    .certificate-item .cert-card-actions {
         max-width: 60%;
     }
 }
@@ -1835,8 +1952,18 @@ body.theme-cyberpunk .theme-list-item.active i {
     }
     .card-description,
     .certificate-item .card-description,
-    .certificate-item .card-checklist {
+    .certificate-item .card-checklist,
+    .certificate-item .cert-card-actions {
         max-width: 100%;
+    }
+    .certificate-item .cert-card-actions {
+        margin-bottom: 28px;
+    }
+    .cert-featured-badge {
+        bottom: 12px;
+        right: 12px;
+        padding: 4px 9px;
+        font-size: 0.68rem;
     }
 }
 

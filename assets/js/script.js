@@ -690,11 +690,13 @@
         mainArea.appendChild(header);
 
         // Description below title: 14px, color #8f8f8f, line-height 1.5.
-        // Wrap key phrase in <strong> with color #fff, weight 500
-        const descEl = document.createElement('p');
-        descEl.className = 'card-description';
-        descEl.innerHTML = descriptionHtml;
-        mainArea.appendChild(descEl);
+        // Wrap key phrase in <strong> with color #fff, weight 500 (only appended if non-empty)
+        if (descriptionHtml && descriptionHtml.trim().length > 0) {
+            const descEl = document.createElement('p');
+            descEl.className = 'card-description';
+            descEl.innerHTML = descriptionHtml;
+            mainArea.appendChild(descEl);
+        }
 
         card.appendChild(mainArea);
 
@@ -1157,24 +1159,16 @@
                     openCertificateLightbox(certificate, imageBasePath);
                 };
 
-                const descriptionHtml = `Verified credential issued by <strong>${certificate.issuer || 'Official Organization'}</strong> in ${cat.label}.`;
-
-                const inspectLinkHtml = `<button type="button" class="cert-inspect-btn">Inspect High-Res</button>`;
-                const verifyLinkHtml = (certificate.verifyUrl && certificate.verifyUrl !== '#')
-                    ? ` • <a href="${certificate.verifyUrl}" target="_blank" rel="noopener noreferrer" class="card-inline-link">Verify Online</a>`
-                    : '';
-
                 const checklist = [
                     { html: `Issuer: <strong>${certificate.issuer || 'Verified Organization'}</strong>` },
-                    { html: `Category: <strong>${cat.label}</strong>` },
-                    { html: `Credential: ${inspectLinkHtml}${verifyLinkHtml}` }
+                    { html: `Category: <strong>${cat.label}</strong>` }
                 ];
 
                 const card = createBentoCard({
                     iconClass: cat.icon || 'fas fa-certificate',
                     title: certificate.title || 'Untitled Certificate',
                     titleUrl: certificate.verifyUrl || '',
-                    descriptionHtml,
+                    descriptionHtml: '', // Removed "Verified credential issued by..." description as requested
                     photoFadeImg: certificate.image ? `${imageBasePath}${certificate.image}` : '',
                     photoFadeAlt: certificate.title || '',
                     graphicIcon: cat.icon || 'fas fa-certificate',
@@ -1184,9 +1178,39 @@
                     onInspect: triggerLightbox
                 });
 
-                const inspectBtn = card.querySelector('.cert-inspect-btn');
-                if (inspectBtn) {
-                    inspectBtn.addEventListener('click', triggerLightbox);
+                // New design for action buttons: Inspect & Verify Online
+                const actionsContainer = document.createElement('div');
+                actionsContainer.className = 'cert-card-actions';
+
+                const inspectBtn = document.createElement('button');
+                inspectBtn.type = 'button';
+                inspectBtn.className = 'cert-btn cert-btn-inspect';
+                inspectBtn.innerHTML = '<i class="fas fa-search-plus" aria-hidden="true"></i> <span>Inspect</span>';
+                inspectBtn.setAttribute('title', 'Inspect full-size certificate');
+                inspectBtn.addEventListener('click', triggerLightbox);
+                actionsContainer.appendChild(inspectBtn);
+
+                if (certificate.verifyUrl && certificate.verifyUrl !== '#') {
+                    const verifyLink = document.createElement('a');
+                    verifyLink.href = certificate.verifyUrl;
+                    verifyLink.target = '_blank';
+                    verifyLink.rel = 'noopener noreferrer';
+                    verifyLink.className = 'cert-btn cert-btn-verify';
+                    verifyLink.innerHTML = '<i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> <span>Verify Online</span>';
+                    verifyLink.setAttribute('title', 'Verify certificate online');
+                    actionsContainer.appendChild(verifyLink);
+                }
+
+                card.appendChild(actionsContainer);
+
+                // Featured Icon on the right down side of the card
+                if (certificate.featured) {
+                    const featuredBadge = document.createElement('div');
+                    featuredBadge.className = 'cert-featured-badge';
+                    featuredBadge.setAttribute('title', 'Featured Certificate');
+                    featuredBadge.setAttribute('aria-label', 'Featured Certificate');
+                    featuredBadge.innerHTML = '<i class="fas fa-star" aria-hidden="true"></i> <span>Featured</span>';
+                    card.appendChild(featuredBadge);
                 }
 
                 accordionContainer.appendChild(card);
