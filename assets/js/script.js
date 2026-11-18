@@ -609,10 +609,13 @@
         ].filter(Boolean);
 
         for (const candidate of candidates) {
-            const regex = new RegExp(`(${candidate})`, 'i');
-            if (regex.test(desc)) {
-                return desc.replace(regex, '<strong>$1</strong>');
-            }
+            try {
+                const escaped = String(candidate).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(`(${escaped})`, 'i');
+                if (regex.test(desc)) {
+                    return desc.replace(regex, '<strong>$1</strong>');
+                }
+            } catch (_) {}
         }
 
         const words = desc.split(' ');
@@ -635,7 +638,9 @@
         className = '',
         colSpan2 = false,
         dataset = {},
-        onInspect = null
+        onInspect = null,
+        headerRightEl = null,
+        headerRightHtml = ''
     }) {
         const card = document.createElement('article');
         card.className = `card bento-card ${colSpan2 ? 'col-span-2 ' : ''}${className}`.trim();
@@ -672,6 +677,16 @@
 
         header.appendChild(headerIcon);
         header.appendChild(titleEl);
+
+        if (headerRightEl) {
+            header.appendChild(headerRightEl);
+        } else if (headerRightHtml) {
+            const rightContainer = document.createElement('div');
+            rightContainer.className = 'card-header-right';
+            rightContainer.innerHTML = headerRightHtml;
+            header.appendChild(rightContainer);
+        }
+
         mainArea.appendChild(header);
 
         // Description below title: 14px, color #8f8f8f, line-height 1.5.

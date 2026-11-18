@@ -470,16 +470,18 @@
 
         /* Contributors */
         .repo-contributors {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: -4px;
+            flex-shrink: 0;
+            margin-left: 6px;
+            vertical-align: middle;
         }
 
         .contributor-avatar {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            border: 2px solid var(--bg-card);
+            border: 2px solid var(--bento-card-bg, #141414);
             object-fit: cover;
             margin-left: -6px;
             transition: transform 0.2s ease, z-index 0s;
@@ -504,18 +506,31 @@
         }
 
         .contributors-more {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            background: var(--border-color);
-            color: var(--text-muted);
+            background: var(--bento-card-border, #222222);
+            color: var(--bento-card-desc, #888888);
             font-size: 0.55rem;
             font-weight: 700;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             margin-left: -6px;
-            border: 2px solid var(--bg-card);
+            border: 2px solid var(--bento-card-bg, #141414);
+        }
+
+        .repo-card .card-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+        }
+
+        .repo-card .card-title {
+            display: inline-flex;
+            align-items: center;
+            margin: 0;
         }
 
         /* Website Link */
@@ -597,42 +612,6 @@
             border-radius: 50%;
         }
 
-        /* Error State */
-        .git-error-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-muted);
-        }
-
-        .git-error-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #ef4444;
-            opacity: 0.7;
-        }
-
-        .git-error-state h3 {
-            color: var(--text-title);
-            margin-bottom: 0.5rem;
-        }
-
-        .git-error-state p {
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .git-error-state a {
-            color: var(--primary-color);
-            font-weight: 600;
-            text-decoration: underline;
-            transition: opacity 0.2s ease;
-        }
-
-        .git-error-state a:hover {
-            opacity: 0.8;
-        }
-
         /* Empty State */
         .git-empty-state {
             text-align: center;
@@ -647,138 +626,8 @@
             opacity: 0.5;
         }
 
-        /* ===== PAGINATION STYLES ===== */
-        .repo-pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            margin: 3.5rem auto 1.5rem;
-            padding: 8px 14px;
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 999px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            width: fit-content;
-            max-width: 100%;
-            flex-wrap: wrap;
-            transition: all 0.3s ease;
-        }
-
-        .repo-pagination:hover {
-            border-color: color-mix(in srgb, var(--primary-color) 40%, transparent);
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
-        }
-
-        .page-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            border: 1px solid transparent;
-            background: transparent;
-            color: var(--text-muted);
-            font-family: var(--btn-font, 'Space Grotesk', sans-serif);
-            font-size: 0.92rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            outline: none;
-            user-select: none;
-        }
-
-        .page-btn:hover:not(:disabled):not(.active) {
-            background: color-mix(in srgb, var(--primary-color) 14%, transparent);
-            color: var(--primary-color);
-            border-color: color-mix(in srgb, var(--primary-color) 35%, transparent);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-        }
-
-        .page-btn.active {
-            background: var(--primary-color);
-            color: #0a0615;
-            font-weight: 700;
-            border-color: var(--primary-color);
-            transform: scale(1.08);
-            box-shadow: 0 4px 20px color-mix(in srgb, var(--primary-color) 50%, transparent);
-        }
-
-        body.theme-white .page-btn.active,
-        body.theme-soft .page-btn.active {
-            color: #ffffff;
-        }
-
-        body.theme-aurora .page-btn.active {
-            color: #0f172a;
-        }
-
-        body.theme-black .page-btn.active {
-            color: #000000;
-        }
-
-        .page-arrow {
-            font-size: 0.85rem;
-            border: 1px solid var(--border-color);
-            background: rgba(128, 128, 128, 0.06);
-            color: var(--text-title);
-        }
-
-        .page-arrow:hover:not(:disabled) {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            background: color-mix(in srgb, var(--primary-color) 14%, transparent);
-            transform: translateY(-2px);
-        }
-
-        .page-btn:disabled,
-        .page-btn.disabled {
-            opacity: 0.25;
-            cursor: not-allowed;
-            pointer-events: none;
-            border-color: transparent;
-            background: transparent;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        .page-dots {
-            width: 28px;
-            height: 42px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            user-select: none;
-        }
-
         /* Responsive */
         @media (max-width: 600px) {
-            .repo-pagination {
-                gap: 5px;
-                padding: 6px 10px;
-                margin-top: 2.5rem;
-            }
-
-            .page-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 0.82rem;
-            }
-
-            .page-dots {
-                width: 20px;
-                height: 36px;
-            }
-
             .github-profile-strip {
                 flex-wrap: wrap;
                 justify-content: center;
@@ -980,13 +829,6 @@
             <!-- Repo Grid -->
             <div id="repo-grid" class="repo-grid" style="display:none;"></div>
 
-            <!-- Error State -->
-            <div id="repo-error" style="display:none;" class="git-error-state">
-                <i class="fas fa-triangle-exclamation"></i>
-                <h3>Couldn't load repositories</h3>
-                <p id="repo-error-msg">There was a problem loading repository data. Please try again later.</p>
-            </div>
-
         </div>
     </section>
 
@@ -1017,8 +859,6 @@
         let activeSort = 'updated';
         let searchQuery = '';
         let contributorsCache = {};
-        let currentPage = 1;
-        const REPOS_PER_PAGE = 12;
         let gitDataPromise = null;
 
         // ── Skeleton ──────────────────────────────────────────────────────────
@@ -1112,15 +952,10 @@
                 renderRepos();
             } catch (err) {
                 document.getElementById('repo-skeleton').style.display = 'none';
-                const errBox = document.getElementById('repo-error');
-                errBox.style.display = 'block';
-                const msgEl = document.getElementById('repo-error-msg');
-                const profileUrl = `https://github.com/${GITHUB_USERNAME}?tab=repositories`;
-                msgEl.innerHTML = `Could not load repositories. Please try again later, or <a href="${profileUrl}" target="_blank" rel="noopener noreferrer">visit my GitHub profile directly</a>.`;
-
+                console.error('Failed to load repositories:', err);
                 const countEl = document.getElementById('git-repo-count');
                 if (countEl) {
-                    countEl.innerHTML = '<strong>-</strong> repositories';
+                    countEl.innerHTML = '<strong>0</strong> repositories';
                 }
             }
         }
@@ -1168,24 +1003,23 @@
 
         function renderRepos() {
             const allFiltered = getFilteredSortedRepos();
-            const totalPages = Math.max(1, Math.ceil(allFiltered.length / REPOS_PER_PAGE));
-
-            // Clamp currentPage in case filters reduced the total
-            if (currentPage > totalPages) currentPage = totalPages;
-            if (currentPage < 1) currentPage = 1;
-
-            const start = (currentPage - 1) * REPOS_PER_PAGE;
-            const pageRepos = allFiltered.slice(start, start + REPOS_PER_PAGE);
 
             const grid = document.getElementById('repo-grid');
             grid.innerHTML = '';
 
             const countEl = document.getElementById('git-repo-count');
-            const from = allFiltered.length === 0 ? 0 : start + 1;
-            const to = Math.min(start + REPOS_PER_PAGE, allFiltered.length);
-            countEl.innerHTML = allFiltered.length === 0
-                ? `<strong>0</strong> repositories`
-                : `Showing <strong>${from}–${to}</strong> of <strong>${allFiltered.length}</strong> repositories`;
+            if (countEl) {
+                countEl.innerHTML = allFiltered.length === 0
+                    ? `<strong>0</strong> repositories`
+                    : allFiltered.length === 1
+                        ? `Showing <strong>1</strong> repository`
+                        : `Showing all <strong>${allFiltered.length}</strong> repositories`;
+            }
+
+            const pager = document.getElementById('repo-pagination');
+            if (pager) {
+                pager.remove();
+            }
 
             if (allFiltered.length === 0) {
                 grid.innerHTML = `
@@ -1193,119 +1027,17 @@
                         <i class="fab fa-github"></i>
                         <p>No repositories match your filters.</p>
                     </div>`;
-                renderPagination(0, 1);
                 return;
             }
 
-            pageRepos.forEach(repo => {
-                grid.appendChild(buildRepoCard(repo));
-            });
-
-            renderPagination(allFiltered.length, totalPages);
-        }
-
-        function renderPagination(total, totalPages) {
-            let pager = document.getElementById('repo-pagination');
-            if (!pager) {
-                pager = document.createElement('nav');
-                pager.id = 'repo-pagination';
-                pager.className = 'repo-pagination';
-                pager.setAttribute('role', 'navigation');
-                pager.setAttribute('aria-label', 'Repository pagination');
-                document.getElementById('repo-grid').insertAdjacentElement('afterend', pager);
-            }
-            pager.innerHTML = '';
-
-            if (totalPages <= 1) {
-                pager.style.display = 'none';
-                return;
-            }
-            pager.style.display = 'flex';
-
-            // Prev button
-            const prev = document.createElement('button');
-            prev.type = 'button';
-            prev.className = 'page-btn page-arrow' + (currentPage === 1 ? ' disabled' : '');
-            prev.disabled = currentPage === 1;
-            prev.setAttribute('aria-label', 'Previous page');
-            prev.innerHTML = '<i class="fas fa-chevron-left" aria-hidden="true"></i>';
-            prev.title = 'Previous page';
-            prev.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    renderRepos();
-                    scrollToGrid();
+            allFiltered.forEach(repo => {
+                try {
+                    const card = buildRepoCard(repo);
+                    if (card) grid.appendChild(card);
+                } catch (e) {
+                    console.error('Error rendering repo card:', repo.name, e);
                 }
             });
-            pager.appendChild(prev);
-
-            // Page number buttons
-            const range = getPageRange(currentPage, totalPages);
-            range.forEach(item => {
-                if (item === '…') {
-                    const dots = document.createElement('span');
-                    dots.className = 'page-dots';
-                    dots.setAttribute('aria-hidden', 'true');
-                    dots.textContent = '…';
-                    pager.appendChild(dots);
-                } else {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'page-btn' + (item === currentPage ? ' active' : '');
-                    btn.textContent = item;
-                    btn.setAttribute('aria-label', `Go to page ${item}`);
-                    if (item === currentPage) {
-                        btn.setAttribute('aria-current', 'page');
-                    }
-                    btn.addEventListener('click', () => {
-                        if (currentPage !== item) {
-                            currentPage = item;
-                            renderRepos();
-                            scrollToGrid();
-                        }
-                    });
-                    pager.appendChild(btn);
-                }
-            });
-
-            // Next button
-            const next = document.createElement('button');
-            next.type = 'button';
-            next.className = 'page-btn page-arrow' + (currentPage === totalPages ? ' disabled' : '');
-            next.disabled = currentPage === totalPages;
-            next.setAttribute('aria-label', 'Next page');
-            next.innerHTML = '<i class="fas fa-chevron-right" aria-hidden="true"></i>';
-            next.title = 'Next page';
-            next.addEventListener('click', () => {
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    renderRepos();
-                    scrollToGrid();
-                }
-            });
-            pager.appendChild(next);
-        }
-
-        // Smart ellipsis page range: always show first, last, current ±1
-        function getPageRange(cur, total) {
-            if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-            const pages = new Set([1, total, cur]);
-            if (cur > 1) pages.add(cur - 1);
-            if (cur < total) pages.add(cur + 1);
-            const sorted = [...pages].sort((a, b) => a - b);
-            const result = [];
-            let prev = 0;
-            for (const p of sorted) {
-                if (p - prev > 1) result.push('…');
-                result.push(p);
-                prev = p;
-            }
-            return result;
-        }
-
-        function scrollToGrid() {
-            const section = document.getElementById('mygit');
-            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function buildRepoCard(repo) {
@@ -1313,14 +1045,19 @@
             const isFeatured = ((repo.stargazers_count || 0) > 0 || (repo.forks_count || 0) > 0);
 
             let desc = repo.description || 'Open source software repository hosted on GitHub.';
-            const descHtml = window.formatDescriptionWithKeyPhrase
-                ? window.formatDescriptionWithKeyPhrase(desc, [repo.language, 'open source', 'repository'])
-                : (desc.includes('<strong>') ? desc : `<strong>${escapeHtml(desc)}</strong>`);
+            let descHtml = desc;
+            try {
+                descHtml = window.formatDescriptionWithKeyPhrase
+                    ? window.formatDescriptionWithKeyPhrase(desc, [repo.language, 'open source', 'repository'])
+                    : (desc.includes('<strong>') ? desc : `<strong>${escapeHtml(desc)}</strong>`);
+            } catch (_) {
+                descHtml = desc.includes('<strong>') ? desc : `<strong>${escapeHtml(desc)}</strong>`;
+            }
 
             const contributors = contributorsCache[repo.full_name] || repo.contributors;
-            const contributorsPart = (contributors && contributors.length > 0)
-                ? buildContributorAvatars(contributors).outerHTML
-                : '';
+            const contributorsEl = (contributors && contributors.length > 0)
+                ? buildContributorAvatars(contributors)
+                : null;
 
             const siteLinkHtml = repo.homepage
                 ? ` • <a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer" class="card-inline-link">Live Site</a>`
@@ -1329,7 +1066,7 @@
             const checklist = [
                 { html: `Language: <strong>${escapeHtml(repo.language || 'Multi-stack')}</strong>` },
                 { html: `Metrics: <strong>${formatNum(repo.stargazers_count || 0)} stars</strong> • <strong>${formatNum(repo.forks_count || 0)} forks</strong>` },
-                { html: `Activity: Updated ${updatedAgo} • <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer" class="card-inline-link">GitHub</a>${siteLinkHtml} ${contributorsPart}` }
+                { html: `Activity: Updated ${updatedAgo} • <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer" class="card-inline-link">GitHub</a>${siteLinkHtml}` }
             ];
 
             let card;
@@ -1338,6 +1075,7 @@
                     iconClass: 'fab fa-github',
                     title: repo.name,
                     titleUrl: repo.html_url,
+                    headerRightEl: contributorsEl,
                     descriptionHtml: descHtml,
                     graphicIcon: 'fab fa-github',
                     checklist,
@@ -1349,6 +1087,11 @@
                 card = document.createElement('div');
                 card.className = 'repo-card';
                 card.setAttribute('data-repo', repo.full_name);
+            }
+
+            if (contributorsEl && !card.querySelector('.card-header .repo-contributors')) {
+                const header = card.querySelector('.card-header');
+                if (header) header.appendChild(contributorsEl);
             }
 
             return card;
@@ -1404,13 +1147,11 @@
             document.querySelectorAll('.git-filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             activeFilter = btn.dataset.filter;
-            currentPage = 1;
             renderRepos();
         });
 
         document.getElementById('git-sort-select').addEventListener('change', e => {
             activeSort = e.target.value;
-            currentPage = 1;
             renderRepos();
         });
 
@@ -1419,7 +1160,6 @@
             clearTimeout(searchDebounce);
             searchDebounce = setTimeout(() => {
                 searchQuery = e.target.value.trim();
-                currentPage = 1;
                 renderRepos();
             }, 300);
         });
