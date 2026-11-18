@@ -30,6 +30,16 @@
 		"alt": "Responsive Web Design Certificate"
 	},
 	{
+		"title": "Intro to SQL (Kaggle)",
+		"featured": true,
+		"issuer": "Kaggle",
+		"category": "database",
+		"icon": "fas fa-database",
+		"verifyUrl": "https://www.kaggle.com/learn/certification/oceanmallik/intro-to-sql",
+		"image": "introtosqlkaggle.png",
+		"alt": "Intro to SQL Certificate from Kaggle"
+	},
+	{
 		"title": "C# Certificate (Hackerrank)",
 		"featured": true,
 		"issuer": "HackerRank",
