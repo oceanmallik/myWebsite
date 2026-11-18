@@ -1,14 +1,22 @@
 (function () {
-    const THEME_CLASSES = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
-    const THEME_ICONS = ['fa-bolt', 'fa-sun', 'fa-cloud', 'fa-water', 'fa-moon'];
-    const THEME_LABELS = ['Cyberpunk', 'White', 'Soft', 'Aurora', 'Black'];
+    const THEME_CLASSES = ['theme-black', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-cyberpunk'];
+    const THEME_ICONS = ['fa-moon', 'fa-sun', 'fa-cloud', 'fa-water', 'fa-bolt'];
+    const THEME_LABELS = ['Black', 'White', 'Soft', 'Aurora', 'Cyberpunk'];
 
     function getStoredThemeIndex() {
-        let storedIndex = parseInt(localStorage.getItem('themeIndex'), 10);
-        if (Number.isNaN(storedIndex) || storedIndex < 0 || storedIndex >= THEME_CLASSES.length) {
-            storedIndex = 4; // Default to Pitch Black
+        const storedThemeName = localStorage.getItem('selectedTheme');
+        if (storedThemeName) {
+            const idx = THEME_CLASSES.indexOf(storedThemeName);
+            if (idx !== -1) return idx;
         }
-        return storedIndex;
+
+        const storedIndex = parseInt(localStorage.getItem('themeIndex_v2'), 10);
+        if (!Number.isNaN(storedIndex) && storedIndex >= 0 && storedIndex < THEME_CLASSES.length) {
+            return storedIndex;
+        }
+
+        // Default to Pitch Black (index 0)
+        return 0;
     }
 
     function applyBodyTheme(body, index) {
@@ -209,7 +217,9 @@
                 renderThemeList();
 
                 try {
+                    localStorage.setItem('themeIndex_v2', String(normalizedIndex));
                     localStorage.setItem('themeIndex', String(normalizedIndex));
+                    localStorage.setItem('selectedTheme', THEME_CLASSES[normalizedIndex]);
                 } catch (error) {
                     // Ignore storage errors in private browsing
                 }

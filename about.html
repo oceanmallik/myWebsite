@@ -9,11 +9,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         (function() {
-            var themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
-            var idx = parseInt(localStorage.getItem('themeIndex'), 10);
-            if (!isNaN(idx) && idx >= 0 && idx < themes.length) {
-                document.documentElement.className = themes[idx];
+            var themes = ['theme-black', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-cyberpunk'];
+            var stored = localStorage.getItem('selectedTheme');
+            if (stored) {
+                var idx = themes.indexOf(stored);
+                if (idx !== -1) {
+                    document.documentElement.className = themes[idx];
+                    return;
+                }
             }
+            var idx = parseInt(localStorage.getItem('themeIndex_v2'), 10);
+            if (isNaN(idx) || idx < 0 || idx >= themes.length) {
+                idx = 0; // Default to Pitch Black
+            }
+            document.documentElement.className = themes[idx];
         })();
     </script>
 </head>
@@ -21,11 +30,20 @@
     <div class="scroll-progress-bar" id="scroll-progress"></div>
     <script>
         (function() {
-            var themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
-            var idx = parseInt(localStorage.getItem('themeIndex'), 10);
-            if (!isNaN(idx) && idx >= 0 && idx < themes.length) {
-                document.body.className = themes[idx];
+            var themes = ['theme-black', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-cyberpunk'];
+            var stored = localStorage.getItem('selectedTheme');
+            if (stored) {
+                var idx = themes.indexOf(stored);
+                if (idx !== -1) {
+                    document.body.className = themes[idx];
+                    return;
+                }
             }
+            var idx = parseInt(localStorage.getItem('themeIndex_v2'), 10);
+            if (isNaN(idx) || idx < 0 || idx >= themes.length) {
+                idx = 0; // Default to Pitch Black
+            }
+            document.body.className = themes[idx];
         })();
     </script>
 
@@ -43,8 +61,8 @@
 
                 <div class="theme-switcher">
                     <button id="theme-toggle" class="theme-toggle-btn" title="Switch Theme">
-                        <i class="fas fa-bolt theme-icon"></i>
-                        <span class="theme-name">Cyberpunk</span>
+                        <i class="fas fa-moon theme-icon"></i>
+                        <span class="theme-name">Black</span>
                     </button>
                     <button id="theme-list-toggle" class="theme-list-toggle-btn" title="Show theme list" aria-label="Show theme list" aria-expanded="false">
                         <i class="fas fa-chevron-down"></i>

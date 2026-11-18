@@ -40,18 +40,18 @@
             display: flex;
             align-items: center;
             gap: 1.25rem;
-            background: #1c1c1c;
-            border: 1px solid #2a2a2a;
+            background: var(--bento-card-bg, #1c1c1c);
+            border: 1px solid var(--bento-card-border, #2a2a2a);
             border-radius: 16px;
             padding: 24px;
             max-width: 720px;
             margin: 0 auto 3rem;
             box-shadow: none;
-            transition: border-color 150ms ease;
+            transition: border-color 150ms ease, background-color 150ms ease;
         }
 
         .github-profile-strip:hover {
-            border-color: #3a3a3a;
+            border-color: var(--bento-card-border-hover, #3a3a3a);
         }
 
         .github-profile-strip img {
@@ -144,9 +144,9 @@
             gap: 5px;
             padding: 6px 14px;
             border-radius: 999px;
-            border: 1px solid #2a2a2a;
-            background: #1c1c1c;
-            color: #8f8f8f;
+            border: 1px solid var(--bento-card-border, #2a2a2a);
+            background: var(--bento-card-bg, #1c1c1c);
+            color: var(--bento-card-desc, #8f8f8f);
             font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
@@ -154,33 +154,33 @@
         }
 
         .git-filter-btn:hover {
-            border-color: #3a3a3a;
-            color: #ffffff;
+            border-color: var(--bento-card-border-hover, #3a3a3a);
+            color: var(--bento-card-title, #ffffff);
         }
 
         .git-filter-btn.active {
-            background: #262626;
-            border-color: #3a3a3a;
-            color: #ffffff;
+            background: var(--bento-card-active-pill-bg, #262626);
+            border-color: var(--bento-card-border-hover, #3a3a3a);
+            color: var(--bento-card-active-pill-color, #ffffff);
         }
 
         .git-search {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: #1c1c1c;
-            border: 1px solid #2a2a2a;
+            background: var(--bento-card-bg, #1c1c1c);
+            border: 1px solid var(--bento-card-border, #2a2a2a);
             border-radius: 999px;
             padding: 6px 14px;
             transition: border-color 150ms ease;
         }
 
         .git-search:focus-within {
-            border-color: #3a3a3a;
+            border-color: var(--bento-card-border-hover, #3a3a3a);
         }
 
         .git-search i {
-            color: #8f8f8f;
+            color: var(--bento-card-desc, #8f8f8f);
             font-size: 0.82rem;
         }
 
@@ -188,13 +188,13 @@
             background: transparent;
             border: none;
             outline: none;
-            color: #ffffff;
+            color: var(--bento-card-title, #ffffff);
             font-size: 0.84rem;
             width: 180px;
         }
 
         .git-search input::placeholder {
-            color: #8f8f8f;
+            color: var(--bento-card-desc, #8f8f8f);
         }
 
         /* Stats Summary Bar */
@@ -209,18 +209,18 @@
 
         .git-repo-count {
             font-size: 0.84rem;
-            color: #8f8f8f;
+            color: var(--bento-card-desc, #8f8f8f);
         }
 
         .git-repo-count strong {
-            color: #ffffff;
+            color: var(--bento-card-title, #ffffff);
         }
 
         .git-sort-select {
-            background: #1c1c1c;
-            border: 1px solid #2a2a2a;
+            background: var(--bento-card-bg, #1c1c1c);
+            border: 1px solid var(--bento-card-border, #2a2a2a);
             border-radius: 8px;
-            color: #d4d4d4;
+            color: var(--bento-card-check-text, #d4d4d4);
             font-size: 0.8rem;
             padding: 5px 10px;
             cursor: pointer;
@@ -229,12 +229,12 @@
         }
 
         .git-sort-select option {
-            background-color: #171717;
-            color: #ffffff;
+            background-color: var(--bento-card-bg, #171717);
+            color: var(--bento-card-title, #ffffff);
         }
 
         .git-sort-select:focus {
-            border-color: #3a3a3a;
+            border-color: var(--bento-card-border-hover, #3a3a3a);
         }
 
         /* Repo Grid - Responsive Bento Grid (3 cols desktop, 2 tablet, 1 mobile, 16px gap) */
@@ -258,9 +258,9 @@
 
         /* Repo Card - Supabase Bento Feature Card style */
         .repo-card {
-            background-color: #1c1c1c !important;
-            background: #1c1c1c !important;
-            border: 1px solid #2a2a2a !important;
+            background-color: var(--bento-card-bg, #1c1c1c) !important;
+            background: var(--bento-card-bg, #1c1c1c) !important;
+            border: 1px solid var(--bento-card-border, #2a2a2a) !important;
             border-radius: 16px !important;
             padding: 24px !important;
             display: flex !important;
@@ -268,7 +268,7 @@
             justify-content: space-between !important;
             box-shadow: none !important;
             transform: none !important;
-            transition: border-color 150ms ease !important;
+            transition: border-color 150ms ease, background-color 150ms ease !important;
             position: relative !important;
             overflow: hidden !important;
             min-height: 240px;
@@ -280,7 +280,7 @@
         }
 
         .repo-card:hover {
-            border-color: #3a3a3a !important;
+            border-color: var(--bento-card-border-hover, #3a3a3a) !important;
             transform: none !important;
             box-shadow: none !important;
         }
@@ -807,11 +807,20 @@
     </style>
     <script>
         (function() {
-            var themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
-            var idx = parseInt(localStorage.getItem('themeIndex'), 10);
-            if (!isNaN(idx) && idx >= 0 && idx < themes.length) {
-                document.documentElement.className = themes[idx];
+            var themes = ['theme-black', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-cyberpunk'];
+            var stored = localStorage.getItem('selectedTheme');
+            if (stored) {
+                var idx = themes.indexOf(stored);
+                if (idx !== -1) {
+                    document.documentElement.className = themes[idx];
+                    return;
+                }
             }
+            var idx = parseInt(localStorage.getItem('themeIndex_v2'), 10);
+            if (isNaN(idx) || idx < 0 || idx >= themes.length) {
+                idx = 0; // Default to Pitch Black
+            }
+            document.documentElement.className = themes[idx];
         })();
     </script>
 </head>
@@ -819,11 +828,20 @@
     <div class="scroll-progress-bar" id="scroll-progress"></div>
     <script>
         (function() {
-            var themes = ['theme-cyberpunk', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-black'];
-            var idx = parseInt(localStorage.getItem('themeIndex'), 10);
-            if (!isNaN(idx) && idx >= 0 && idx < themes.length) {
-                document.body.className = themes[idx];
+            var themes = ['theme-black', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-cyberpunk'];
+            var stored = localStorage.getItem('selectedTheme');
+            if (stored) {
+                var idx = themes.indexOf(stored);
+                if (idx !== -1) {
+                    document.body.className = themes[idx];
+                    return;
+                }
             }
+            var idx = parseInt(localStorage.getItem('themeIndex_v2'), 10);
+            if (isNaN(idx) || idx < 0 || idx >= themes.length) {
+                idx = 0; // Default to Pitch Black
+            }
+            document.body.className = themes[idx];
         })();
     </script>
 
@@ -841,8 +859,8 @@
 
                 <div class="theme-switcher">
                     <button id="theme-toggle" class="theme-toggle-btn" title="Switch Theme">
-                        <i class="fas fa-bolt theme-icon"></i>
-                        <span class="theme-name">Cyberpunk</span>
+                        <i class="fas fa-moon theme-icon"></i>
+                        <span class="theme-name">Black</span>
                     </button>
                     <button id="theme-list-toggle" class="theme-list-toggle-btn" title="Show theme list" aria-label="Show theme list" aria-expanded="false">
                         <i class="fas fa-chevron-down"></i>
@@ -1004,9 +1022,9 @@
                 skeletonGrid.innerHTML += `
                     <div class="card bento-card repo-skeleton" style="min-height: 240px; display: flex; flex-direction: column; justify-content: space-between;">
                         <div class="card-main">
-                            <div class="skeleton-line title" style="height: 18px; width: 140px; border-radius: 4px; background: #262626; margin-bottom: 12px;"></div>
-                            <div class="skeleton-line body" style="height: 14px; width: 55%; border-radius: 4px; background: #222222; margin-bottom: 8px;"></div>
-                            <div class="skeleton-line body short" style="height: 14px; width: 40%; border-radius: 4px; background: #222222;"></div>
+                            <div class="skeleton-line title" style="height: 18px; width: 140px; border-radius: 4px; background: var(--bento-card-border, #262626); margin-bottom: 12px;"></div>
+                            <div class="skeleton-line body" style="height: 14px; width: 55%; border-radius: 4px; background: var(--bento-card-badge-bg, #222222); margin-bottom: 8px;"></div>
+                            <div class="skeleton-line body short" style="height: 14px; width: 40%; border-radius: 4px; background: var(--bento-card-badge-bg, #222222);"></div>
                         </div>
                         <div class="card-illustration" aria-hidden="true">
                             <div class="concentric-squares">
@@ -1017,9 +1035,9 @@
                             </div>
                         </div>
                         <ul class="card-checklist">
-                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 60%; border-radius: 4px; background: #222222;"></span></li>
-                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 45%; border-radius: 4px; background: #222222;"></span></li>
-                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 70%; border-radius: 4px; background: #222222;"></span></li>
+                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 60%; border-radius: 4px; background: var(--bento-card-badge-bg, #222222);"></span></li>
+                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 45%; border-radius: 4px; background: var(--bento-card-badge-bg, #222222);"></span></li>
+                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 70%; border-radius: 4px; background: var(--bento-card-badge-bg, #222222);"></span></li>
                         </ul>
                     </div>`;
             }
