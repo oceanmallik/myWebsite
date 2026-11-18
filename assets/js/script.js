@@ -894,12 +894,12 @@
                 imageWrapper.appendChild(imageElement);
                 imageWrapper.appendChild(zoomOverlay);
 
-                // Category pill on top-left
-                if (certificate.category && categoryMap[certificate.category]) {
-                    const cat = categoryMap[certificate.category];
+                // Category pill on top-left — works for any category value
+                if (certificate.category) {
+                    const cat = categoryMap[certificate.category] || { label: certificate.category.charAt(0).toUpperCase() + certificate.category.slice(1), icon: 'fas fa-tag' };
                     const catBadge = document.createElement('span');
                     catBadge.className = 'cert-category-badge';
-                    catBadge.innerHTML = `<i class="${cat.icon}"></i> ${cat.label}`;
+                    catBadge.textContent = cat.label;
                     imageWrapper.appendChild(catBadge);
                 }
 
@@ -996,10 +996,40 @@
                     return;
                 }
 
-                // If on certificates.html, support category filter pills
-                const filterButtons = document.querySelectorAll('#cert-filter-group .filter-pill');
-                if (filterButtons.length > 0) {
+                // If on certificates.html, build filter pills dynamically from JSON categories
+                const filterGroup = document.getElementById('cert-filter-group');
+                if (filterGroup) {
+                    // "All" pill first
+                    const allBtn = document.createElement('button');
+                    allBtn.type = 'button';
+                    allBtn.className = 'filter-pill active';
+                    allBtn.dataset.filter = 'all';
+                    allBtn.textContent = 'All Certificates';
+                    filterGroup.appendChild(allBtn);
+
+                    // Collect unique categories in the order they first appear
+                    const seenCategories = [];
+                    allCertificates.forEach((cert) => {
+                        if (cert.category && !seenCategories.includes(cert.category)) {
+                            seenCategories.push(cert.category);
+                        }
+                    });
+
+                    // Build a pill for each unique category
+                    seenCategories.forEach((catKey) => {
+                        const cat = categoryMap[catKey] || { label: catKey.charAt(0).toUpperCase() + catKey.slice(1) };
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'filter-pill';
+                        btn.dataset.filter = catKey;
+                        btn.textContent = cat.label;
+                        filterGroup.appendChild(btn);
+                    });
+
                     let activeCategory = 'all';
+
+                    // Query all pills AFTER they are all appended
+                    const allFilterButtons = filterGroup.querySelectorAll('.filter-pill');
 
                     const applyCertFilter = () => {
                         const filtered = allCertificates.filter((cert) => {
@@ -1009,9 +1039,9 @@
                         renderCertificates(filtered);
                     };
 
-                    filterButtons.forEach((btn) => {
+                    allFilterButtons.forEach((btn) => {
                         btn.addEventListener('click', () => {
-                            filterButtons.forEach((b) => b.classList.remove('active'));
+                            allFilterButtons.forEach((b) => b.classList.remove('active'));
                             btn.classList.add('active');
                             activeCategory = btn.dataset.filter || 'all';
                             applyCertFilter();

@@ -45,6 +45,15 @@
 		"alt": "SQL (Basic) Certificate from Hackerrank"
 	},
 	{
+		"title": "2026 NASA Space Apps Challenge",
+		"featured": false,
+		"issuer": "Nasa",
+		"category": "hackathon",
+		"verifyUrl": "https://toph.co/c/diu-codetrap-spring-2026/standings",
+		"image": "nasaapp26.png",
+		"alt": "2026 NASA Space Apps Challenge"
+	},
+	{
 		"title": "DIU Code Trap #10th",
 		"featured": false,
 		"issuer": "DIU & Toph",
