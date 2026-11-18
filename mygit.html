@@ -486,7 +486,14 @@
             cursor: pointer;
         }
 
-        .contributor-avatar:first-child {
+        .contributor-avatar-link {
+            display: inline-flex;
+            line-height: 0;
+            text-decoration: none;
+        }
+
+        .contributor-avatar:first-child,
+        .contributor-avatar-link:first-child .contributor-avatar {
             margin-left: 0;
         }
 
@@ -977,7 +984,7 @@
             <div id="repo-error" style="display:none;" class="git-error-state">
                 <i class="fas fa-triangle-exclamation"></i>
                 <h3>Couldn't load repositories</h3>
-                <p id="repo-error-msg">There was a problem reaching the GitHub API. Please try again later.</p>
+                <p id="repo-error-msg">There was a problem loading repository data. Please try again later.</p>
             </div>
 
         </div>
@@ -992,8 +999,7 @@
     <script>
     (function () {
         const GITHUB_USERNAME = 'oceanmallik';
-        const GH_API_BASE = 'https://api.github.com';
-        const PER_PAGE = 100;
+        const DATA_CACHE_URL = 'https://raw.githubusercontent.com/oceanmallik/github-data-cache/refs/heads/seed/data.json';
 
         // Language → colour mapping (GitHub colours)
         const LANG_COLORS = {
@@ -1013,6 +1019,7 @@
         let contributorsCache = {};
         let currentPage = 1;
         const REPOS_PER_PAGE = 12;
+        let gitDataPromise = null;
 
         // ── Skeleton ──────────────────────────────────────────────────────────
         function renderSkeletons(count = 6) {
@@ -1043,50 +1050,39 @@
             }
         }
 
-        // ── Session Cache helpers ─────────────────────────────────────────────
-        const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+        async function fetchGitData() {
+            if (gitDataPromise) return gitDataPromise;
 
-        function cacheSet(key, data) {
-            try {
-                sessionStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
-            } catch (_) {}
-        }
-
-        function cacheGet(key) {
-            try {
-                const raw = sessionStorage.getItem(key);
-                if (!raw) return null;
-                const parsed = JSON.parse(raw);
-                if (Date.now() - parsed.ts > CACHE_TTL_MS) {
-                    sessionStorage.removeItem(key);
-                    return null;
+            gitDataPromise = (async () => {
+                const res = await fetch(DATA_CACHE_URL);
+                if (!res.ok) {
+                    throw new Error(`Failed to load GitHub data: HTTP ${res.status}`);
                 }
-                return parsed.data;
-            } catch (_) { return null; }
+                const data = await res.json();
+                if (!data || (!data.repos && !data.profile)) {
+                    throw new Error('Invalid GitHub data format');
+                }
+                return data;
+            })();
+
+            return gitDataPromise;
         }
 
         // ── Profile Strip ─────────────────────────────────────────────────────
         async function loadProfile() {
             try {
-                let user = cacheGet('gh_profile');
-                if (!user) {
-                    const res = await fetch(`${GH_API_BASE}/users/${GITHUB_USERNAME}`);
-                    if (!res.ok) throw new Error(`Status ${res.status}`);
-                    user = await res.json();
-                    cacheSet('gh_profile', user);
-                }
-
+                const data = await fetchGitData();
+                const user = data && data.profile;
                 if (user) {
                     if (user.avatar_url) document.getElementById('gh-avatar').src = user.avatar_url;
                     document.getElementById('gh-name').textContent = user.name || user.login || 'Ocean Mallik';
                     document.getElementById('gh-login').textContent = `@${user.login || GITHUB_USERNAME}`;
-                    document.getElementById('gh-repos').textContent = user.public_repos !== undefined ? user.public_repos : '-';
+                    document.getElementById('gh-repos').textContent = user.public_repos !== undefined ? user.public_repos : (data.repos ? data.repos.length : '-');
                     document.getElementById('gh-followers').textContent = user.followers !== undefined ? formatNum(user.followers) : '-';
                     document.getElementById('gh-following').textContent = user.following !== undefined ? user.following : '-';
                     document.getElementById('gh-profile-link').href = user.html_url || `https://github.com/${GITHUB_USERNAME}`;
                 }
             } catch (_) {
-                // If API is not responding or rate limited, ensure profile card still displays with '-' for stats
                 document.getElementById('gh-repos').textContent = '-';
                 document.getElementById('gh-followers').textContent = '-';
                 document.getElementById('gh-following').textContent = '-';
@@ -1096,98 +1092,37 @@
         // ── Repositories ──────────────────────────────────────────────────────
         async function loadRepos() {
             try {
-                let repos = cacheGet('gh_repos');
-                if (!repos) {
-                    const res = await fetch(
-                        `${GH_API_BASE}/users/${GITHUB_USERNAME}/repos?per_page=${PER_PAGE}&type=public`
-                    );
+                const data = await fetchGitData();
+                const rawRepos = Array.isArray(data && data.repos) ? data.repos : [];
 
-                    if (!res.ok) {
-                        const isRateLimit = res.status === 403 || res.status === 429;
-                        const profileUrl = `https://github.com/${GITHUB_USERNAME}?tab=repositories`;
-                        const msg = isRateLimit
-                            ? `GitHub API rate limit reached (${res.status}). You have 60 free requests/hour. Please wait a few minutes and refresh, or <a href="${profileUrl}" target="_blank" rel="noopener noreferrer">visit my profile directly</a>.`
-                            : `GitHub API responded with ${res.status}.`;
-                        const err = new Error(msg);
-                        err.isHtml = isRateLimit;
-                        throw err;
+                allRepos = rawRepos.map(repo => {
+                    const fullName = repo.full_name || `${GITHUB_USERNAME}/${repo.name}`;
+                    if (Array.isArray(repo.contributors)) {
+                        contributorsCache[fullName] = repo.contributors;
                     }
-
-                    repos = await res.json();
-                    cacheSet('gh_repos', repos);
-                }
-
-                allRepos = repos;
+                    return {
+                        ...repo,
+                        full_name: fullName
+                    };
+                });
 
                 document.getElementById('repo-skeleton').style.display = 'none';
                 document.getElementById('repo-grid').style.display = 'grid';
 
                 renderRepos();
-                initLazyContributors();
             } catch (err) {
                 document.getElementById('repo-skeleton').style.display = 'none';
                 const errBox = document.getElementById('repo-error');
                 errBox.style.display = 'block';
                 const msgEl = document.getElementById('repo-error-msg');
-                if (err.isHtml) {
-                    msgEl.innerHTML = err.message;
-                } else if (err.message) {
-                    msgEl.textContent = err.message;
-                }
+                const profileUrl = `https://github.com/${GITHUB_USERNAME}?tab=repositories`;
+                msgEl.innerHTML = `Could not load repositories. Please try again later, or <a href="${profileUrl}" target="_blank" rel="noopener noreferrer">visit my GitHub profile directly</a>.`;
+
                 const countEl = document.getElementById('git-repo-count');
                 if (countEl) {
                     countEl.innerHTML = '<strong>-</strong> repositories';
                 }
             }
-        }
-
-        // ── Lazy Contributors (IntersectionObserver) ──────────────────────────
-        let contributorObserver = null;
-
-        function initLazyContributors() {
-            if (contributorObserver) contributorObserver.disconnect();
-            contributorObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) return;
-                    const card = entry.target;
-                    const fullName = card.dataset.repo;
-                    if (fullName && contributorsCache[fullName] === undefined) {
-                        fetchContributors(fullName);
-                    }
-                    contributorObserver.unobserve(card);
-                });
-            }, { rootMargin: '100px' });
-
-            document.querySelectorAll('.repo-card').forEach(card => {
-                contributorObserver.observe(card);
-            });
-        }
-
-
-        async function fetchContributors(fullName) {
-            if (contributorsCache[fullName] !== undefined) return;
-            contributorsCache[fullName] = null; // mark as fetching
-            try {
-                const res = await fetch(
-                    `${GH_API_BASE}/repos/${fullName}/contributors?per_page=6&anon=false`
-                );
-                if (!res.ok) {
-                    contributorsCache[fullName] = [];
-                    return;
-                }
-                contributorsCache[fullName] = await res.json();
-                // Re-render only if this repo is currently visible
-                const card = document.querySelector(`[data-repo="${fullName}"]`);
-                if (card) updateContributorsInCard(card, contributorsCache[fullName]);
-            } catch (_) {
-                contributorsCache[fullName] = [];
-            }
-        }
-
-        function updateContributorsInCard(card, contributors) {
-            const placeholder = card.querySelector('.contributors-placeholder');
-            if (!placeholder) return;
-            placeholder.replaceWith(buildContributorAvatars(contributors));
         }
 
         // ── Rendering ─────────────────────────────────────────────────────────
@@ -1267,9 +1202,6 @@
             });
 
             renderPagination(allFiltered.length, totalPages);
-
-            // Re-attach lazy contributor observer for freshly rendered cards
-            if (typeof initLazyContributors === 'function') initLazyContributors();
         }
 
         function renderPagination(total, totalPages) {
@@ -1377,18 +1309,18 @@
         }
 
         function buildRepoCard(repo) {
-            const updatedAgo = timeAgo(repo.updated_at);
-            const isFeatured = (repo.stargazers_count > 0 || repo.forks_count > 0);
+            const updatedAgo = timeAgo(repo.updated_at || repo.pushed_at || Date.now());
+            const isFeatured = ((repo.stargazers_count || 0) > 0 || (repo.forks_count || 0) > 0);
 
             let desc = repo.description || 'Open source software repository hosted on GitHub.';
             const descHtml = window.formatDescriptionWithKeyPhrase
                 ? window.formatDescriptionWithKeyPhrase(desc, [repo.language, 'open source', 'repository'])
                 : (desc.includes('<strong>') ? desc : `<strong>${escapeHtml(desc)}</strong>`);
 
-            const contributors = contributorsCache[repo.full_name];
-            const contributorsPart = contributors
+            const contributors = contributorsCache[repo.full_name] || repo.contributors;
+            const contributorsPart = (contributors && contributors.length > 0)
                 ? buildContributorAvatars(contributors).outerHTML
-                : `<span class="contributors-placeholder"></span>`;
+                : '';
 
             const siteLinkHtml = repo.homepage
                 ? ` • <a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer" class="card-inline-link">Live Site</a>`
@@ -1396,7 +1328,7 @@
 
             const checklist = [
                 { html: `Language: <strong>${escapeHtml(repo.language || 'Multi-stack')}</strong>` },
-                { html: `Metrics: <strong>${formatNum(repo.stargazers_count)} stars</strong> • <strong>${formatNum(repo.forks_count)} forks</strong>` },
+                { html: `Metrics: <strong>${formatNum(repo.stargazers_count || 0)} stars</strong> • <strong>${formatNum(repo.forks_count || 0)} forks</strong>` },
                 { html: `Activity: Updated ${updatedAgo} • <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer" class="card-inline-link">GitHub</a>${siteLinkHtml} ${contributorsPart}` }
             ];
 
@@ -1419,11 +1351,6 @@
                 card.setAttribute('data-repo', repo.full_name);
             }
 
-            // Trigger contributor fetch if not cached
-            if (!contributors) {
-                fetchContributors(repo.full_name);
-            }
-
             return card;
         }
 
@@ -1437,16 +1364,26 @@
             const extra = contributors.length - display.length;
 
             display.forEach(c => {
+                const username = c.username || c.login || 'contributor';
+                const profileUrl = c.profile_url || `https://github.com/${username}`;
+                const rawAvatar = c.avatar_url || '';
+                const avatarSrc = rawAvatar ? (rawAvatar.includes('?') ? `${rawAvatar}&s=48` : `${rawAvatar}?s=48`) : '';
+
+                const a = document.createElement('a');
+                a.className = 'contributor-avatar-link';
+                a.href = profileUrl;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.title = `@${username}`;
+
                 const img = document.createElement('img');
                 img.className = 'contributor-avatar';
-                img.src = c.avatar_url + '&s=48';
-                img.alt = c.login;
-                img.title = `@${c.login}`;
+                img.src = avatarSrc;
+                img.alt = username;
                 img.loading = 'lazy';
-                img.addEventListener('click', () => {
-                    window.open(`https://github.com/${c.login}`, '_blank', 'noopener,noreferrer');
-                });
-                wrapper.appendChild(img);
+
+                a.appendChild(img);
+                wrapper.appendChild(a);
             });
 
             if (extra > 0) {
