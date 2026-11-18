@@ -582,6 +582,205 @@
         document.body.style.overflow = 'hidden';
     }
 
+    /* --- Reusable Supabase-Style Bento Feature Card Component --- */
+    function formatDescriptionWithKeyPhrase(desc, techArr = [], fallbackTerm = '') {
+        if (!desc) return '';
+        if (desc.includes('<strong>')) return desc;
+
+        const candidates = [
+            'native android app', 'note-hosting website', 'indie game in development',
+            'indie game', 'portfolio website', 'blood donation', 'developer tools',
+            'command-line tool', 'systems programming', 'notification tracker',
+            'cross platform', 'relational databases', 'responsive web design',
+            'foundational c#', 'space apps challenge', 'competitive programming',
+            'freecodecamp', 'hackerrank', 'microsoft',
+            ...(Array.isArray(techArr) ? techArr : []),
+            fallbackTerm
+        ].filter(Boolean);
+
+        for (const candidate of candidates) {
+            const regex = new RegExp(`(${candidate})`, 'i');
+            if (regex.test(desc)) {
+                return desc.replace(regex, '<strong>$1</strong>');
+            }
+        }
+
+        const words = desc.split(' ');
+        if (words.length > 3) {
+            return `<strong>${words.slice(0, 2).join(' ')}</strong> ${words.slice(2).join(' ')}`;
+        }
+        return `<strong>${desc}</strong>`;
+    }
+
+    function createBentoCard({
+        iconClass = 'fas fa-layer-group',
+        title = '',
+        titleUrl = '',
+        descriptionHtml = '',
+        graphicIcon = '',
+        graphicImg = '',
+        photoFadeImg = '',
+        photoFadeAlt = '',
+        checklist = [],
+        className = '',
+        colSpan2 = false,
+        dataset = {},
+        onInspect = null
+    }) {
+        const card = document.createElement('article');
+        card.className = `card bento-card ${colSpan2 ? 'col-span-2 ' : ''}${className}`.trim();
+
+        Object.entries(dataset).forEach(([k, v]) => {
+            card.dataset[k] = v;
+        });
+
+        // 1. Top Content Area
+        const mainArea = document.createElement('div');
+        mainArea.className = 'card-main';
+
+        // Header row: small line icon (18px, color #a1a1a1) + title (16px, weight 600, color #fff), gap 12px
+        const header = document.createElement('div');
+        header.className = 'card-header';
+
+        const headerIcon = document.createElement('span');
+        headerIcon.className = 'card-header-icon';
+        headerIcon.setAttribute('aria-hidden', 'true');
+        headerIcon.innerHTML = `<i class="${iconClass}"></i>`;
+
+        const titleEl = document.createElement('h3');
+        titleEl.className = 'card-title';
+        if (titleUrl && titleUrl !== '#') {
+            const link = document.createElement('a');
+            link.href = titleUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.textContent = title;
+            titleEl.appendChild(link);
+        } else {
+            titleEl.textContent = title;
+        }
+
+        header.appendChild(headerIcon);
+        header.appendChild(titleEl);
+        mainArea.appendChild(header);
+
+        // Description below title: 14px, color #8f8f8f, line-height 1.5.
+        // Wrap key phrase in <strong> with color #fff, weight 500
+        const descEl = document.createElement('p');
+        descEl.className = 'card-description';
+        descEl.innerHTML = descriptionHtml;
+        mainArea.appendChild(descEl);
+
+        card.appendChild(mainArea);
+
+        // 2. Right Visual Area:
+        // If photoFadeImg is provided (e.g. certificate photos), fit from right and smoothly fade away into #1c1c1c
+        // Otherwise, render standard concentric squares + faded logo graphic at 10-20% opacity
+        if (photoFadeImg) {
+            const photoContainer = document.createElement('div');
+            photoContainer.className = 'card-photo-visual';
+            if (onInspect) {
+                photoContainer.setAttribute('role', 'button');
+                photoContainer.setAttribute('tabindex', '0');
+                photoContainer.setAttribute('aria-label', `Inspect ${title || 'certificate'} high-resolution`);
+                photoContainer.setAttribute('title', 'Click to inspect high-resolution');
+                photoContainer.addEventListener('click', onInspect);
+                photoContainer.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onInspect(e);
+                    }
+                });
+            }
+
+            const photoImg = document.createElement('img');
+            photoImg.className = 'card-photo-img';
+            photoImg.src = photoFadeImg;
+            photoImg.alt = photoFadeAlt || title || 'Certificate';
+            photoImg.loading = 'lazy';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'card-photo-fade-overlay';
+            overlay.setAttribute('aria-hidden', 'true');
+
+            photoContainer.appendChild(photoImg);
+            photoContainer.appendChild(overlay);
+            card.appendChild(photoContainer);
+        } else {
+            const illustration = document.createElement('div');
+            illustration.className = 'card-illustration';
+            illustration.setAttribute('aria-hidden', 'true');
+
+            const concentric = document.createElement('div');
+            concentric.className = 'concentric-squares';
+            for (let i = 1; i <= 4; i++) {
+                const sq = document.createElement('span');
+                sq.className = `concentric-square square-${i}`;
+                concentric.appendChild(sq);
+            }
+            illustration.appendChild(concentric);
+
+            const graphic = document.createElement('div');
+            graphic.className = 'card-illustration-graphic';
+            if (graphicImg) {
+                const img = document.createElement('img');
+                img.src = graphicImg;
+                img.alt = '';
+                img.loading = 'lazy';
+                graphic.appendChild(img);
+            } else {
+                const gIcon = document.createElement('i');
+                gIcon.className = graphicIcon || iconClass;
+                graphic.appendChild(gIcon);
+            }
+            illustration.appendChild(graphic);
+
+            if (onInspect) {
+                illustration.style.cursor = 'pointer';
+                illustration.setAttribute('role', 'button');
+                illustration.setAttribute('tabindex', '0');
+                illustration.setAttribute('title', 'Click to inspect');
+                illustration.addEventListener('click', onInspect);
+            }
+
+            card.appendChild(illustration);
+        }
+
+        // 3. Checklist pinned to the bottom of the card:
+        // 3 items, each with a small check icon (14px, #d4d4d4) + text (14px, color #d4d4d4), gap 8px between rows
+        const checklistUl = document.createElement('ul');
+        checklistUl.className = 'card-checklist';
+
+        checklist.slice(0, 3).forEach((item) => {
+            const li = document.createElement('li');
+            li.className = 'card-checklist-item';
+
+            const checkIcon = document.createElement('i');
+            checkIcon.className = (item.icon || 'fas fa-check') + ' card-check-icon';
+            checkIcon.setAttribute('aria-hidden', 'true');
+
+            const textSpan = document.createElement('span');
+            textSpan.className = 'card-check-text';
+            if (item.html) {
+                textSpan.innerHTML = item.html;
+            } else {
+                textSpan.textContent = item.text || '';
+            }
+
+            li.appendChild(checkIcon);
+            li.appendChild(textSpan);
+            checklistUl.appendChild(li);
+        });
+
+        card.appendChild(checklistUl);
+
+        return card;
+    }
+
+    // Expose globally so external pages (like mygit.html) can reuse the same Card component
+    window.createBentoCard = createBentoCard;
+    window.formatDescriptionWithKeyPhrase = formatDescriptionWithKeyPhrase;
+
     /* --- Activities Rendering & Interactive Filters --- */
     function initActivitiesFromJson() {
         const activitiesGrid = document.getElementById('activities-grid');
@@ -597,123 +796,49 @@
             idle: { className: 'status-idle', label: 'Exploring / Idle' }
         };
 
-        const createLinkElement = (link) => {
-            const anchorElement = document.createElement('a');
-            const iconElement = document.createElement('i');
-            const iconClass = link.iconClass || (link.type === 'github' ? 'fab fa-github' : 'fas fa-external-link-alt');
-
-            anchorElement.href = link.url || '#';
-            anchorElement.target = '_blank';
-            anchorElement.rel = 'noopener noreferrer';
-
-            if (link.type === 'live') {
-                anchorElement.classList.add('live-link');
-            }
-
-            iconElement.className = iconClass;
-            anchorElement.appendChild(iconElement);
-            anchorElement.appendChild(document.createTextNode(` ${link.label || 'Open'}`));
-
-            return anchorElement;
-        };
-
         const createCardElement = (activity) => {
             const statusConfig = typeof activity.status === 'string' ? statusMap[activity.status] : null;
-            const statusClassName = activity.statusClass || (statusConfig ? statusConfig.className : statusMap.active.className);
-            const statusLabel = activity.statusLabel || (statusConfig ? statusConfig.label : statusMap.active.label);
+            const statusLabel = activity.statusLabel || (statusConfig ? statusConfig.label : 'Active');
+            const categoryTitle = activity.category ? (activity.category.charAt(0).toUpperCase() + activity.category.slice(1)) : 'Project';
 
-            const cardElement = document.createElement('div');
-            cardElement.className = `card project-card${activity.featured ? ' featured-card' : ''}`;
+            const techString = Array.isArray(activity.tech) && activity.tech.length > 0
+                ? activity.tech.slice(0, 3).join(', ')
+                : 'Software Engineering';
 
-            // Mini macOS window header bar
-            const windowHeader = document.createElement('div');
-            windowHeader.className = 'card-window-header';
-            windowHeader.innerHTML = `
-                <span class="window-dot dot-red"></span>
-                <span class="window-dot dot-yellow"></span>
-                <span class="window-dot dot-green"></span>
-                <span class="window-title">${activity.category || activity.tech?.[0] || 'App'}</span>
-            `;
-            cardElement.appendChild(windowHeader);
+            const linksHtml = Array.isArray(activity.links) && activity.links.length > 0
+                ? activity.links.map((l) => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="card-inline-link">${l.label}</a>`).join(' • ')
+                : `<a href="${activity.primaryUrl || '#'}" target="_blank" rel="noopener noreferrer" class="card-inline-link">Explore Project</a>`;
 
-            const cardImageElement = document.createElement('div');
-            cardImageElement.className = 'card-image';
+            const descriptionHtml = formatDescriptionWithKeyPhrase(activity.description, activity.tech, activity.category);
 
-            if (activity.featured) {
-                const highlightElement = document.createElement('div');
-                highlightElement.className = 'card-highlight';
-                highlightElement.innerHTML = '<i class="fas fa-star" style="font-size: 0.62rem; margin-right: 4px;"></i> Featured';
-                cardImageElement.appendChild(highlightElement);
-            }
+            const checklist = [
+                { html: `Status: <strong>${statusLabel}</strong> (${categoryTitle})` },
+                { html: `Stack: <strong>${techString}</strong>` },
+                { html: `Links: ${linksHtml}` }
+            ];
 
-            const cardIconElement = document.createElement('i');
-            cardIconElement.className = activity.icon || 'fas fa-code';
-            cardImageElement.appendChild(cardIconElement);
-
-            const cardContentElement = document.createElement('div');
-            cardContentElement.className = 'card-content';
-
-            const statusElement = document.createElement('div');
-            statusElement.className = `project-status ${statusClassName}`;
-
-            const statusLightElement = document.createElement('span');
-            statusLightElement.className = 'status-light';
-            statusLightElement.setAttribute('aria-hidden', 'true');
-
-            const statusTextElement = document.createElement('span');
-            statusTextElement.textContent = statusLabel;
-
-            statusElement.appendChild(statusLightElement);
-            statusElement.appendChild(statusTextElement);
-
-            const titleElement = document.createElement('h3');
-            const titleLinkElement = document.createElement('a');
-            titleLinkElement.href = activity.primaryUrl || '#';
-            titleLinkElement.target = '_blank';
-            titleLinkElement.rel = 'noopener noreferrer';
-            titleLinkElement.textContent = activity.title || 'Untitled Activity';
-            titleElement.appendChild(titleLinkElement);
-
-            const descriptionElement = document.createElement('p');
-            descriptionElement.textContent = activity.description || '';
-
-            const badgesElement = document.createElement('div');
-            badgesElement.className = 'tech-badges';
-
-            (Array.isArray(activity.tech) ? activity.tech : []).forEach((techItem) => {
-                const badgeElement = document.createElement('small');
-                badgeElement.textContent = techItem;
-                badgesElement.appendChild(badgeElement);
-            });
-
-            const linksElement = document.createElement('div');
-            linksElement.className = 'card-links';
-
-            (Array.isArray(activity.links) ? activity.links : []).forEach((link) => {
-                if (link && link.url) {
-                    linksElement.appendChild(createLinkElement(link));
+            return createBentoCard({
+                iconClass: activity.icon || 'fas fa-code',
+                title: activity.title || 'Untitled Activity',
+                titleUrl: activity.primaryUrl || '#',
+                descriptionHtml,
+                graphicIcon: activity.icon || 'fas fa-code',
+                checklist,
+                className: 'project-card',
+                colSpan2: false,
+                dataset: {
+                    category: activity.category || ''
                 }
             });
-
-            cardContentElement.appendChild(statusElement);
-            cardContentElement.appendChild(titleElement);
-            cardContentElement.appendChild(descriptionElement);
-            cardContentElement.appendChild(badgesElement);
-            cardContentElement.appendChild(linksElement);
-
-            cardElement.appendChild(cardImageElement);
-            cardElement.appendChild(cardContentElement);
-
-            return cardElement;
         };
 
         const showInfoMessage = (targetGrid, message) => {
             if (!targetGrid) return;
             targetGrid.innerHTML = `
                 <div class="card project-card" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
-                    <i class="fas fa-search" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 12px; display: block;"></i>
-                    <h3 style="margin-bottom: 8px;">No matching activities found</h3>
-                    <p style="color: var(--text-muted);">${message}</p>
+                    <i class="fas fa-search" style="font-size: 2rem; color: #8f8f8f; margin-bottom: 12px; display: block;" aria-hidden="true"></i>
+                    <h3 class="card-title" style="margin-bottom: 8px;">No matching activities found</h3>
+                    <p class="card-description" style="max-width: 100%; margin: 0 auto;">${message}</p>
                 </div>
             `;
         };
@@ -843,10 +968,10 @@
 
         const renderInfoCard = (message) => {
             accordionContainer.innerHTML = `
-                <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
-                    <i class="fas fa-certificate" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 12px; display: block;"></i>
-                    <h3 style="margin-bottom: 8px;">Certificates</h3>
-                    <p style="color: var(--text-muted);">${message}</p>
+                <div class="card bento-card" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
+                    <i class="fas fa-certificate" style="font-size: 2rem; color: #8f8f8f; margin-bottom: 12px; display: block;" aria-hidden="true"></i>
+                    <h3 class="card-title" style="margin-bottom: 8px;">Certificates</h3>
+                    <p class="card-description" style="max-width: 100%; margin: 0 auto;">${message}</p>
                 </div>
             `;
         };
@@ -868,116 +993,49 @@
             }
 
             certificates.forEach((certificate) => {
-                const certificateItemElement = document.createElement('div');
-                certificateItemElement.className = 'certificate-item';
+                const cat = categoryMap[certificate.category] || {
+                    label: certificate.category ? (certificate.category.charAt(0).toUpperCase() + certificate.category.slice(1)) : 'General',
+                    icon: 'fas fa-certificate'
+                };
 
-                if (certificate.featured) {
-                    certificateItemElement.classList.add('featured-card');
-                }
-
-                const imageWrapper = document.createElement('div');
-                imageWrapper.className = 'certificate-image-wrapper';
-                imageWrapper.setAttribute('role', 'button');
-                imageWrapper.setAttribute('tabindex', '0');
-                imageWrapper.setAttribute('title', 'Click to inspect full certificate');
-
-                const imageElement = document.createElement('img');
-                imageElement.src = certificate.image ? `${imageBasePath}${certificate.image}` : '';
-                imageElement.alt = certificate.alt || `${certificate.title || 'Certificate'} image`;
-                imageElement.className = 'cert-img';
-                imageElement.loading = 'lazy';
-
-                const zoomOverlay = document.createElement('div');
-                zoomOverlay.className = 'cert-zoom-overlay';
-                zoomOverlay.innerHTML = '<span class="cert-zoom-pill"><i class="fas fa-search-plus"></i> View Fullscreen</span>';
-
-                imageWrapper.appendChild(imageElement);
-                imageWrapper.appendChild(zoomOverlay);
-
-                // Category pill on top-left — works for any category value
-                if (certificate.category) {
-                    const cat = categoryMap[certificate.category] || { label: certificate.category.charAt(0).toUpperCase() + certificate.category.slice(1), icon: 'fas fa-tag' };
-                    const catBadge = document.createElement('span');
-                    catBadge.className = 'cert-category-badge';
-                    catBadge.textContent = cat.label;
-                    imageWrapper.appendChild(catBadge);
-                }
-
-                // Featured badge on top-right
-                if (certificate.featured) {
-                    const featuredBadge = document.createElement('span');
-                    featuredBadge.className = 'cert-featured-badge';
-                    featuredBadge.innerHTML = '<i class="fas fa-star"></i> Featured';
-                    imageWrapper.appendChild(featuredBadge);
-                }
-
-                // Lightbox trigger helper
                 const triggerLightbox = (event) => {
-                    event.preventDefault();
+                    if (event) event.preventDefault();
                     openCertificateLightbox(certificate, imageBasePath);
                 };
 
-                imageWrapper.addEventListener('click', triggerLightbox);
-                imageWrapper.addEventListener('keydown', (event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        triggerLightbox(event);
-                    }
+                const descriptionHtml = `Verified credential issued by <strong>${certificate.issuer || 'Official Organization'}</strong> in ${cat.label}.`;
+
+                const inspectLinkHtml = `<button type="button" class="cert-inspect-btn">Inspect High-Res</button>`;
+                const verifyLinkHtml = (certificate.verifyUrl && certificate.verifyUrl !== '#')
+                    ? ` • <a href="${certificate.verifyUrl}" target="_blank" rel="noopener noreferrer" class="card-inline-link">Verify Online</a>`
+                    : '';
+
+                const checklist = [
+                    { html: `Issuer: <strong>${certificate.issuer || 'Verified Organization'}</strong>` },
+                    { html: `Category: <strong>${cat.label}</strong>` },
+                    { html: `Credential: ${inspectLinkHtml}${verifyLinkHtml}` }
+                ];
+
+                const card = createBentoCard({
+                    iconClass: cat.icon || 'fas fa-certificate',
+                    title: certificate.title || 'Untitled Certificate',
+                    titleUrl: certificate.verifyUrl || '',
+                    descriptionHtml,
+                    photoFadeImg: certificate.image ? `${imageBasePath}${certificate.image}` : '',
+                    photoFadeAlt: certificate.title || '',
+                    graphicIcon: cat.icon || 'fas fa-certificate',
+                    checklist,
+                    className: 'certificate-item',
+                    colSpan2: false,
+                    onInspect: triggerLightbox
                 });
 
-                certificateItemElement.appendChild(imageWrapper);
-
-                const cardContentElement = document.createElement('div');
-                cardContentElement.className = 'certificate-card-content';
-
-                // Meta row: Issuer & Verified badge
-                const metaRow = document.createElement('div');
-                metaRow.className = 'cert-meta-row';
-
-                const issuerEl = document.createElement('span');
-                issuerEl.className = 'cert-issuer';
-                issuerEl.innerHTML = `<i class="fas fa-shield-alt"></i> ${certificate.issuer || 'Verified Credential'}`;
-                metaRow.appendChild(issuerEl);
-
-                const verifiedPill = document.createElement('span');
-                verifiedPill.className = 'cert-verified-pill';
-                verifiedPill.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
-                metaRow.appendChild(verifiedPill);
-
-                cardContentElement.appendChild(metaRow);
-
-                // Certificate title
-                const titleElement = document.createElement('h3');
-                titleElement.className = 'certificate-title';
-                titleElement.textContent = certificate.title || 'Untitled Certificate';
-                cardContentElement.appendChild(titleElement);
-
-                // Action row: Inspect & Verify Online buttons
-                const actionRow = document.createElement('div');
-                actionRow.className = 'cert-action-row';
-
-                const inspectBtn = document.createElement('button');
-                inspectBtn.type = 'button';
-                inspectBtn.className = 'cert-btn-preview';
-                inspectBtn.innerHTML = '<i class="fas fa-expand"></i> Inspect';
-                inspectBtn.setAttribute('title', 'Inspect certificate in high resolution');
-                inspectBtn.addEventListener('click', triggerLightbox);
-                actionRow.appendChild(inspectBtn);
-
-                if (certificate.verifyUrl && certificate.verifyUrl !== '#') {
-                    const verifyBtn = document.createElement('a');
-                    verifyBtn.className = 'cert-btn-verify';
-                    verifyBtn.href = certificate.verifyUrl;
-                    verifyBtn.target = '_blank';
-                    verifyBtn.rel = 'noopener noreferrer';
-                    verifyBtn.innerHTML = '<i class="fas fa-external-link-alt"></i> Verify Online';
-                    verifyBtn.setAttribute('title', 'Verify certificate on issuer website');
-                    actionRow.appendChild(verifyBtn);
+                const inspectBtn = card.querySelector('.cert-inspect-btn');
+                if (inspectBtn) {
+                    inspectBtn.addEventListener('click', triggerLightbox);
                 }
 
-                cardContentElement.appendChild(actionRow);
-                certificateItemElement.appendChild(cardContentElement);
-                accordionContainer.appendChild(certificateItemElement);
+                accordionContainer.appendChild(card);
             });
         };
 

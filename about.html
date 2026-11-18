@@ -95,71 +95,175 @@
             </div>
 
             <div class="bento-grid">
-                <!-- Card 1: Main Bio & Intro -->
-                <div class="bento-card bento-bio reveal">
-                    <div>
-                        <div class="bio-header">
-                            <div class="bio-avatar-mini">
-                                <img src="assets/images/me.jpg" alt="Ocean Mallik">
-                            </div>
-                            <div>
-                                <span class="bio-badge"><i class="fas fa-map-marker-alt"></i> Dhaka, Bangladesh</span>
-                                <h2>Ocean <span class="highlight">Mallik</span></h2>
-                                <p class="bio-role">Software Engineer in Training &bull; DIU</p>
-                            </div>
+                <!-- Card 1: Main Bio & Intro (col-span-2) -->
+                <article class="card bento-card col-span-2 reveal">
+                    <div class="card-main">
+                        <div class="card-header">
+                            <span class="card-header-icon" aria-hidden="true"><i class="fas fa-user-astronaut"></i></span>
+                            <h3 class="card-title">Ocean Mallik</h3>
                         </div>
-
-                        <p class="bio-text">
-                            Hello visitor, I’m Ocean, a Software Engineering student at Daffodil International University. I enjoy using computers, exploring new ideas, and tinkering with anything that sparks my interest. From building cross platform mobile apps like DIU Notes Buddy to experimenting with Godot for indie games and developing open source tools, I am continuously learning and building.
+                        <p class="card-description">
+                            Software Engineering student at <strong>Daffodil International University</strong>. Exploring computer systems, building native mobile apps, and contributing to open source projects.
                         </p>
+                    </div>
 
-                        <div class="bio-tags">
-                            <span class="bento-pill"><i class="fas fa-bolt highlight"></i> Fast Learner</span>
-                            <span class="bento-pill"><i class="fas fa-coffee highlight"></i> Caffeine Powered</span>
-                            <span class="bento-pill"><i class="fas fa-terminal highlight"></i> Linux &amp; CLI</span>
-                            <span class="bento-pill"><i class="fas fa-gamepad highlight"></i> Game Dev</span>
-                            <span class="bento-pill"><i class="fas fa-code-branch highlight"></i> Open Source</span>
+                    <!-- Illustration area on the right -->
+                    <div class="card-illustration" aria-hidden="true">
+                        <div class="concentric-squares">
+                            <span class="concentric-square square-1"></span>
+                            <span class="concentric-square square-2"></span>
+                            <span class="concentric-square square-3"></span>
+                            <span class="concentric-square square-4"></span>
+                        </div>
+                        <div class="card-illustration-graphic">
+                            <img src="assets/images/me.jpg" alt="" loading="lazy">
                         </div>
                     </div>
 
-                    <div class="bio-cta">
-                        <a href="https://link.oceanmallik.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-                            <i class="fas fa-link"></i> All My Links
-                        </a>
-                        <a href="https://blog.oceanmallik.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-                            <i class="fas fa-feather-alt"></i> Dev Blog
-                        </a>
-                        <a href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-                            <i class="fab fa-github"></i> GitHub
-                        </a>
-                    </div>
-                </div>
+                    <!-- Checklist pinned to bottom -->
+                    <ul class="card-checklist">
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Location: <strong>Dhaka, Bangladesh</strong></span>
+                        </li>
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Core Focus: <strong>Native Mobile &amp; Systems</strong></span>
+                        </li>
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Links: <a href="https://link.oceanmallik.com" target="_blank" rel="noopener noreferrer" class="card-inline-link">All Links</a> • <a href="https://blog.oceanmallik.com" target="_blank" rel="noopener noreferrer" class="card-inline-link">Dev Blog</a> • <a href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="card-inline-link">GitHub</a></span>
+                        </li>
+                    </ul>
+                </article>
 
-                <!-- Card 2: Verified Developer Card -->
-                <div class="bento-card bento-card-media reveal">
-                    <div class="card-media-wrapper">
-                        <img src="assets/images/fcCard.png" alt="Ocean Mallik Developer Card" class="bento-fc-card">
+                <!-- Card 2: Verified Developer Card (1 col) -->
+                <article class="card bento-card reveal">
+                    <div class="card-main">
+                        <div class="card-header">
+                            <span class="card-header-icon" aria-hidden="true"><i class="fas fa-id-card"></i></span>
+                            <h3 class="card-title">Developer Credentials</h3>
+                        </div>
+                        <p class="card-description">
+                            Official accreditation and verified identity card issued by <strong>freeCodeCamp &amp; DIU</strong>.
+                        </p>
                     </div>
-                    <div class="card-media-caption">
-                        <span><i class="fas fa-shield-alt highlight"></i> Verified Developer Card</span>
-                    </div>
-                </div>
 
-                <!-- Card 3: Technical Skills Matrix -->
-                <div class="bento-card bento-skills reveal">
-                    <div class="bento-card-title">
-                        <i class="fas fa-layer-group highlight"></i> Technical Skills &amp; Stack
+                    <!-- Illustration area on the right -->
+                    <div class="card-illustration" aria-hidden="true">
+                        <div class="concentric-squares">
+                            <span class="concentric-square square-1"></span>
+                            <span class="concentric-square square-2"></span>
+                            <span class="concentric-square square-3"></span>
+                            <span class="concentric-square square-4"></span>
+                        </div>
+                        <div class="card-illustration-graphic">
+                            <img src="assets/images/fcCard.png" alt="" loading="lazy">
+                        </div>
                     </div>
-                    <div id="skills-container" class="skills-categories" data-skills-source="data/mySkills.json"></div>
-                </div>
 
-                <!-- Card 4: Educational Qualification -->
-                <div class="bento-card bento-timeline reveal">
-                    <div class="bento-card-title">
-                        <i class="fas fa-graduation-cap highlight"></i> Educational Qualification
+                    <!-- Checklist pinned to bottom -->
+                    <ul class="card-checklist">
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Accreditation: <strong>freeCodeCamp Verified</strong></span>
+                        </li>
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Identity: <strong>Ocean Mallik (DIU)</strong></span>
+                        </li>
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Status: <strong>Active Developer Card</strong></span>
+                        </li>
+                    </ul>
+                </article>
+
+                <!-- Card 3: Technical Skills Matrix (col-span-2) -->
+                <article class="card bento-card col-span-2 reveal">
+                    <div class="card-main">
+                        <div class="card-header">
+                            <span class="card-header-icon" aria-hidden="true"><i class="fas fa-layer-group"></i></span>
+                            <h3 class="card-title">Technical Skillset &amp; Stack</h3>
+                        </div>
+                        <p class="card-description">
+                            Core engineering competencies across <strong>frontend, backend, native mobile, and systems</strong> programming.
+                        </p>
+                        <div id="skills-container" class="skills-categories" data-skills-source="data/mySkills.json"></div>
                     </div>
-                    <div id="education-timeline" class="timeline" data-education-source="data/myEducation.json"></div>
-                </div>
+
+                    <!-- Illustration area on the right -->
+                    <div class="card-illustration" aria-hidden="true">
+                        <div class="concentric-squares">
+                            <span class="concentric-square square-1"></span>
+                            <span class="concentric-square square-2"></span>
+                            <span class="concentric-square square-3"></span>
+                            <span class="concentric-square square-4"></span>
+                        </div>
+                        <div class="card-illustration-graphic">
+                            <i class="fas fa-laptop-code" aria-hidden="true"></i>
+                        </div>
+                    </div>
+
+                    <!-- Checklist pinned to bottom -->
+                    <ul class="card-checklist">
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Languages: <strong>JavaScript, TypeScript, C#, Python, C</strong></span>
+                        </li>
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Frameworks: <strong>React Native, Node.js, Godot Engine</strong></span>
+                        </li>
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Tools: <strong>Git, Linux CLI, Docker, VS Code</strong></span>
+                        </li>
+                    </ul>
+                </article>
+
+                <!-- Card 4: Educational Qualification (1 col) -->
+                <article class="card bento-card reveal">
+                    <div class="card-main">
+                        <div class="card-header">
+                            <span class="card-header-icon" aria-hidden="true"><i class="fas fa-graduation-cap"></i></span>
+                            <h3 class="card-title">Educational Background</h3>
+                        </div>
+                        <p class="card-description">
+                            Formal academic curriculum in <strong>Software Engineering</strong> and computer sciences.
+                        </p>
+                        <div id="education-timeline" class="timeline" data-education-source="data/myEducation.json"></div>
+                    </div>
+
+                    <!-- Illustration area on the right -->
+                    <div class="card-illustration" aria-hidden="true">
+                        <div class="concentric-squares">
+                            <span class="concentric-square square-1"></span>
+                            <span class="concentric-square square-2"></span>
+                            <span class="concentric-square square-3"></span>
+                            <span class="concentric-square square-4"></span>
+                        </div>
+                        <div class="card-illustration-graphic">
+                            <i class="fas fa-university" aria-hidden="true"></i>
+                        </div>
+                    </div>
+
+                    <!-- Checklist pinned to bottom -->
+                    <ul class="card-checklist">
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">B.Sc. in Software Engineering — <strong>DIU (Ongoing)</strong></span>
+                        </li>
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Higher Secondary (HSC) — <strong>Science</strong></span>
+                        </li>
+                        <li class="card-checklist-item">
+                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
+                            <span class="card-check-text">Secondary School (SSC) — <strong>Science</strong></span>
+                        </li>
+                    </ul>
+                </article>
             </div>
         </div>
     </section>

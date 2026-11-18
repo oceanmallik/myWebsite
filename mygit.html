@@ -35,25 +35,23 @@
             margin: 0 auto 2rem;
         }
 
-        /* GitHub Profile Strip */
+        /* GitHub Profile Strip - Dark Bento Card Spec */
         .github-profile-strip {
             display: flex;
             align-items: center;
             gap: 1.25rem;
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            padding: 1rem 1.5rem;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: #1c1c1c;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 24px;
             max-width: 720px;
             margin: 0 auto 3rem;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-            transition: border-color 0.3s ease, opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
+            box-shadow: none;
+            transition: border-color 150ms ease;
         }
 
         .github-profile-strip:hover {
-            border-color: var(--primary-color);
+            border-color: #3a3a3a;
         }
 
         .github-profile-strip img {
@@ -146,45 +144,43 @@
             gap: 5px;
             padding: 6px 14px;
             border-radius: 999px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--text-muted);
+            border: 1px solid #2a2a2a;
+            background: #1c1c1c;
+            color: #8f8f8f;
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(8px);
+            transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
         }
 
         .git-filter-btn:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+            border-color: #3a3a3a;
+            color: #ffffff;
         }
 
         .git-filter-btn.active {
-            background: color-mix(in srgb, var(--primary-color) 18%, transparent);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+            background: #262626;
+            border-color: #3a3a3a;
+            color: #ffffff;
         }
 
         .git-search {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: #1c1c1c;
+            border: 1px solid #2a2a2a;
             border-radius: 999px;
             padding: 6px 14px;
-            backdrop-filter: blur(8px);
-            transition: border-color 0.2s ease;
+            transition: border-color 150ms ease;
         }
 
         .git-search:focus-within {
-            border-color: var(--primary-color);
+            border-color: #3a3a3a;
         }
 
         .git-search i {
-            color: var(--text-muted);
+            color: #8f8f8f;
             font-size: 0.82rem;
         }
 
@@ -192,13 +188,13 @@
             background: transparent;
             border: none;
             outline: none;
-            color: var(--text-title);
+            color: #ffffff;
             font-size: 0.84rem;
             width: 180px;
         }
 
         .git-search input::placeholder {
-            color: var(--text-muted);
+            color: #8f8f8f;
         }
 
         /* Stats Summary Bar */
@@ -213,77 +209,80 @@
 
         .git-repo-count {
             font-size: 0.84rem;
-            color: var(--text-muted);
+            color: #8f8f8f;
         }
 
         .git-repo-count strong {
-            color: var(--text-title);
+            color: #ffffff;
         }
 
         .git-sort-select {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: #1c1c1c;
+            border: 1px solid #2a2a2a;
             border-radius: 8px;
-            color: var(--text-main);
+            color: #d4d4d4;
             font-size: 0.8rem;
             padding: 5px 10px;
             cursor: pointer;
             outline: none;
-            transition: border-color 0.2s ease;
+            transition: border-color 150ms ease;
         }
 
         .git-sort-select option {
-            background-color: var(--bg-secondary);
-            color: var(--text-title);
+            background-color: #171717;
+            color: #ffffff;
         }
 
         .git-sort-select:focus {
-            border-color: var(--primary-color);
+            border-color: #3a3a3a;
         }
 
-        /* Repo Grid */
+        /* Repo Grid - Responsive Bento Grid (3 cols desktop, 2 tablet, 1 mobile, 16px gap) */
         .repo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
+            display: grid !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            gap: 16px !important;
         }
 
-        /* Repo Card */
+        @media (max-width: 1024px) {
+            .repo-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .repo-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* Repo Card - Supabase Bento Feature Card style */
         .repo-card {
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            background-color: #1c1c1c !important;
+            background: #1c1c1c !important;
+            border: 1px solid #2a2a2a !important;
+            border-radius: 16px !important;
+            padding: 24px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            box-shadow: none !important;
+            transform: none !important;
+            transition: border-color 150ms ease !important;
+            position: relative !important;
+            overflow: hidden !important;
+            min-height: 240px;
         }
 
-        .repo-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .repo-card::before,
+        .repo-card::after {
+            display: none !important;
         }
 
         .repo-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 16px 40px rgba(0,0,0,0.18);
-            border-color: color-mix(in srgb, var(--primary-color) 40%, transparent);
-        }
-
-        .repo-card:hover::before {
-            opacity: 1;
+            border-color: #3a3a3a !important;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         /* Card Top Row */
@@ -1003,20 +1002,25 @@
             skeletonGrid.innerHTML = '';
             for (let i = 0; i < count; i++) {
                 skeletonGrid.innerHTML += `
-                    <div class="repo-skeleton">
-                        <div class="skeleton-line title"></div>
-                        <div class="skeleton-line body"></div>
-                        <div class="skeleton-line body short"></div>
-                        <div class="skeleton-tags">
-                            <div class="skeleton-line tag"></div>
-                            <div class="skeleton-line tag"></div>
-                            <div class="skeleton-line tag"></div>
+                    <div class="card bento-card repo-skeleton" style="min-height: 240px; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div class="card-main">
+                            <div class="skeleton-line title" style="height: 18px; width: 140px; border-radius: 4px; background: #262626; margin-bottom: 12px;"></div>
+                            <div class="skeleton-line body" style="height: 14px; width: 55%; border-radius: 4px; background: #222222; margin-bottom: 8px;"></div>
+                            <div class="skeleton-line body short" style="height: 14px; width: 40%; border-radius: 4px; background: #222222;"></div>
                         </div>
-                        <div class="skeleton-footer">
-                            <div class="skeleton-line skeleton-avatar"></div>
-                            <div class="skeleton-line skeleton-avatar"></div>
-                            <div class="skeleton-line body" style="width:80px; margin-left:auto;"></div>
+                        <div class="card-illustration" aria-hidden="true">
+                            <div class="concentric-squares">
+                                <span class="concentric-square square-1"></span>
+                                <span class="concentric-square square-2"></span>
+                                <span class="concentric-square square-3"></span>
+                                <span class="concentric-square square-4"></span>
+                            </div>
                         </div>
+                        <ul class="card-checklist">
+                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 60%; border-radius: 4px; background: #222222;"></span></li>
+                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 45%; border-radius: 4px; background: #222222;"></span></li>
+                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 70%; border-radius: 4px; background: #222222;"></span></li>
+                        </ul>
                     </div>`;
             }
         }
@@ -1355,84 +1359,47 @@
         }
 
         function buildRepoCard(repo) {
-            const card = document.createElement('div');
-            card.className = 'repo-card';
-            card.setAttribute('data-repo', repo.full_name);
-
-            const langColor = repo.language ? (LANG_COLORS[repo.language] || '#8b8b8b') : null;
             const updatedAgo = timeAgo(repo.updated_at);
+            const isFeatured = (repo.stargazers_count > 0 || repo.forks_count > 0);
 
-            // Topics
-            const topicsHTML = (repo.topics && repo.topics.length)
-                ? `<div class="repo-topics">${repo.topics.slice(0, 6).map(t =>
-                    `<span class="repo-topic">${escapeHtml(t)}</span>`).join('')}</div>`
-                : '';
+            let desc = repo.description || 'Open source software repository hosted on GitHub.';
+            const descHtml = window.formatDescriptionWithKeyPhrase
+                ? window.formatDescriptionWithKeyPhrase(desc, [repo.language, 'open source', 'repository'])
+                : (desc.includes('<strong>') ? desc : `<strong>${escapeHtml(desc)}</strong>`);
 
-            // Website link
-            const websiteHTML = repo.homepage
-                ? `<a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer" class="repo-website-link" title="${escapeHtml(repo.homepage)}">
-                       <i class="fas fa-globe"></i> ${formatUrl(repo.homepage)}
-                   </a>`
-                : '';
-
-            // Language
-            const langHTML = repo.language
-                ? `<span class="repo-lang">
-                       <span class="lang-dot" style="background:${langColor};"></span>
-                       ${escapeHtml(repo.language)}
-                   </span>`
-                : '';
-
-            // Fork badge
-            const forkBadge = repo.fork
-                ? `<span class="repo-fork-badge"><i class="fas fa-code-fork"></i> Fork</span>`
-                : '';
-
-            // Contributor avatars (uses cache or placeholder)
             const contributors = contributorsCache[repo.full_name];
             const contributorsPart = contributors
                 ? buildContributorAvatars(contributors).outerHTML
                 : `<span class="contributors-placeholder"></span>`;
 
-            card.innerHTML = `
-                <div class="repo-card-top">
-                    <div class="repo-name-row">
-                        <i class="fas fa-book-open repo-icon"></i>
-                        <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer"
-                           class="repo-name" title="${escapeHtml(repo.name)}">${escapeHtml(repo.name)}</a>
-                        ${forkBadge}
-                    </div>
-                    <div class="repo-card-actions">
-                        ${repo.homepage ? `<a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer"
-                            class="repo-action-btn" title="Visit live site"><i class="fas fa-arrow-up-right-from-square"></i></a>` : ''}
-                        <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer"
-                           class="repo-action-btn" title="View on GitHub"><i class="fab fa-github"></i></a>
-                    </div>
-                </div>
+            const siteLinkHtml = repo.homepage
+                ? ` • <a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer" class="card-inline-link">Live Site</a>`
+                : '';
 
-                <p class="repo-description${repo.description ? '' : ' empty'}">${
-                    repo.description ? escapeHtml(repo.description) : 'No description provided.'
-                }</p>
+            const checklist = [
+                { html: `Language: <strong>${escapeHtml(repo.language || 'Multi-stack')}</strong>` },
+                { html: `Metrics: <strong>${formatNum(repo.stargazers_count)} stars</strong> • <strong>${formatNum(repo.forks_count)} forks</strong>` },
+                { html: `Activity: Updated ${updatedAgo} • <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer" class="card-inline-link">GitHub</a>${siteLinkHtml} ${contributorsPart}` }
+            ];
 
-                ${topicsHTML}
-
-                <div class="repo-card-footer">
-                    <div class="repo-meta">
-                        <span class="repo-stat stars" title="${repo.stargazers_count} stars">
-                            <i class="fas fa-star"></i> ${formatNum(repo.stargazers_count)}
-                        </span>
-                        <span class="repo-stat forks" title="${repo.forks_count} forks">
-                            <i class="fas fa-code-fork"></i> ${formatNum(repo.forks_count)}
-                        </span>
-                        ${langHTML}
-                    </div>
-                    <div class="repo-contributors">${contributorsPart}</div>
-                </div>
-                ${websiteHTML ? `<div class="repo-website-row">${websiteHTML}</div>` : ''}
-
-                <div style="font-size:0.7rem; color:var(--text-muted); margin-top:-0.25rem;">
-                    Updated ${updatedAgo}
-                </div>`;
+            let card;
+            if (window.createBentoCard) {
+                card = window.createBentoCard({
+                    iconClass: 'fab fa-github',
+                    title: repo.name,
+                    titleUrl: repo.html_url,
+                    descriptionHtml: descHtml,
+                    graphicIcon: 'fab fa-github',
+                    checklist,
+                    className: 'repo-card',
+                    colSpan2: false,
+                    dataset: { repo: repo.full_name }
+                });
+            } else {
+                card = document.createElement('div');
+                card.className = 'repo-card';
+                card.setAttribute('data-repo', repo.full_name);
+            }
 
             // Trigger contributor fetch if not cached
             if (!contributors) {
