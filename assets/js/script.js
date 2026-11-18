@@ -806,175 +806,304 @@
     window.createBentoCard = createBentoCard;
     window.formatDescriptionWithKeyPhrase = formatDescriptionWithKeyPhrase;
 
-    /* --- Activities Rendering & Interactive Filters --- */
+    /* --- Activities Rendering & Interactive Showcase --- */
     function initActivitiesFromJson() {
+        const showcaseList = document.getElementById('showcase-list');
         const activitiesGrid = document.getElementById('activities-grid');
         const activitiesPreviewGrid = document.getElementById('activities-preview-grid');
 
-        if (!activitiesGrid && !activitiesPreviewGrid) {
+        if (!showcaseList && !activitiesGrid && !activitiesPreviewGrid) {
             return;
         }
 
-        const statusMap = {
-            active: { className: 'status-active', label: 'In Development' },
-            finished: { className: 'status-finished', label: 'Completed' },
-            idle: { className: 'status-idle', label: 'Exploring / Idle' }
+        const categoryNormalize = (cat) => {
+            if (!cat) return 'web';
+            const c = String(cat).toLowerCase().trim();
+            if (c === 'tools') return 'tool';
+            if (c === 'systems') return 'system';
+            if (c === 'games') return 'game';
+            if (c === 'mobile' || c === 'app' || c === 'apps') return 'mobile';
+            return c;
         };
 
-        const createCardElement = (activity) => {
-            const statusConfig = typeof activity.status === 'string' ? statusMap[activity.status] : null;
-            const statusLabel = activity.statusLabel || (statusConfig ? statusConfig.label : 'Active');
-            const categoryTitle = activity.category ? (activity.category.charAt(0).toUpperCase() + activity.category.slice(1)) : 'Project';
+        const categoryLabels = {
+            mobile: 'Mobile',
+            web: 'Web & Apps',
+            game: 'Game',
+            tool: 'Tool & CLI',
+            system: 'System'
+        };
 
-            const techString = Array.isArray(activity.tech) && activity.tech.length > 0
-                ? activity.tech.slice(0, 3).join(', ')
-                : 'Software Engineering';
+        const statusNormalize = (status) => {
+            if (!status) return { label: 'In Development', slug: 'in-development' };
+            const s = String(status).toLowerCase().trim();
+            if (s === 'active' || s === 'in development' || s.includes('develop')) {
+                return { label: 'In Development', slug: 'in-development' };
+            }
+            if (s === 'finished' || s === 'completed' || s.includes('complete')) {
+                return { label: 'Completed', slug: 'completed' };
+            }
+            if (s === 'idle' || s.includes('explor')) {
+                return { label: 'Exploring / Idle', slug: 'idle' };
+            }
+            return { label: status, slug: s.replace(/\s+/g, '-') };
+        };
 
-            const linksHtml = Array.isArray(activity.links) && activity.links.length > 0
-                ? activity.links.map((l) => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="card-inline-link">${l.label}</a>`).join(' • ')
-                : `<a href="${activity.primaryUrl || '#'}" target="_blank" rel="noopener noreferrer" class="card-inline-link">Explore Project</a>`;
-
-            const descriptionHtml = formatDescriptionWithKeyPhrase(activity.description, activity.tech, activity.category);
-
-            const checklist = [
-                { html: `Status: <strong>${statusLabel}</strong> (${categoryTitle})` },
-                { html: `Stack: <strong>${techString}</strong>` },
-                { html: `Links: ${linksHtml}` }
-            ];
-
-            return createBentoCard({
-                iconClass: activity.icon || 'fas fa-code',
-                title: activity.title || 'Untitled Activity',
-                titleUrl: activity.primaryUrl || '#',
-                descriptionHtml,
-                graphicIcon: activity.icon || 'fas fa-code',
-                checklist,
-                className: 'project-card',
-                colSpan2: false,
-                dataset: {
-                    category: activity.category || ''
+        const getDomainFromUrl = (url, fallbackTitle) => {
+            try {
+                if (!url || url === '#' || url.startsWith('/')) {
+                    return fallbackTitle ? `${fallbackTitle.toLowerCase().replace(/[^a-z0-9]/g, '')}.dev` : 'oceanmallik.com';
                 }
+                const parsed = new URL(url);
+                return parsed.hostname.replace(/^www\./, '');
+            } catch (e) {
+                return fallbackTitle ? `${fallbackTitle.toLowerCase().replace(/[^a-z0-9]/g, '')}.dev` : 'oceanmallik.com';
+            }
+        };
+
+        const getFallbackSvgDataUri = (title, category) => {
+            const safeTitle = (title || 'Project').replace(/[<>&"]/g, '');
+            const safeCat = (category || 'Code').toUpperCase();
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"><rect width="800" height="500" fill="#141418"/><circle cx="400" cy="250" r="160" fill="#202028" opacity="0.6"/><text x="400" y="230" fill="#ffffff" font-family="sans-serif" font-size="28" font-weight="bold" text-anchor="middle">${safeTitle}</text><text x="400" y="275" fill="#888899" font-family="sans-serif" font-size="16" letter-spacing="4" text-anchor="middle">${safeCat}</text></svg>`;
+            return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+        };
+
+        // Render preview grid on homepage (index.html)
+        const renderPreviewGrid = (grid, activities) => {
+            if (!grid) return;
+            grid.innerHTML = '';
+            const previewItems = activities.slice(0, 3);
+            previewItems.forEach((activity) => {
+                const statusInfo = statusNormalize(activity.status);
+                const techList = Array.isArray(activity.stack) ? activity.stack : (Array.isArray(activity.tech) ? activity.tech : []);
+                const techString = techList.slice(0, 3).join(', ') || 'Software Engineering';
+
+                const linksHtml = Array.isArray(activity.links) && activity.links.length > 0
+                    ? activity.links.map((l) => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="card-inline-link">${l.label}</a>`).join(' • ')
+                    : `<a href="${activity.primaryUrl || '#'}" target="_blank" rel="noopener noreferrer" class="card-inline-link">Explore Project</a>`;
+
+                const descriptionHtml = formatDescriptionWithKeyPhrase(activity.description || '', techList, activity.category);
+                const categoryTitle = categoryLabels[categoryNormalize(activity.category)] || 'Project';
+
+                const checklist = [
+                    { html: `Status: <strong>${statusInfo.label}</strong> (${categoryTitle})` },
+                    { html: `Stack: <strong>${techString}</strong>` },
+                    { html: `Links: ${linksHtml}` }
+                ];
+
+                const card = createBentoCard({
+                    iconClass: activity.icon || (activity.category === 'mobile' ? 'fas fa-mobile-alt' : (activity.category === 'game' ? 'fas fa-gamepad' : 'fas fa-code')),
+                    title: activity.title || 'Untitled Project',
+                    titleUrl: (activity.links && activity.links[0] ? activity.links[0].url : activity.primaryUrl) || '#',
+                    descriptionHtml,
+                    graphicIcon: activity.icon || 'fas fa-code',
+                    checklist,
+                    className: 'project-card',
+                    colSpan2: false,
+                    dataset: {
+                        category: activity.category || ''
+                    }
+                });
+                grid.appendChild(card);
             });
         };
 
-        const showInfoMessage = (targetGrid, message) => {
-            if (!targetGrid) return;
-            targetGrid.innerHTML = `
-                <div class="card project-card" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
-                    <i class="fas fa-search" style="font-size: 2rem; color: #8f8f8f; margin-bottom: 12px; display: block;" aria-hidden="true"></i>
-                    <h3 class="card-title" style="margin-bottom: 8px;">No matching activities found</h3>
-                    <p class="card-description" style="max-width: 100%; margin: 0 auto;">${message}</p>
-                </div>
-            `;
-        };
+        // Render scrolling showcase list on activities.html
+        const renderShowcase = (container, activities) => {
+            if (!container) return;
+            container.innerHTML = '';
 
-        const renderActivitiesIntoGrid = (targetGrid, activities, limit = null) => {
-            if (!targetGrid) return;
-            targetGrid.innerHTML = '';
-            const itemsToRender = limit === null ? activities : activities.slice(0, limit);
-
-            if (itemsToRender.length === 0) {
-                showInfoMessage(targetGrid, 'No activities match your current search or category filter.');
+            if (activities.length === 0) {
+                container.innerHTML = `
+                    <div class="showcase-empty">
+                        <i class="fas fa-layer-group" aria-hidden="true"></i>
+                        <h3>No projects found</h3>
+                        <p>No projects match the selected category filter.</p>
+                    </div>
+                `;
                 return;
             }
 
-            itemsToRender.forEach((activity) => {
-                targetGrid.appendChild(createCardElement(activity));
+            const totalCount = activities.length;
+            const padNumber = (num) => String(num).padStart(2, '0');
+
+            activities.forEach((project, index) => {
+                const category = categoryNormalize(project.category);
+                const isMobile = category === 'mobile';
+                const statusInfo = statusNormalize(project.status);
+                const stack = Array.isArray(project.stack) ? project.stack : (Array.isArray(project.tech) ? project.tech : []);
+                const links = Array.isArray(project.links) ? project.links : [];
+                const screenshots = Array.isArray(project.screenshots) ? project.screenshots : [];
+
+                const counterStr = `${padNumber(index + 1)} / ${padNumber(totalCount)}`;
+                // Alternating rows: project 1 (index 0) text left / image right; project 2 (index 1) image left / text right
+                const isReversed = index % 2 === 1;
+
+                const itemEl = document.createElement('article');
+                itemEl.className = `showcase-item ${isReversed ? 'is-reversed' : ''}`;
+                itemEl.dataset.id = project.id || `project-${index}`;
+                itemEl.dataset.category = category;
+
+                // Primary link for browser address bar & title link
+                const primaryLink = links.find((l) => l.type === 'live' || !l.label.toLowerCase().includes('github')) || links[0] || null;
+                const primaryUrl = primaryLink ? primaryLink.url : '#';
+                const displayHost = getDomainFromUrl(primaryUrl, project.title);
+
+                // Build Stack HTML
+                const stackHtml = stack.map((tech) => `<span class="stack-badge">${tech}</span>`).join('');
+
+                // Build Links HTML
+                const linksHtml = links.map((link, lIdx) => {
+                    const lLower = (link.label || '').toLowerCase();
+                    const uLower = (link.url || '').toLowerCase();
+                    let iconClass = 'fas fa-arrow-up-right-from-square';
+
+                    if (lLower.includes('github') || uLower.includes('github.com')) {
+                        iconClass = 'fab fa-github';
+                    } else if (lLower.includes('play') || lLower.includes('store') || uLower.includes('google.com')) {
+                        iconClass = 'fab fa-google-play';
+                    } else if (lLower.includes('game') || category === 'game') {
+                        iconClass = 'fas fa-gamepad';
+                    } else if (lLower.includes('live') || lLower.includes('web') || lLower.includes('site')) {
+                        iconClass = 'fas fa-arrow-up-right-from-square';
+                    }
+
+                    const btnClass = lIdx === 0 ? 'showcase-btn showcase-btn-primary' : 'showcase-btn showcase-btn-secondary';
+                    return `
+                        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="${btnClass}">
+                            <i class="${iconClass}" aria-hidden="true"></i>
+                            <span>${link.label}</span>
+                        </a>
+                    `;
+                }).join('');
+
+                // Build Media HTML
+                let mediaHtml = '';
+                const fallbackUri = getFallbackSvgDataUri(project.title, category);
+
+                if (isMobile) {
+                    const screen1 = screenshots[0] || 'assets/images/works/diu-app-1.png';
+                    const screen2 = screenshots[1] || screenshots[0] || 'assets/images/works/diu-app-2.png';
+
+                    mediaHtml = `
+                        <div class="showcase-media showcase-media-mobile">
+                            <div class="phones-wrapper">
+                                <div class="phone-frame phone-frame-left">
+                                    <div class="phone-screen">
+                                        <img src="${screen1}" alt="${project.title} - screenshot 1" loading="lazy" class="phone-img" onerror="this.onerror=null;this.src='${fallbackUri}';">
+                                    </div>
+                                </div>
+                                <div class="phone-frame phone-frame-right">
+                                    <div class="phone-screen">
+                                        <img src="${screen2}" alt="${project.title} - screenshot 2" loading="lazy" class="phone-img" onerror="this.onerror=null;this.src='${fallbackUri}';">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const screen = screenshots[0] || fallbackUri;
+
+                    mediaHtml = `
+                        <div class="showcase-media showcase-media-browser">
+                            <div class="browser-frame">
+                                <div class="browser-header">
+                                    <div class="browser-dots" aria-hidden="true">
+                                        <span class="browser-dot dot-close"></span>
+                                        <span class="browser-dot dot-minimize"></span>
+                                        <span class="browser-dot dot-maximize"></span>
+                                    </div>
+                                    <div class="browser-address-bar">
+                                        <i class="fas fa-lock" aria-hidden="true"></i>
+                                        <span class="browser-url">${displayHost}</span>
+                                    </div>
+                                    <div class="browser-header-actions" aria-hidden="true">
+                                        <i class="fas fa-chevron-left"></i>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </div>
+                                </div>
+                                <div class="browser-viewport">
+                                    <img src="${screen}" alt="${project.title} - browser preview" loading="lazy" class="browser-img" onerror="this.onerror=null;this.src='${fallbackUri}';">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                itemEl.innerHTML = `
+                    <div class="showcase-content">
+                        <div class="showcase-meta">
+                            <span class="showcase-counter">${counterStr}</span>
+                            <span class="showcase-status status-${statusInfo.slug}">
+                                <span class="status-dot"></span>
+                                <span>${statusInfo.label}</span>
+                            </span>
+                            <span class="showcase-category-badge">${categoryLabels[category] || category}</span>
+                        </div>
+                        <h2 class="showcase-title">
+                            ${primaryUrl !== '#' ? `<a href="${primaryUrl}" target="_blank" rel="noopener noreferrer">${project.title}</a>` : project.title}
+                        </h2>
+                        <p class="showcase-description">${project.description || ''}</p>
+                        ${stack.length > 0 ? `<div class="showcase-stack">${stackHtml}</div>` : ''}
+                        ${links.length > 0 ? `<div class="showcase-links">${linksHtml}</div>` : ''}
+                    </div>
+                    ${mediaHtml}
+                `;
+
+                container.appendChild(itemEl);
             });
+
+            // Set up scroll reveal for showcase items
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                container.querySelectorAll('.showcase-item').forEach((item) => {
+                    observer.observe(item);
+                });
+            } else {
+                container.querySelectorAll('.showcase-item').forEach((item) => {
+                    item.classList.add('is-visible');
+                });
+            }
         };
 
         fetchJsonWithFallback(['data/myWorks.json', './data/myWorks.json', 'myWorks.json', './myWorks.json', '../myWorks.json'])
             .then((data) => {
-                const allActivities = Array.isArray(data) ? data : data.works;
-                if (!Array.isArray(allActivities) || allActivities.length === 0) {
-                    showInfoMessage(activitiesGrid, 'No activities found in myWorks.json yet.');
-                    showInfoMessage(activitiesPreviewGrid, 'No activities found in myWorks.json yet.');
+                const allActivities = Array.isArray(data) ? data : (data.works || []);
+                if (allActivities.length === 0) {
+                    if (showcaseList) showcaseList.innerHTML = '<div class="showcase-empty"><h3>No activities found</h3></div>';
+                    if (activitiesPreviewGrid) activitiesPreviewGrid.innerHTML = '<div class="card project-card"><p>No activities found</p></div>';
                     return;
                 }
 
                 // Render preview grid (homepage)
                 if (activitiesPreviewGrid) {
-                    renderActivitiesIntoGrid(activitiesPreviewGrid, allActivities, 3);
+                    renderPreviewGrid(activitiesPreviewGrid, allActivities);
                 }
 
-                // If on activities.html, set up interactive search & filter tabs
-                if (activitiesGrid) {
-                    let activeFilter = 'all';
-                    let searchQuery = '';
-
-                    const countAllEl = document.getElementById('count-all');
-                    if (countAllEl) countAllEl.textContent = allActivities.length;
-
-                    const summaryCountEl = document.getElementById('activity-result-count');
-                    const searchInput = document.getElementById('activity-search-input');
-                    const searchClearBtn = document.getElementById('activity-search-clear');
-                    const filterButtons = document.querySelectorAll('#activity-filter-group .filter-pill');
-
-                    const applyFilters = () => {
-                        const filtered = allActivities.filter((item) => {
-                            // Category match
-                            let matchesCategory = true;
-                            if (activeFilter !== 'all') {
-                                matchesCategory = item.category === activeFilter;
-                            }
-
-                            // Search match
-                            let matchesSearch = true;
-                            if (searchQuery.trim().length > 0) {
-                                const q = searchQuery.toLowerCase();
-                                const title = (item.title || '').toLowerCase();
-                                const desc = (item.description || '').toLowerCase();
-                                const tech = Array.isArray(item.tech) ? item.tech.join(' ').toLowerCase() : '';
-                                matchesSearch = title.includes(q) || desc.includes(q) || tech.includes(q);
-                            }
-
-                            return matchesCategory && matchesSearch;
-                        });
-
-                        renderActivitiesIntoGrid(activitiesGrid, filtered);
-
-                        if (summaryCountEl) {
-                            summaryCountEl.textContent = `Showing ${filtered.length} of ${allActivities.length} activities`;
-                        }
-                    };
-
-                    filterButtons.forEach((btn) => {
-                        btn.addEventListener('click', () => {
-                            filterButtons.forEach((b) => b.classList.remove('active'));
-                            btn.classList.add('active');
-                            activeFilter = btn.dataset.filter || 'all';
-                            applyFilters();
-                        });
-                    });
-
-                    if (searchInput) {
-                        searchInput.addEventListener('input', (e) => {
-                            searchQuery = e.target.value;
-                            if (searchClearBtn) {
-                                searchClearBtn.classList.toggle('hidden', searchQuery.length === 0);
-                            }
-                            applyFilters();
-                        });
-                    }
-
-                    if (searchClearBtn) {
-                        searchClearBtn.addEventListener('click', () => {
-                            if (searchInput) {
-                                searchInput.value = '';
-                                searchQuery = '';
-                                searchClearBtn.classList.add('hidden');
-                                searchInput.focus();
-                                applyFilters();
-                            }
-                        });
-                    }
-
-                    applyFilters();
+                // Render showcase list (activities.html)
+                if (showcaseList) {
+                    renderShowcase(showcaseList, allActivities);
+                } else if (activitiesGrid) {
+                    // Fallback for legacy activitiesGrid if ever loaded
+                    renderPreviewGrid(activitiesGrid, allActivities);
                 }
             })
-            .catch(() => {
-                showInfoMessage(activitiesGrid, 'Could not load activities right now. Please verify myWorks.json is accessible.');
-                showInfoMessage(activitiesPreviewGrid, 'Could not load activities right now. Please verify myWorks.json is accessible.');
+            .catch((err) => {
+                console.error('Error loading myWorks.json:', err);
+                if (showcaseList) {
+                    showcaseList.innerHTML = '<div class="showcase-empty"><h3>Could not load activities</h3><p>Please verify myWorks.json is accessible.</p></div>';
+                }
+                if (activitiesPreviewGrid) {
+                    activitiesPreviewGrid.innerHTML = '<div class="card project-card"><p>Could not load activities</p></div>';
+                }
             });
     }
 
