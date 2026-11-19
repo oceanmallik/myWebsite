@@ -3,6 +3,7 @@
 		"id": "bartawire",
 		"title": "BartaWire - Your Daily News Dose",
 		"category": "web",
+		"featured": true,
 		"description": "A fast, modern, and responsive blogging platform built with vanilla web technologies and powered by Supabase.",
 		"stack": [
 			"HTML",
@@ -26,34 +27,10 @@
 		]
 	},
 	{
-		"id": "personal-portfolio",
-		"title": "Personal Portfolio Website",
-		"category": "web",
-		"description": "Built from scratch with multiple themes and responsive sections.",
-		"stack": [
-			"HTML",
-			"CSS",
-			"JavaScript"
-		],
-		"status": "In Development",
-		"screenshots": [
-			"assets/images/works/myWebsite.png"
-		],
-		"links": [
-			{
-				"label": "Github Code",
-				"url": "https://github.com/oceanmallik/myWebsite"
-			},
-			{
-				"label": "Live Website",
-				"url": "https://www.oceanmallik.com"
-			}
-		]
-	},
-	{
 		"id": "diu-notes-app",
 		"title": "DIU Notes – Mobile App",
 		"category": "mobile",
+		"featured": true,
 		"description": "A simple note-hosting website ported to a native Android app for DIU students.",
 		"stack": [
 			"JavaScript",
@@ -77,9 +54,36 @@
 		]
 	},
 	{
+		"id": "personal-portfolio",
+		"title": "Personal Portfolio Website",
+		"category": "web",
+		"featured": true,
+		"description": "Built from scratch with multiple themes and responsive sections.",
+		"stack": [
+			"HTML",
+			"CSS",
+			"JavaScript"
+		],
+		"status": "In Development",
+		"screenshots": [
+			"assets/images/works/myWebsite.png"
+		],
+		"links": [
+			{
+				"label": "Github Code",
+				"url": "https://github.com/oceanmallik/myWebsite"
+			},
+			{
+				"label": "Live Website",
+				"url": "https://www.oceanmallik.com"
+			}
+		]
+	},
+	{
 		"id": "diu-notes-buddy",
 		"title": "DIU Notes Buddy",
 		"category": "web",
+		"featured": false,
 		"description": "A simple note-hosting website for DIU students.",
 		"stack": [
 			"HTML",
@@ -106,6 +110,7 @@
 		"id": "meme-calculator",
 		"title": "Meme Calculator",
 		"category": "game",
+		"featured": false,
 		"description": "A fun open-source project hosted on GitHub. 2 + 2 = 5, 1 + 1 = 11 and lot more!",
 		"stack": [
 			"Godot",
@@ -126,6 +131,7 @@
 		"id": "polyglot-calculator",
 		"title": "Polyglot Calculator",
 		"category": "system",
+		"featured": false,
 		"description": "This project seamlessly links Python, C, C#, and Rust through a master C++ orchestrator. An experimental project to test polyglot programming amongst popular software.",
 		"stack": [
 			"Python",

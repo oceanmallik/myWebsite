@@ -870,42 +870,141 @@
             return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
         };
 
-        // Render preview grid on homepage (index.html)
+        // Render preview grid on homepage (index.html) - Featured Activities
         const renderPreviewGrid = (grid, activities) => {
             if (!grid) return;
             grid.innerHTML = '';
-            const previewItems = activities.slice(0, 3);
+
+            // Filter first 3 projects where featured is true (fallback to first 3 if none flagged)
+            const featuredActivities = activities.filter((a) => a.featured === true).slice(0, 3);
+            const previewItems = featuredActivities.length > 0 ? featuredActivities : activities.slice(0, 3);
+
             previewItems.forEach((activity) => {
+                const category = categoryNormalize(activity.category);
+                const isMobile = category === 'mobile';
                 const statusInfo = statusNormalize(activity.status);
-                const techList = Array.isArray(activity.stack) ? activity.stack : (Array.isArray(activity.tech) ? activity.tech : []);
-                const techString = techList.slice(0, 3).join(', ') || 'Software Engineering';
+                const stack = Array.isArray(activity.stack) ? activity.stack : (Array.isArray(activity.tech) ? activity.tech : []);
+                const links = Array.isArray(activity.links) ? activity.links : [];
+                const screenshots = Array.isArray(activity.screenshots) ? activity.screenshots : [];
 
-                const linksHtml = Array.isArray(activity.links) && activity.links.length > 0
-                    ? activity.links.map((l) => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="card-inline-link">${l.label}</a>`).join(' • ')
-                    : `<a href="${activity.primaryUrl || '#'}" target="_blank" rel="noopener noreferrer" class="card-inline-link">Explore Project</a>`;
+                const primaryLink = links.find((l) => l.type === 'live' || !l.label.toLowerCase().includes('github')) || links[0] || null;
+                const primaryUrl = primaryLink ? primaryLink.url : '#';
+                const displayHost = getDomainFromUrl(primaryUrl, activity.title);
+                const fallbackUri = getFallbackSvgDataUri(activity.title, category);
 
-                const descriptionHtml = formatDescriptionWithKeyPhrase(activity.description || '', techList, activity.category);
-                const categoryTitle = categoryLabels[categoryNormalize(activity.category)] || 'Project';
+                // Top: image area, 16:10, rounded corners
+                const statusBadgeHtml = `
+                    <span class="featured-status-badge status-${statusInfo.slug}">
+                        <span class="status-dot"></span>
+                        <span>${statusInfo.label}</span>
+                    </span>
+                `;
 
-                const checklist = [
-                    { html: `Status: <strong>${statusInfo.label}</strong> (${categoryTitle})` },
-                    { html: `Stack: <strong>${techString}</strong>` },
-                    { html: `Links: ${linksHtml}` }
-                ];
+                let mediaHtml = '';
+                if (isMobile) {
+                    const screen1 = screenshots[0] || 'assets/images/works/diunotes1.jpg';
+                    const screen2 = screenshots[1] || screenshots[0] || 'assets/images/works/diunotes2.jpg';
 
-                const card = createBentoCard({
-                    iconClass: activity.icon || (activity.category === 'mobile' ? 'fas fa-mobile-alt' : (activity.category === 'game' ? 'fas fa-gamepad' : 'fas fa-code')),
-                    title: activity.title || 'Untitled Project',
-                    titleUrl: (activity.links && activity.links[0] ? activity.links[0].url : activity.primaryUrl) || '#',
-                    descriptionHtml,
-                    graphicIcon: activity.icon || 'fas fa-code',
-                    checklist,
-                    className: 'project-card',
-                    colSpan2: false,
-                    dataset: {
-                        category: activity.category || ''
+                    mediaHtml = `
+                        <div class="featured-media-area">
+                            <div class="featured-phones-container">
+                                <div class="featured-phone-mockup featured-phone-mockup-left">
+                                    <div class="featured-phone-notch" aria-hidden="true"></div>
+                                    <div class="featured-phone-screen">
+                                        <img src="${screen1}" alt="${activity.title} - screenshot 1" loading="lazy" class="featured-phone-img" onerror="this.onerror=null;this.src='${fallbackUri}';">
+                                    </div>
+                                </div>
+                                <div class="featured-phone-mockup featured-phone-mockup-right">
+                                    <div class="featured-phone-notch" aria-hidden="true"></div>
+                                    <div class="featured-phone-screen">
+                                        <img src="${screen2}" alt="${activity.title} - screenshot 2" loading="lazy" class="featured-phone-img" onerror="this.onerror=null;this.src='${fallbackUri}';">
+                                    </div>
+                                </div>
+                            </div>
+                            ${statusBadgeHtml}
+                        </div>
+                    `;
+                } else {
+                    const screen = screenshots[0] || fallbackUri;
+
+                    mediaHtml = `
+                        <div class="featured-media-area">
+                            <div class="featured-browser-frame">
+                                <div class="featured-browser-header">
+                                    <div class="featured-browser-dots" aria-hidden="true">
+                                        <span class="browser-dot dot-close"></span>
+                                        <span class="browser-dot dot-minimize"></span>
+                                        <span class="browser-dot dot-maximize"></span>
+                                    </div>
+                                    <div class="featured-browser-address-bar">
+                                        <i class="fas fa-lock" aria-hidden="true"></i>
+                                        <span class="featured-browser-url">${displayHost}</span>
+                                    </div>
+                                    <div class="featured-browser-actions" aria-hidden="true">
+                                        <i class="fas fa-chevron-left"></i>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </div>
+                                </div>
+                                <div class="featured-browser-viewport">
+                                    <img src="${screen}" alt="${activity.title} preview" loading="lazy" class="featured-browser-img" onerror="this.onerror=null;this.src='${fallbackUri}';">
+                                </div>
+                            </div>
+                            ${statusBadgeHtml}
+                        </div>
+                    `;
+                }
+
+                // Stack as small pill tags
+                const stackPillsHtml = stack.map((tech) => `<span class="featured-stack-pill">${tech}</span>`).join('');
+
+                // Links (Github Code, Live/Play Store)
+                const linksHtml = links.map((link) => {
+                    const lLower = (link.label || '').toLowerCase();
+                    const uLower = (link.url || '').toLowerCase();
+                    let iconClass = 'fas fa-arrow-up-right-from-square';
+                    let isPrimary = false;
+
+                    if (lLower.includes('github') || uLower.includes('github.com')) {
+                        iconClass = 'fab fa-github';
+                    } else if (lLower.includes('play') || lLower.includes('store') || uLower.includes('google.com')) {
+                        iconClass = 'fab fa-google-play';
+                        isPrimary = true;
+                    } else if (lLower.includes('game') || category === 'game') {
+                        iconClass = 'fas fa-gamepad';
+                        isPrimary = true;
+                    } else if (lLower.includes('live') || lLower.includes('visit') || lLower.includes('website')) {
+                        iconClass = 'fas fa-external-link-alt';
+                        isPrimary = true;
                     }
-                });
+
+                    return `
+                        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="featured-link-btn ${isPrimary ? 'primary' : ''}">
+                            <i class="${iconClass}" aria-hidden="true"></i>
+                            <span>${link.label}</span>
+                        </a>
+                    `;
+                }).join('');
+
+                const card = document.createElement('article');
+                card.className = 'featured-activity-card';
+                card.dataset.id = activity.id || '';
+                card.dataset.category = category;
+
+                card.innerHTML = `
+                    ${mediaHtml}
+                    <div class="featured-card-body">
+                        <h3 class="featured-card-title">
+                            ${primaryUrl !== '#' ? `<a href="${primaryUrl}" target="_blank" rel="noopener noreferrer">${activity.title}</a>` : activity.title}
+                        </h3>
+                        <p class="featured-card-desc" title="${(activity.description || '').replace(/"/g, '&quot;')}">${activity.description || ''}</p>
+                        ${stack.length > 0 ? `<div class="featured-card-stack">${stackPillsHtml}</div>` : ''}
+                        ${links.length > 0 ? `
+                        <div class="featured-card-footer">
+                            <div class="featured-card-links">${linksHtml}</div>
+                        </div>` : ''}
+                    </div>
+                `;
+
                 grid.appendChild(card);
             });
         };
