@@ -80,6 +80,34 @@
 		]
 	},
 	{
+		"id": "team-artemis-26",
+		"title": "AEGIS",
+		"category": "web",
+		"featured": true,
+		"description": "An offline-first astronaut health-monitoring prototype built for the NASA Space Apps Challenge 2026.",
+		"stack": [
+			"HTML",
+			"CSS",
+			"JavaScript",
+			"Python",
+			"node.js"
+		],
+		"status": "Completed",
+		"screenshots": [
+			"assets/images/works/nasaapp26.png"
+		],
+		"links": [
+			{
+				"label": "Github Code",
+				"url": "https://github.com/oceanmallik/TeamArtemisSubmission"
+			},
+			{
+				"label": "Live Website",
+				"url": "https://teamartemis26.oceanmallik.com/"
+			}
+		]
+	},
+	{
 		"id": "diu-notes-buddy",
 		"title": "DIU Notes Buddy",
 		"category": "web",
