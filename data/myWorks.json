@@ -151,6 +151,41 @@
 		]
 	},
 	{
+		"id": "ai-dev-fest-26",
+		"title": "Tender Document Package Builder",
+		"category": "web",
+		"featured": true,
+		"description": "A client-side web application for parsing tender specifications, matching required documents to PDF attachments, validating document expiry dates against tender deadlines, and assembling a unified, publication-ready PDF submission.",
+		"stack": [
+			"HTML",
+			"CSS",
+			"JavaScript"
+		],
+		"status": "Completed",
+		"screenshots": [
+			"assets/images/works/aidevfest26.png"
+		],
+		"links": [
+			{
+				"label": "Github Code",
+				"url": "https://github.com/oceanmallik/devfest-25335087"
+			},
+			{
+				"label": "Live Website",
+				"url": "https://aidevfest26.oceanmallik.com/"
+			}
+		],
+		"contributors": [
+			{
+				"name": "Ocean Mallik",
+				"image": "assets/images/me.jpg",
+				"link": "https://github.com/oceanmallik",
+				"url": "https://github.com/oceanmallik",
+				"contribution": "Lead Developer"
+			}
+		]
+	},
+	{
 		"id": "diu-notes-buddy",
 		"title": "DIU Notes Buddy",
 		"category": "web",
