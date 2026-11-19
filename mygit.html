@@ -12,115 +12,34 @@
         /* Page Header */
         .git-page-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
+            padding: 0 16px;
         }
 
         .git-page-header .subtitle {
-            font-size: 0.92rem;
+            font-size: 0.88rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--primary-color);
             margin-bottom: 0.6rem;
+            font-weight: 600;
         }
 
         .git-page-header .title {
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 1rem;
+            font-size: clamp(2rem, 4vw, 2.6rem);
+            margin-bottom: 0.85rem;
+            line-height: 1.25;
+            font-weight: 700;
         }
 
         .git-page-header .description {
             color: var(--text-muted);
-            font-size: 1rem;
-            max-width: 520px;
-            margin: 0 auto 2rem;
+            font-size: 0.95rem;
+            max-width: 620px;
+            margin: 0 auto;
+            line-height: 1.65;
         }
 
-        /* GitHub Profile Strip - Dark Bento Card Spec */
-        .github-profile-strip {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-            background: var(--bento-card-bg, #1c1c1c);
-            border: 1px solid var(--bento-card-border, #2a2a2a);
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 720px;
-            margin: 0 auto 3rem;
-            box-shadow: none;
-            transition: border-color 150ms ease, background-color 150ms ease;
-        }
-
-        .github-profile-strip:hover {
-            border-color: var(--bento-card-border-hover, #3a3a3a);
-        }
-
-        .github-profile-strip img {
-            width: 54px;
-            height: 54px;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-
-        .profile-strip-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .profile-strip-info .name {
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--text-title);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .profile-strip-info .login {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-        }
-
-        .profile-strip-stats {
-            display: flex;
-            gap: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .profile-stat {
-            text-align: center;
-        }
-
-        .profile-stat .num {
-            display: block;
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--text-title);
-        }
-
-        .profile-stat .lbl {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .profile-strip-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            white-space: nowrap;
-            transition: opacity 0.2s ease, transform 0.2s ease;
-        }
-
-        .profile-strip-link:hover {
-            opacity: 0.8;
-            transform: translateX(2px);
-        }
 
         /* Filters */
         .git-filters {
@@ -128,8 +47,8 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
         }
 
         .git-filter-group {
@@ -202,7 +121,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.85rem;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
@@ -628,31 +547,33 @@
 
         /* Responsive */
         @media (max-width: 600px) {
-            .github-profile-strip,
-            .combined-profile-header {
-                flex-wrap: wrap;
-                justify-content: center;
-                text-align: center;
+            .git-page-header {
+                margin-bottom: 1.5rem;
             }
 
-            .combined-profile-user {
-                justify-content: center;
-                text-align: center;
+            .combined-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .contributions-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .contributions-footer-left,
+            .contributions-footer-right {
                 width: 100%;
-            }
-
-            .profile-strip-info {
-                text-align: center;
-            }
-
-            .profile-strip-stats {
-                width: 100%;
-                justify-content: center;
+                justify-content: space-between;
             }
 
             .git-filters {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
             }
 
             .git-search input {
@@ -734,9 +655,9 @@
             background: var(--bento-card-bg, #1c1c1c);
             border: 1px solid var(--bento-card-border, #2a2a2a);
             border-radius: 16px;
-            padding: 22px 26px;
+            padding: 20px 24px;
             max-width: 860px;
-            margin: 0 auto 2.25rem;
+            margin: 0 auto 2.5rem;
             box-shadow: none;
             position: relative;
             transition: border-color 150ms ease, background-color 150ms ease;
@@ -747,157 +668,159 @@
             border-color: var(--bento-card-border-hover, #3a3a3a);
         }
 
-        .combined-profile-header {
+        .combined-card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 1.25rem;
+            gap: 12px 18px;
+            width: 100%;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--bento-card-border, #2a2a2a);
         }
 
-        .combined-profile-user {
+        .combined-user-info {
             display: flex;
             align-items: center;
-            gap: 14px;
-            min-width: 180px;
+            gap: 12px;
+            min-width: 0;
+            flex-wrap: wrap;
         }
 
         .combined-avatar {
-            width: 48px;
-            height: 48px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            border: 2px solid var(--border-color);
+            border: 1.5px solid var(--border-color);
             object-fit: cover;
             flex-shrink: 0;
         }
 
-        .combined-card-divider {
-            height: 1px;
-            background: var(--bento-card-border, #2a2a2a);
-            margin: 16px 0 18px 0;
-            width: 100%;
-        }
-
-        .combined-contributions-section {
-            width: 100%;
-        }
-
-        .contributions-header {
+        .combined-user-meta {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 10px 16px;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
+            min-width: 0;
         }
 
-        .contributions-title-area {
-            display: flex;
+        .combined-name-row {
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-title);
+            white-space: nowrap;
         }
 
-        .contributions-icon {
-            font-size: 1.15rem;
+        .combined-gh-link {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 150ms ease;
+        }
+
+        .combined-gh-link:hover {
             color: var(--primary-color);
-            display: flex;
+        }
+
+        .combined-stats-inline {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            white-space: nowrap;
         }
 
-        .contributions-title {
-            font-size: 1.05rem;
+        .stat-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-item strong {
+            color: var(--text-title);
             font-weight: 600;
-            color: var(--bento-card-title, #ffffff);
-            margin: 0;
-            line-height: 1.3;
         }
 
-        .contributions-count {
+        .stat-item.highlight strong {
             color: var(--primary-color);
             font-weight: 700;
             font-family: 'Space Grotesk', 'Inter', sans-serif;
         }
 
-        .contributions-meta {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            background: var(--bento-card-badge-bg, rgba(255, 255, 255, 0.03));
-            border: 1px solid var(--bento-card-border, #2a2a2a);
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-weight: 500;
+        .stat-dot {
+            opacity: 0.4;
+            font-size: 0.72rem;
         }
 
-        .contributions-years-bar {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: 4px 2px 10px 2px;
-            margin-bottom: 14px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .contributions-years-bar::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .contributions-years-bar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .contributions-years-bar::-webkit-scrollbar-thumb {
-            background: var(--bento-card-border, #2a2a2a);
-            border-radius: 4px;
-        }
-
-        .contributions-years-bar::-webkit-scrollbar-thumb:hover {
-            background: var(--bento-card-border-hover, #3a3a3a);
-        }
-
-        .contrib-year-btn {
+        .combined-year-wrap {
+            position: relative;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            padding: 4px 12px;
-            border-radius: 999px;
-            border: 1px solid var(--bento-card-border, #2a2a2a);
-            background: var(--bento-card-bg, #1c1c1c);
-            color: var(--bento-card-desc, #8f8f8f);
-            font-size: 0.76rem;
-            font-weight: 500;
-            cursor: pointer;
-            white-space: nowrap;
-            flex-shrink: 0;
-            transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
-            user-select: none;
         }
 
-        .contrib-year-btn:hover {
+        .year-select-icon {
+            position: absolute;
+            left: 10px;
+            font-size: 0.72rem;
+            color: var(--primary-color);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .contrib-year-select {
+            background: var(--bento-card-bg, #1c1c1c);
+            border: 1px solid var(--bento-card-border, #2a2a2a);
+            border-radius: 999px;
+            color: var(--bento-card-check-text, #d4d4d4);
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 4px 28px 4px 28px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 150ms ease, background-color 150ms ease;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath stroke='%23888' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m1 1 4 4 4-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        .contrib-year-select:hover,
+        .contrib-year-select:focus {
             border-color: var(--bento-card-border-hover, #3a3a3a);
             color: var(--bento-card-title, #ffffff);
         }
 
-        .contrib-year-btn.active {
-            background: var(--bento-card-active-pill-bg, #262626);
-            border-color: var(--bento-card-border-hover, #3a3a3a);
-            color: var(--bento-card-active-pill-color, #ffffff);
-            font-weight: 600;
+        .contrib-year-select option {
+            background-color: var(--bento-card-bg, #171717);
+            color: var(--bento-card-title, #ffffff);
+        }
+
+        .contributions-body-wrap {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
         }
 
         .contributions-graph-scroll {
             width: 100%;
             overflow-x: auto;
             overflow-y: hidden;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
+            padding: 8px 0 4px 0;
             -webkit-overflow-scrolling: touch;
+            display: flex;
         }
 
         .contributions-graph-scroll::-webkit-scrollbar {
-            height: 5px;
+            height: 4px;
         }
 
         .contributions-graph-scroll::-webkit-scrollbar-track {
@@ -914,33 +837,34 @@
         }
 
         .contributions-graph-inner {
-            min-width: 770px;
+            min-width: 775px;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
             user-select: none;
         }
 
         .contributions-loading-state {
-            padding: 36px 20px;
+            padding: 24px 10px;
             text-align: center;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.84rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .contrib-months-header {
             position: relative;
-            height: 16px;
+            height: 15px;
             margin-left: 32px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .contrib-month-label {
             position: absolute;
-            font-size: 10px;
+            font-size: 9.5px;
             color: var(--text-muted);
             font-weight: 500;
             letter-spacing: 0.2px;
@@ -958,9 +882,9 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            font-size: 9px;
+            font-size: 8.5px;
             color: var(--text-muted);
-            padding-top: 2px;
+            padding-top: 1px;
             flex-shrink: 0;
             text-transform: capitalize;
         }
@@ -1030,39 +954,63 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 12px 18px;
             margin-top: 8px;
-            padding-top: 12px;
+            padding-top: 10px;
             border-top: 1px solid var(--bento-card-border, #2a2a2a);
         }
 
-        .contributions-legend-link {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 150ms ease;
+        .contributions-footer-left {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .contributions-legend-link:hover {
+        .contributions-total-summary {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .contributions-total-summary strong {
             color: var(--primary-color);
+            font-weight: 700;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .contributions-footer-right {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .contributions-meta {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         .contributions-legend {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
 
         .legend-text {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
-            margin: 0 4px;
+            margin: 0 3px;
         }
 
         .contributions-legend .contrib-cell {
+            width: 9px;
+            height: 9px;
             cursor: default;
         }
 
@@ -1195,7 +1143,7 @@
         </div>
     </nav>
 
-    <section id="mygit" class="section bg-secondary" style="padding-top: 120px; min-height: 100vh;">
+    <section id="mygit" class="section bg-secondary" style="padding-top: 110px; min-height: 100vh;">
         <div class="container">
 
             <div class="git-page-header reveal">
@@ -1206,54 +1154,31 @@
 
             <!-- Combined GitHub Profile & Contributions Card -->
             <div id="github-combined-card" class="card bento-card github-combined-card reveal">
-                <!-- Top Section: GitHub Profile Header -->
-                <div class="combined-profile-header">
-                    <div class="combined-profile-user">
+                <!-- Top Compact Header: User Info & Account Stats -->
+                <div class="combined-card-header">
+                    <div class="combined-user-info">
                         <img id="gh-avatar" src="https://github.com/oceanmallik.png" alt="Ocean Mallik" onerror="this.onerror=null; this.src='assets/images/me.jpg';" class="combined-avatar">
-                        <div class="profile-strip-info">
-                            <div class="name" id="gh-name">Ocean Mallik</div>
-                            <div class="login" id="gh-login">@oceanmallik</div>
+                        <div class="combined-user-meta">
+                            <div class="combined-name-row">
+                                <span class="name" id="gh-name">Ocean Mallik</span>
+                                <a id="gh-profile-link" href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="combined-gh-link" title="Open GitHub Profile">
+                                    <span id="gh-login">@oceanmallik</span>
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            </div>
+                            <div class="combined-stats-inline">
+                                <span class="stat-item"><strong id="gh-repos">-</strong> repos</span>
+                                <span class="stat-dot">•</span>
+                                <span class="stat-item"><strong id="gh-followers">-</strong> followers</span>
+                                <span class="stat-dot">•</span>
+                                <span class="stat-item"><strong id="gh-following">-</strong> following</span>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="profile-strip-stats">
-                        <div class="profile-stat">
-                            <span class="num" id="gh-repos">-</span>
-                            <span class="lbl">Repos</span>
-                        </div>
-                        <div class="profile-stat">
-                            <span class="num" id="gh-followers">-</span>
-                            <span class="lbl">Followers</span>
-                        </div>
-                        <div class="profile-stat">
-                            <span class="num" id="gh-following">-</span>
-                            <span class="lbl">Following</span>
-                        </div>
-                    </div>
-
-                    <a id="gh-profile-link" href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="profile-strip-link">
-                        <i class="fab fa-github"></i> View Profile <i class="fas fa-arrow-right" style="font-size:0.7rem;"></i>
-                    </a>
                 </div>
 
-                <!-- Divider -->
-                <div class="combined-card-divider"></div>
-
-                <!-- Bottom Section: Contributions Activity -->
-                <div class="combined-contributions-section">
-                    <div class="contributions-header">
-                        <div class="contributions-title-area">
-                            <span class="contributions-icon" aria-hidden="true"><i class="fas fa-chart-line"></i></span>
-                            <h3 class="contributions-title">
-                                <span id="contributions-total-count" class="contributions-count">--</span> contributions in <span id="contributions-year-label">the last year</span>
-                            </h3>
-                        </div>
-                        <div class="contributions-meta" id="contributions-meta-range">Loading activity…</div>
-                    </div>
-
-                    <!-- Year Selector Tabs -->
-                    <div class="contributions-years-bar" id="contributions-years-bar" aria-label="Select year for contributions"></div>
-
+                <!-- Contributions Body -->
+                <div class="contributions-body-wrap">
                     <div class="contributions-graph-scroll">
                         <div id="contributions-graph-inner" class="contributions-graph-inner">
                             <div class="contributions-loading-state" id="contributions-loading">
@@ -1263,17 +1188,28 @@
                     </div>
 
                     <div class="contributions-footer">
-                        <span class="contributions-legend-link">
-                            <i class="fab fa-github"></i> Public contribution activity
-                        </span>
-                        <div class="contributions-legend">
-                            <span class="legend-text">Less</span>
-                            <span class="contrib-cell level-none" title="No contributions"></span>
-                            <span class="contrib-cell level-1" title="1-3 contributions"></span>
-                            <span class="contrib-cell level-2" title="4-6 contributions"></span>
-                            <span class="contrib-cell level-3" title="7-9 contributions"></span>
-                            <span class="contrib-cell level-4" title="10+ contributions"></span>
-                            <span class="legend-text">More</span>
+                        <div class="contributions-footer-left">
+                            <span class="contributions-total-summary">
+                                <strong id="contributions-total-count">--</strong> contributions in <span id="contributions-year-label">the last year</span>
+                            </span>
+                            <span class="stat-dot">•</span>
+                            <span class="contributions-meta" id="contributions-meta-range">Loading activity…</span>
+                        </div>
+
+                        <div class="contributions-footer-right">
+                            <div class="combined-year-wrap">
+                                <i class="fas fa-calendar-alt year-select-icon" aria-hidden="true"></i>
+                                <select id="contrib-year-select" class="contrib-year-select" aria-label="Select contribution year"></select>
+                            </div>
+                            <div class="contributions-legend">
+                                <span class="legend-text">Less</span>
+                                <span class="contrib-cell level-none" title="No contributions"></span>
+                                <span class="contrib-cell level-1" title="1-3 contributions"></span>
+                                <span class="contrib-cell level-2" title="4-6 contributions"></span>
+                                <span class="contrib-cell level-3" title="7-9 contributions"></span>
+                                <span class="contrib-cell level-4" title="10+ contributions"></span>
+                                <span class="legend-text">More</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1455,17 +1391,17 @@
             return null;
         }
 
-        function renderYearButtons(data, activeKey) {
-            const bar = document.getElementById('contributions-years-bar');
-            if (!bar) return;
-            bar.innerHTML = '';
+        function renderYearSelect(data, activeKey) {
+            const select = document.getElementById('contrib-year-select');
+            if (!select) return;
+            select.innerHTML = '';
 
             const items = [];
             if (data.lastYear || Array.isArray(data.weeks)) {
                 const lyTotal = (data.lastYear && data.lastYear.totalContributions) || data.totalContributions || 0;
                 items.push({
                     key: 'lastYear',
-                    label: 'Last Year',
+                    label: `Last Year (${lyTotal.toLocaleString('en-US')})`,
                     total: lyTotal
                 });
             }
@@ -1476,30 +1412,23 @@
                 const total = yrData && typeof yrData.totalContributions === 'number' ? yrData.totalContributions : 0;
                 items.push({
                     key: yr,
-                    label: yr,
+                    label: `${yr} (${total.toLocaleString('en-US')})`,
                     total: total
                 });
             });
 
             items.forEach((item) => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = `contrib-year-btn ${item.key === activeKey ? 'active' : ''}`;
-                btn.dataset.year = item.key;
-                btn.textContent = item.label;
-                btn.title = `${item.total.toLocaleString('en-US')} contributions in ${item.label === 'Last Year' ? 'the last year' : item.label}`;
-
-                btn.addEventListener('click', () => {
-                    if (selectedYearKey === item.key) return;
-                    selectedYearKey = item.key;
-                    bar.querySelectorAll('.contrib-year-btn').forEach(b => {
-                        b.classList.toggle('active', b.dataset.year === selectedYearKey);
-                    });
-                    switchContributionYear(selectedYearKey);
-                });
-
-                bar.appendChild(btn);
+                const opt = document.createElement('option');
+                opt.value = item.key;
+                opt.textContent = item.label;
+                if (item.key === activeKey) opt.selected = true;
+                select.appendChild(opt);
             });
+
+            select.onchange = (e) => {
+                selectedYearKey = e.target.value;
+                switchContributionYear(selectedYearKey);
+            };
         }
 
         function switchContributionYear(yearKey) {
@@ -1554,7 +1483,7 @@
                 selectedYearKey = years[0];
             }
 
-            renderYearButtons(data, selectedYearKey);
+            renderYearSelect(data, selectedYearKey);
             switchContributionYear(selectedYearKey);
         }
 
