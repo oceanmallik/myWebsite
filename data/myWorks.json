@@ -259,26 +259,28 @@
 		]
 	},
 	{
-		"id": "polyglot-calculator",
-		"title": "Polyglot Calculator",
-		"category": "system",
+		"id": "link-tree",
+		"title": "All links at one place",
+		"category": "web",
 		"featured": false,
-		"description": "This project seamlessly links Python, C, C#, and Rust through a master C++ orchestrator. An experimental project to test polyglot programming amongst popular software.",
+		"description": "A website showing all the links of user, usable as a digital way to provide contact information.",
 		"stack": [
-			"Python",
-			"C",
-			"C#",
-			"Rust",
-			"C++"
+			"HTML",
+			"CSS",
+			"JavaScript"
 		],
 		"status": "Completed",
 		"screenshots": [
-			"assets/images/works/polyglot.png"
+			"assets/images/works/links.png"
 		],
 		"links": [
 			{
 				"label": "Github Code",
-				"url": "https://github.com/oceanmallik/polyglotCalculator"
+				"url": "https://github.com/oceanmallik/myLink"
+			},
+			{
+				"label": "Live Website",
+				"url": "https://link.oceanmallik.com/"
 			}
 		],
 		"contributors": [
