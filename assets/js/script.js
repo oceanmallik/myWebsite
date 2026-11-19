@@ -830,7 +830,7 @@
 
         const categoryLabels = {
             mobile: 'Mobile',
-            web: 'Web & Apps',
+            web: 'Web',
             game: 'Game',
             tool: 'Tool & CLI',
             system: 'System'
