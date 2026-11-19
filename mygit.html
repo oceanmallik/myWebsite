@@ -626,17 +626,7 @@
             --contrib-tooltip-border: #44403c;
         }
 
-        body.theme-aurora {
-            --contrib-none: #d6ede7;
-            --contrib-level-1: #a5f3fc;
-            --contrib-level-2: #22d3ee;
-            --contrib-level-3: #0891b2;
-            --contrib-level-4: #155e75;
-            --contrib-border: rgba(0, 0, 0, 0.06);
-            --contrib-tooltip-bg: #0f172a;
-            --contrib-tooltip-text: #f8fafc;
-            --contrib-tooltip-border: #334155;
-        }
+
 
         body.theme-cyberpunk {
             --contrib-none: #1a1033;
@@ -1053,7 +1043,7 @@
     </style>
     <script>
         (function() {
-            var themes = ['theme-black', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-cyberpunk'];
+            var themes = ['theme-black', 'theme-white', 'theme-soft', 'theme-cyberpunk'];
             var stored = localStorage.getItem('selectedTheme');
             if (stored) {
                 var idx = themes.indexOf(stored);
@@ -1074,7 +1064,7 @@
     <div class="scroll-progress-bar" id="scroll-progress"></div>
     <script>
         (function() {
-            var themes = ['theme-black', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-cyberpunk'];
+            var themes = ['theme-black', 'theme-white', 'theme-soft', 'theme-cyberpunk'];
             var stored = localStorage.getItem('selectedTheme');
             if (stored) {
                 var idx = themes.indexOf(stored);

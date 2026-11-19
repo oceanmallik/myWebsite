@@ -174,45 +174,7 @@ html.theme-soft {
     --bento-card-active-pill-color: #ffffff;
 }
 
-/* === THEME 5: AURORA MINT (Fresh / Calm Teal) === */
-body.theme-aurora,
-html.theme-aurora {
-    --primary-color: #06b6d4;
-    --primary-hover: #22d3ee;
-    --featured-accent: #06b6d4;
 
-    --bg-main: #e8fff8;
-    --bg-secondary: #d9f7ee;
-    --bg-card: #f4fbf8;
-    --nav-bg: rgba(232, 255, 248, 0.85);
-
-    --text-main: #1f3a3d;
-    --text-title: #102427;
-    --text-muted: #4f6d70;
-
-    --border-color: #c3eae1;
-    --border-hover: #98dcce;
-    --glass-border: rgba(16, 36, 39, 0.1);
-
-    --bento-card-bg: #f4fbf8;
-    --bento-card-border: #c3eae1;
-    --bento-card-border-hover: #98dcce;
-    --bento-card-title: #102427;
-    --bento-card-icon: #4f6d70;
-    --bento-card-desc: #4f6d70;
-    --bento-card-desc-strong: #102427;
-    --bento-card-check-text: #1f3a3d;
-    --bento-card-check-strong: #102427;
-    --bento-card-check-icon: #06b6d4;
-    --bento-card-square-border: rgba(16, 36, 39, 0.06);
-    --bento-card-graphic: #102427;
-    --bento-card-fade-start: #f4fbf8;
-    --bento-card-fade-mid: rgba(244, 251, 248, 0.6);
-    --bento-card-badge-bg: #eaf8f4;
-    --bento-card-badge-border: #c3eae1;
-    --bento-card-active-pill-bg: #102427;
-    --bento-card-active-pill-color: #ffffff;
-}
 
 /* === CYBERPUNK CLASS ALIAS (matches base theme) === */
 body.theme-cyberpunk,
@@ -846,9 +808,7 @@ body.theme-soft .btn-primary {
     color: #ffffff !important;
 }
 
-body.theme-aurora .btn-primary {
-    color: #0f172a !important;
-}
+
 
 .btn-primary:hover {
     filter: brightness(1.06);
@@ -868,9 +828,7 @@ body.theme-soft .btn-accent {
     color: #ffffff !important;
 }
 
-body.theme-aurora .btn-accent {
-    color: #0f172a !important;
-}
+
 
 .btn-accent:hover {
     filter: brightness(1.06);
@@ -1868,8 +1826,7 @@ body.theme-cyberpunk .theme-list-item.active i {
 }
 
 body.theme-white .cert-btn-verify:hover,
-body.theme-soft .cert-btn-verify:hover,
-body.theme-aurora .cert-btn-verify:hover {
+body.theme-soft .cert-btn-verify:hover {
     background: rgba(0, 0, 0, 0.05);
 }
 
@@ -1898,11 +1855,173 @@ body.theme-aurora .cert-btn-verify:hover {
     transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 }
 
-body.theme-white .cert-featured-badge {
-    background: rgba(255, 255, 255, 0.92);
-    border-color: rgba(217, 119, 6, 0.35);
-    color: #d97706;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+/* === Light Theme Certificate Cards (White, Soft) === */
+body.theme-white .certificate-item,
+body.theme-soft .certificate-item {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 1px solid #d9dbe0 !important;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 6px 20px rgba(16, 24, 40, 0.06) !important;
+}
+
+body.theme-white .certificate-item:hover,
+body.theme-soft .certificate-item:hover {
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.08), 0 8px 24px rgba(16, 24, 40, 0.08) !important;
+}
+
+/* 1. Subtle gradient overlay for smooth blend into card background on the left */
+body.theme-white .certificate-item .card-photo-fade-overlay,
+body.theme-soft .certificate-item .card-photo-fade-overlay {
+    display: block !important;
+    background: linear-gradient(to right, #ffffff 0%, rgba(255, 255, 255, 0.7) 10%, transparent 28%) !important;
+}
+
+/* 2. Thumbnail container: transparent background, no border-left so there is no cut-off line */
+body.theme-white .certificate-item .card-photo-visual,
+body.theme-soft .certificate-item .card-photo-visual {
+    background: transparent !important;
+    padding: 0 !important;
+    border-left: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    opacity: 1 !important;
+}
+
+/* 3. Thumbnail image: soft left fade so the edge blends smoothly into the card */
+body.theme-white .certificate-item .card-photo-img,
+body.theme-soft .certificate-item .card-photo-img {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.35) 8%, rgba(0, 0, 0, 1) 24%) !important;
+    mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.35) 8%, rgba(0, 0, 0, 1) 24%) !important;
+    opacity: 1 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: right center !important;
+    transition: transform 300ms ease, opacity 200ms ease !important;
+}
+
+body.theme-white .certificate-item:hover .card-photo-img,
+body.theme-soft .certificate-item:hover .card-photo-img {
+    transform: scale(1.03);
+    box-shadow: none !important;
+}
+
+/* 5. FEATURED badge: background #fff7e0, border 1px solid #f0c24b, text color #8a5a00 */
+body.theme-white .certificate-item .cert-featured-badge,
+body.theme-soft .certificate-item .cert-featured-badge {
+    background: #fff7e0 !important;
+    border: 1px solid #f0c24b !important;
+    color: #8a5a00 !important;
+    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.theme-white .certificate-item .cert-featured-badge i,
+body.theme-soft .certificate-item .cert-featured-badge i {
+    color: #8a5a00 !important;
+}
+
+body.theme-white .certificate-item:hover .cert-featured-badge,
+body.theme-soft .certificate-item:hover .cert-featured-badge {
+    transform: translateY(-2px);
+    border-color: #d97706 !important;
+    box-shadow: 0 4px 10px rgba(16, 24, 40, 0.12) !important;
+}
+
+/* 6. Text and buttons contrast on white background */
+body.theme-white .certificate-item .card-title,
+body.theme-white .certificate-item .card-title a,
+body.theme-soft .certificate-item .card-title,
+body.theme-soft .certificate-item .card-title a {
+    color: #111111 !important;
+}
+
+body.theme-white .certificate-item .card-title a:hover,
+body.theme-soft .certificate-item .card-title a:hover {
+    color: #000000 !important;
+}
+
+body.theme-white .certificate-item .card-header-icon i,
+body.theme-soft .certificate-item .card-header-icon i {
+    color: #444444 !important;
+}
+
+body.theme-white .certificate-item .card-check-text,
+body.theme-soft .certificate-item .card-check-text {
+    color: #444444 !important;
+}
+
+body.theme-white .certificate-item .card-check-text strong,
+body.theme-soft .certificate-item .card-check-text strong {
+    color: #111111 !important;
+}
+
+body.theme-white .certificate-item .card-check-icon i,
+body.theme-soft .certificate-item .card-check-icon i {
+    color: #444444 !important;
+}
+
+/* Action Buttons */
+body.theme-white .certificate-item .cert-btn,
+body.theme-soft .certificate-item .cert-btn {
+    border: 1px solid #d0d3d9 !important;
+}
+
+body.theme-white .certificate-item .cert-btn-inspect,
+body.theme-soft .certificate-item .cert-btn-inspect {
+    background: #ffffff !important;
+    color: #111111 !important;
+    border: 1px solid #d0d3d9 !important;
+}
+
+body.theme-white .certificate-item .cert-btn-inspect:hover,
+body.theme-soft .certificate-item .cert-btn-inspect:hover {
+    background: #111111 !important;
+    color: #ffffff !important;
+    border-color: #111111 !important;
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.15) !important;
+}
+
+body.theme-white .certificate-item .cert-btn-verify,
+body.theme-soft .certificate-item .cert-btn-verify {
+    background: #ffffff !important;
+    color: #444444 !important;
+    border: 1px solid #d0d3d9 !important;
+}
+
+body.theme-white .certificate-item .cert-btn-verify:hover,
+body.theme-soft .certificate-item .cert-btn-verify:hover {
+    background: #eef0f4 !important;
+    color: #111111 !important;
+    border-color: #b0b4bc !important;
+}
+
+/* Mobile alignment (prevent text collision with solid panel on <= 480px) */
+@media (max-width: 480px) {
+    body.theme-white .certificate-item .card-main,
+    body.theme-soft .certificate-item .card-main,
+    body.theme-white .certificate-item .card-description,
+    body.theme-soft .certificate-item .card-description,
+    body.theme-white .certificate-item .card-checklist,
+    body.theme-soft .certificate-item .card-checklist,
+    body.theme-white .certificate-item .cert-card-actions,
+    body.theme-soft .certificate-item .cert-card-actions {
+        max-width: 54% !important;
+    }
+
+    body.theme-white .certificate-item .card-photo-visual,
+    body.theme-soft .certificate-item .card-photo-visual {
+        padding: 0 !important;
+    }
 }
 
 body.theme-cyberpunk .cert-featured-badge {
@@ -2436,9 +2555,7 @@ body.theme-soft .back-to-top-btn:hover {
     color: #ffffff;
 }
 
-body.theme-aurora .back-to-top-btn:hover {
-    color: #0f172a;
-}
+
 
 /* --- 18. Modern Mobile Drawer Navigation --- */
 .mobile-menu-overlay {
@@ -2732,8 +2849,7 @@ body.theme-aurora .back-to-top-btn:hover {
 }
 
 body.theme-white .avatar-tag,
-body.theme-soft .avatar-tag,
-body.theme-aurora .avatar-tag {
+body.theme-soft .avatar-tag {
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
@@ -3324,8 +3440,7 @@ body.theme-aurora .avatar-tag {
 }
 
 body.theme-white .browser-header,
-body.theme-soft .browser-header,
-body.theme-aurora .browser-header {
+body.theme-soft .browser-header {
     background: rgba(0, 0, 0, 0.04);
 }
 
@@ -3373,8 +3488,7 @@ body.theme-aurora .browser-header {
 }
 
 body.theme-white .browser-address-bar,
-body.theme-soft .browser-address-bar,
-body.theme-aurora .browser-address-bar {
+body.theme-soft .browser-address-bar {
     background: rgba(0, 0, 0, 0.04);
 }
 
@@ -3608,8 +3722,7 @@ body.theme-aurora .browser-address-bar {
 }
 
 body.theme-white .lightbox-body,
-body.theme-soft .lightbox-body,
-body.theme-aurora .lightbox-body {
+body.theme-soft .lightbox-body {
     background: var(--bg-secondary);
 }
 

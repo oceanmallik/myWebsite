@@ -1,7 +1,7 @@
 (function () {
-    const THEME_CLASSES = ['theme-black', 'theme-white', 'theme-soft', 'theme-aurora', 'theme-cyberpunk'];
-    const THEME_ICONS = ['fa-moon', 'fa-sun', 'fa-cloud', 'fa-water', 'fa-bolt'];
-    const THEME_LABELS = ['Black', 'White', 'Soft', 'Aurora', 'Cyberpunk'];
+    const THEME_CLASSES = ['theme-black', 'theme-white', 'theme-soft', 'theme-cyberpunk'];
+    const THEME_ICONS = ['fa-moon', 'fa-sun', 'fa-cloud', 'fa-bolt'];
+    const THEME_LABELS = ['Black', 'White', 'Soft', 'Cyberpunk'];
 
     function getStoredThemeIndex() {
         const storedThemeName = localStorage.getItem('selectedTheme');
