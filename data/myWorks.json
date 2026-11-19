@@ -24,6 +24,15 @@
 				"label": "Visit BartaWire",
 				"url": "https://www.bartawire.com/"
 			}
+		],
+		"contributors": [
+			{
+				"name": "Ocean Mallik",
+				"image": "assets/images/me.jpg",
+				"link": "https://github.com/oceanmallik",
+				"url": "https://github.com/oceanmallik",
+				"contribution": "Lead Developer"
+			}
 		]
 	},
 	{
@@ -51,6 +60,15 @@
 				"label": "On Play Store",
 				"url": "https://play.google.com/store/apps/details?id=com.oceanmallik.diunote"
 			}
+		],
+		"contributors": [
+			{
+				"name": "Ocean Mallik",
+				"image": "assets/images/me.jpg",
+				"link": "https://github.com/oceanmallik",
+				"url": "https://github.com/oceanmallik",
+				"contribution": "Lead Developer"
+			}
 		]
 	},
 	{
@@ -76,6 +94,15 @@
 			{
 				"label": "Live Website",
 				"url": "https://www.oceanmallik.com"
+			}
+		],
+		"contributors": [
+			{
+				"name": "Ocean Mallik",
+				"image": "assets/images/me.jpg",
+				"link": "https://github.com/oceanmallik",
+				"url": "https://github.com/oceanmallik",
+				"contribution": "Lead Developer"
 			}
 		]
 	},
@@ -105,6 +132,22 @@
 				"label": "Live Website",
 				"url": "https://teamartemis26.oceanmallik.com/"
 			}
+		],
+		"contributors": [
+			{
+				"name": "Person B",
+				"image": "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+				"link": "https://github.com/oceanmallik/TeamArtemisSubmission",
+				"url": "https://github.com/oceanmallik/TeamArtemisSubmission",
+				"contribution": "Team Lead, research, communication and media"
+			},
+			{
+				"name": "Ocean Mallik",
+				"image": "assets/images/me.jpg",
+				"link": "https://github.com/oceanmallik",
+				"url": "https://github.com/oceanmallik",
+				"contribution": "Lead Developer"
+			}
 		]
 	},
 	{
@@ -132,6 +175,22 @@
 				"label": "Live Website",
 				"url": "https://diunotesbuddy.live/"
 			}
+		],
+		"contributors": [
+			{
+				"name": "Ocean Mallik",
+				"image": "assets/images/me.jpg",
+				"link": "https://github.com/oceanmallik",
+				"url": "https://github.com/oceanmallik",
+				"contribution": "Lead Developer"
+			},
+			{
+				"name": "MD. HASIBUL HASAN HASIB",
+				"image": "https://avatars.githubusercontent.com/u/86542881",
+				"link": "https://github.com/Hasib2050",
+				"url": "https://github.com/Hasib2050",
+				"contribution": "Notes Contributor and Assets Manager"
+			}
 		]
 	},
 	{
@@ -152,6 +211,15 @@
 			{
 				"label": "Github Code",
 				"url": "https://github.com/oceanmallik/memeCalculator"
+			}
+		],
+		"contributors": [
+			{
+				"name": "Ocean Mallik",
+				"image": "assets/images/me.jpg",
+				"link": "https://github.com/oceanmallik",
+				"url": "https://github.com/oceanmallik",
+				"contribution": "Lead Developer"
 			}
 		]
 	},
@@ -176,6 +244,15 @@
 			{
 				"label": "Github Code",
 				"url": "https://github.com/oceanmallik/polyglotCalculator"
+			}
+		],
+		"contributors": [
+			{
+				"name": "Ocean Mallik",
+				"image": "assets/images/me.jpg",
+				"link": "https://github.com/oceanmallik",
+				"url": "https://github.com/oceanmallik",
+				"contribution": "MLead Developer"
 			}
 		]
 	}

@@ -985,6 +985,51 @@
                     `;
                 }).join('');
 
+                // Contributors for Featured Preview Card
+                const contributors = Array.isArray(activity.contributors) ? activity.contributors : [];
+                let contributorsHtml = '';
+                if (contributors.length > 0) {
+                    const itemsHtml = contributors.map((c) => {
+                        const cName = c.name || 'Contributor';
+                        const cLink = c.link || c.url || c.profileUrl || '#';
+                        const cImg = c.image || c.avatar || c.profileImage || 'assets/images/me.jpg';
+                        const cContrib = c.contribution || c.description || c.role || '';
+                        const hasLink = cLink && cLink !== '#';
+                        const tooltip = cContrib ? `${cName}: ${cContrib}` : cName;
+
+                        const content = `
+                            <img src="${cImg}" alt="${cName}" loading="lazy" class="featured-contrib-avatar" onerror="this.onerror=null;this.src='assets/images/me.jpg';">
+                            <div class="featured-contrib-text">
+                                <span class="featured-contrib-name">${cName}</span>
+                                ${cContrib ? `<span class="featured-contrib-role">${cContrib}</span>` : ''}
+                            </div>
+                        `;
+
+                        if (hasLink) {
+                            return `
+                                <a href="${cLink}" target="_blank" rel="noopener noreferrer" class="featured-contrib-item" title="${tooltip}">
+                                    ${content}
+                                </a>
+                            `;
+                        } else {
+                            return `
+                                <div class="featured-contrib-item" title="${tooltip}">
+                                    ${content}
+                                </div>
+                            `;
+                        }
+                    }).join('');
+
+                    contributorsHtml = `
+                        <div class="featured-contributors">
+                            <span class="featured-contrib-label"><i class="fas fa-users" aria-hidden="true"></i> Contributors</span>
+                            <div class="featured-contrib-list">
+                                ${itemsHtml}
+                            </div>
+                        </div>
+                    `;
+                }
+
                 const card = document.createElement('article');
                 card.className = 'featured-activity-card';
                 card.dataset.id = activity.id || '';
@@ -998,6 +1043,7 @@
                         </h3>
                         <p class="featured-card-desc" title="${(activity.description || '').replace(/"/g, '&quot;')}">${activity.description || ''}</p>
                         ${stack.length > 0 ? `<div class="featured-card-stack">${stackPillsHtml}</div>` : ''}
+                        ${contributorsHtml}
                         ${links.length > 0 ? `
                         <div class="featured-card-footer">
                             <div class="featured-card-links">${linksHtml}</div>
@@ -1035,6 +1081,7 @@
                 const stack = Array.isArray(project.stack) ? project.stack : (Array.isArray(project.tech) ? project.tech : []);
                 const links = Array.isArray(project.links) ? project.links : [];
                 const screenshots = Array.isArray(project.screenshots) ? project.screenshots : [];
+                const contributors = Array.isArray(project.contributors) ? project.contributors : [];
 
                 const counterStr = `${padNumber(index + 1)} / ${padNumber(totalCount)}`;
                 // Alternating rows: project 1 (index 0) text left / image right; project 2 (index 1) image left / text right
@@ -1052,6 +1099,57 @@
 
                 // Build Stack HTML
                 const stackHtml = stack.map((tech) => `<span class="stack-badge">${tech}</span>`).join('');
+
+                // Build Contributors HTML
+                let contributorsHtml = '';
+                if (contributors.length > 0) {
+                    const contributorCardsHtml = contributors.map((c) => {
+                        const cName = c.name || 'Contributor';
+                        const cLink = c.link || c.url || c.profileUrl || '#';
+                        const cImg = c.image || c.avatar || c.profileImage || 'assets/images/me.jpg';
+                        const cContrib = c.contribution || c.description || c.role || '';
+                        const hasLink = cLink && cLink !== '#';
+                        const fullTitle = cContrib ? `${cName} — ${cContrib}` : cName;
+
+                        const content = `
+                            <span class="contributor-avatar-wrap">
+                                <img src="${cImg}" alt="${cName}" loading="lazy" class="contributor-avatar" onerror="this.onerror=null;this.src='assets/images/me.jpg';">
+                            </span>
+                            <span class="contributor-details">
+                                <span class="contributor-name-row">
+                                    <span class="contributor-name">${cName}</span>
+                                    ${hasLink ? '<i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>' : ''}
+                                </span>
+                                ${cContrib ? `<span class="contributor-contribution">${cContrib}</span>` : ''}
+                            </span>
+                        `;
+
+                        if (hasLink) {
+                            return `
+                                <a href="${cLink}" target="_blank" rel="noopener noreferrer" class="showcase-contributor-card" title="${fullTitle}">
+                                    ${content}
+                                </a>
+                            `;
+                        } else {
+                            return `
+                                <div class="showcase-contributor-card" title="${fullTitle}">
+                                    ${content}
+                                </div>
+                            `;
+                        }
+                    }).join('');
+
+                    contributorsHtml = `
+                        <div class="showcase-contributors">
+                            <span class="showcase-contributors-heading">
+                                <i class="fas fa-users" aria-hidden="true"></i> Contributors
+                            </span>
+                            <div class="showcase-contributors-list">
+                                ${contributorCardsHtml}
+                            </div>
+                        </div>
+                    `;
+                }
 
                 // Build Links HTML
                 const linksHtml = links.map((link, lIdx) => {
@@ -1146,6 +1244,7 @@
                         </h2>
                         <p class="showcase-description">${project.description || ''}</p>
                         ${stack.length > 0 ? `<div class="showcase-stack">${stackHtml}</div>` : ''}
+                        ${contributorsHtml}
                         ${links.length > 0 ? `<div class="showcase-links">${linksHtml}</div>` : ''}
                     </div>
                     ${mediaHtml}
