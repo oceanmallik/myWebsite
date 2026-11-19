@@ -1,0 +1,17 @@
+{
+  "name": "Ocean Mallik",
+  "handle": "oceanmallik",
+  "title": "Software Engineer in Training",
+  "institution": "Daffodil International University",
+  "location": "Dhaka, Bangladesh",
+  "status": "Available for Projects & Collaborations",
+  "avatar": "assets/images/me.jpg",
+  "bio": "Software Engineering student at Daffodil International University. Passionate about exploring computer systems, building native mobile apps, and contributing to open-source software.",
+  "focus": "Native Mobile & Systems",
+  "stats": {
+    "projects": 6,
+    "apps": 1,
+    "certificates": 11,
+    "repos": null
+  }
+}

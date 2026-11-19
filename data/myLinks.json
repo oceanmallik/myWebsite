@@ -1,0 +1,66 @@
+[
+  {
+    "title": "GitHub",
+    "url": "https://github.com/oceanmallik",
+    "icon": "fab fa-github",
+    "description": "github.com/oceanmallik",
+    "badge": "Repos",
+    "featured": true
+  },
+  {
+    "title": "Gitlab",
+    "url": "https://gitlab.com/oceanmallik",
+    "icon": "fab fa-gitlab",
+    "description": "gitlab.com/oceanmallik",
+    "badge": "Repos",
+    "featured": true
+  },
+  {
+    "title": "All Links Hub",
+    "url": "https://link.oceanmallik.com/",
+    "icon": "fas fa-link",
+    "description": "link.oceanmallik.com",
+    "badge": "Links",
+    "featured": true
+  },
+  {
+    "title": "Dev Blog",
+    "url": "https://www.bartawire.com/#/@oceanmallik",
+    "icon": "fas fa-feather-alt",
+    "description": "bartawire.com/#/@oceanmallik",
+    "badge": "Articles",
+    "featured": true
+  },
+  {
+    "title": "Google Play Store",
+    "url": "https://play.google.com/store/apps/details?id=com.oceanmallik.diunote",
+    "icon": "fab fa-google-play",
+    "description": "DIU Notes Android App",
+    "badge": "App",
+    "featured": true
+  },
+  {
+    "title": "LinkedIn",
+    "url": "https://www.linkedin.com/in/oceanmallik",
+    "icon": "fab fa-linkedin-in",
+    "description": "linkedin.com/in/oceanmallik",
+    "badge": "Network",
+    "featured": false
+  },
+  {
+    "title": "Email",
+    "url": "mailto:oceanmallik@oceanmallik.com",
+    "icon": "fas fa-envelope",
+    "description": "oceanmallik@oceanmallik.com",
+    "badge": "Direct Mail",
+    "featured": false
+  },
+  {
+    "title": "Support",
+    "url": "https://supportkori.com/oceanmallik",
+    "icon": "fas fa-heart",
+    "description": "supportkori.com/oceanmallik",
+    "badge": "Donate",
+    "featured": false
+  }
+]

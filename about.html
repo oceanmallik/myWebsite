@@ -104,109 +104,115 @@
 
     <section class="section bg-secondary" style="padding-top: 110px; min-height: 100vh;">
         <div class="container">
+            <!-- Header Section -->
             <div style="margin-bottom: 40px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;" class="reveal">
                 <p class="subtitle" style="letter-spacing: 2px; text-transform: uppercase; font-size: 0.92rem; margin-bottom: 0.5rem;"><i class="fas fa-user-astronaut"></i> &nbsp;Developer Profile</p>
                 <h1 class="title">About <span class="highlight">Me</span></h1>
                 <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.7;">
-                    A quick peek into my background, technical skillset, educational qualifications, and development journey.
+                    A quick peek into my background, technical skillset, verified profiles, and engineering journey.
                 </p>
             </div>
 
             <div class="bento-grid">
-                <!-- Card 1: Main Bio & Intro (col-span-2) -->
-                <article class="card bento-card col-span-2 reveal">
-                    <div class="card-main">
-                        <div class="card-header">
-                            <span class="card-header-icon" aria-hidden="true"><i class="fas fa-user-astronaut"></i></span>
-                            <h3 class="card-title">Ocean Mallik</h3>
+                <!-- 1. Profile Section Hero Card with Projects & Apps Counters (col-span-full) -->
+                <article id="profile-hero-card" class="card bento-card profile-hero-card col-span-full reveal" data-profile-source="data/myProfile.json">
+                    <div class="profile-hero-top">
+                        <div class="profile-avatar-box">
+                            <img id="profile-avatar" class="profile-avatar-img" src="assets/images/me.jpg" alt="Ocean Mallik" loading="lazy">
+                            <span class="profile-avatar-badge" title="Online &amp; Active"></span>
                         </div>
-                        <p class="card-description">
-                            Software Engineering student at <strong>Daffodil International University</strong>. Exploring computer systems, building native mobile apps, and contributing to open source projects.
-                        </p>
+
+                        <div class="profile-hero-details">
+                            <div class="profile-name-row">
+                                <h2 id="profile-name" class="profile-name-heading">Ocean Mallik</h2>
+                                <span id="profile-handle" class="profile-handle-tag">@oceanmallik</span>
+                            </div>
+                            <p id="profile-tagline" class="profile-tagline">Software Engineer in Training &bull; DIU</p>
+
+                            <div class="profile-meta-chips">
+                                <span id="profile-location" class="profile-chip">
+                                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i> Dhaka, Bangladesh
+                                </span>
+                                <span id="profile-focus" class="profile-chip">
+                                    <i class="fas fa-microchip" aria-hidden="true"></i> Native Mobile &amp; Systems
+                                </span>
+                                <span id="profile-status" class="profile-chip profile-chip-active">
+                                    <span class="status-pulse-dot" aria-hidden="true"></span> Available for Projects &amp; Collaborations
+                                </span>
+                            </div>
+
+                            <p id="profile-bio" class="profile-bio-text">
+                                Software Engineering student at <strong>Daffodil International University</strong>. Exploring computer systems, building native mobile apps, and contributing to open-source software.
+                            </p>
+                        </div>
                     </div>
 
-                    <!-- Illustration area on the right -->
-                    <div class="card-illustration" aria-hidden="true">
-                        <div class="concentric-squares">
-                            <span class="concentric-square square-1"></span>
-                            <span class="concentric-square square-2"></span>
-                            <span class="concentric-square square-3"></span>
-                            <span class="concentric-square square-4"></span>
-                        </div>
-                        <div class="card-illustration-graphic">
-                            <img src="assets/images/me.jpg" alt="" loading="lazy">
-                        </div>
-                    </div>
+                    <!-- Profile Counters & Stats Row -->
+                    <div class="profile-stats-grid">
+                        <a href="activities.html" class="profile-stat-box" title="View all projects">
+                            <div class="profile-stat-header">
+                                <i class="fas fa-layer-group profile-stat-icon" aria-hidden="true"></i>
+                                <span class="profile-stat-pill">Works</span>
+                            </div>
+                            <div id="stat-projects" class="profile-stat-value">6</div>
+                            <div class="profile-stat-label">Projects Built</div>
+                            <div class="profile-stat-subtext">Explore activities <i class="fas fa-arrow-right" aria-hidden="true"></i></div>
+                        </a>
 
-                    <!-- Checklist pinned to bottom -->
-                    <ul class="card-checklist">
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Location: <strong>Dhaka, Bangladesh</strong></span>
-                        </li>
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Core Focus: <strong>Native Mobile &amp; Systems</strong></span>
-                        </li>
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Links: <a href="https://link.oceanmallik.com" target="_blank" rel="noopener noreferrer" class="card-inline-link">All Links</a> • <a href="https://blog.oceanmallik.com" target="_blank" rel="noopener noreferrer" class="card-inline-link">Dev Blog</a> • <a href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="card-inline-link">GitHub</a></span>
-                        </li>
-                    </ul>
+                        <a href="https://play.google.com/store/apps/dev?id=5168944414714193607" target="_blank" rel="noopener noreferrer" class="profile-stat-box" title="View published mobile apps">
+                            <div class="profile-stat-header">
+                                <i class="fab fa-google-play profile-stat-icon" aria-hidden="true"></i>
+                                <span class="profile-stat-pill">Mobile</span>
+                            </div>
+                            <div id="stat-apps" class="profile-stat-value">1</div>
+                            <div class="profile-stat-label">Apps Published</div>
+                            <div class="profile-stat-subtext">Google Play &amp; Android <i class="fas fa-arrow-right" aria-hidden="true"></i></div>
+                        </a>
+
+                        <a href="certificates.html" class="profile-stat-box" title="View all certifications">
+                            <div class="profile-stat-header">
+                                <i class="fas fa-certificate profile-stat-icon" aria-hidden="true"></i>
+                                <span class="profile-stat-pill">Verified</span>
+                            </div>
+                            <div id="stat-certs" class="profile-stat-value">11</div>
+                            <div class="profile-stat-label">Certifications</div>
+                            <div class="profile-stat-subtext">Inspect credentials <i class="fas fa-arrow-right" aria-hidden="true"></i></div>
+                        </a>
+
+                        <a href="mygit.html" class="profile-stat-box" title="View GitHub repositories">
+                            <div class="profile-stat-header">
+                                <i class="fab fa-github profile-stat-icon" aria-hidden="true"></i>
+                                <span class="profile-stat-pill">Git</span>
+                            </div>
+                            <div id="stat-repos" class="profile-stat-value">-</div>
+                            <div class="profile-stat-label">Repositories</div>
+                            <div class="profile-stat-subtext">View Git Repositories<i class="fas fa-arrow-right" aria-hidden="true"></i></div>
+                        </a>
+                    </div>
                 </article>
 
-                <!-- Card 2: Verified Developer Card (1 col) -->
-                <article class="card bento-card reveal">
+                <!-- 2. Required Links Hub Card (col-span-full) -->
+                <article class="card bento-card col-span-full reveal">
                     <div class="card-main">
                         <div class="card-header">
-                            <span class="card-header-icon" aria-hidden="true"><i class="fas fa-id-card"></i></span>
-                            <h3 class="card-title">Developer Credentials</h3>
+                            <span class="card-header-icon" aria-hidden="true"><i class="fas fa-link"></i></span>
+                            <h3 class="card-title">Verified Links &amp; Profiles</h3>
                         </div>
                         <p class="card-description">
-                            Official accreditation and verified identity card issued by <strong>freeCodeCamp &amp; DIU</strong>.
+                            All official developer profiles, central link hubs, dev articles, and direct communication channels.
                         </p>
+                        <!-- Dynamic Links Container from myLinks.json -->
+                        <div id="profile-links-container" class="profile-links-grid" data-links-source="data/myLinks.json"></div>
                     </div>
-
-                    <!-- Illustration area on the right -->
-                    <div class="card-illustration" aria-hidden="true">
-                        <div class="concentric-squares">
-                            <span class="concentric-square square-1"></span>
-                            <span class="concentric-square square-2"></span>
-                            <span class="concentric-square square-3"></span>
-                            <span class="concentric-square square-4"></span>
-                        </div>
-                        <div class="card-illustration-graphic">
-                            <img src="assets/images/fcCard.png" alt="" loading="lazy">
-                        </div>
-                    </div>
-
-                    <!-- Checklist pinned to bottom -->
-                    <ul class="card-checklist">
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Accreditation: <strong>freeCodeCamp Verified</strong></span>
-                        </li>
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Identity: <strong>Ocean Mallik (DIU)</strong></span>
-                        </li>
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Status: <strong>Active Developer Card</strong></span>
-                        </li>
-                    </ul>
                 </article>
 
-                <!-- Card 3: Technical Skills Matrix (col-span-2) -->
+                <!-- 3. Technical Skills Matrix (col-span-2) -->
                 <article class="card bento-card col-span-2 reveal">
                     <div class="card-main">
                         <div class="card-header">
                             <span class="card-header-icon" aria-hidden="true"><i class="fas fa-layer-group"></i></span>
                             <h3 class="card-title">Technical Skillset &amp; Stack</h3>
                         </div>
-                        <p class="card-description">
-                            Core engineering competencies across <strong>frontend, backend, native mobile, and systems</strong> programming.
-                        </p>
                         <div id="skills-container" class="skills-categories" data-skills-source="data/mySkills.json"></div>
                     </div>
 
@@ -222,34 +228,15 @@
                             <i class="fas fa-laptop-code" aria-hidden="true"></i>
                         </div>
                     </div>
-
-                    <!-- Checklist pinned to bottom -->
-                    <ul class="card-checklist">
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Languages: <strong>JavaScript, TypeScript, C#, Python, C</strong></span>
-                        </li>
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Frameworks: <strong>React Native, Node.js, Godot Engine</strong></span>
-                        </li>
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Tools: <strong>Git, Linux CLI, Docker, VS Code</strong></span>
-                        </li>
-                    </ul>
                 </article>
 
-                <!-- Card 4: Educational Qualification (1 col) -->
+                <!-- 4. Educational Background (1 col - Replaces Developer Credentials) -->
                 <article class="card bento-card reveal">
                     <div class="card-main">
                         <div class="card-header">
                             <span class="card-header-icon" aria-hidden="true"><i class="fas fa-graduation-cap"></i></span>
                             <h3 class="card-title">Educational Background</h3>
                         </div>
-                        <p class="card-description">
-                            Formal academic curriculum in <strong>Software Engineering</strong> and computer sciences.
-                        </p>
                         <div id="education-timeline" class="timeline" data-education-source="data/myEducation.json"></div>
                     </div>
 
@@ -265,22 +252,6 @@
                             <i class="fas fa-university" aria-hidden="true"></i>
                         </div>
                     </div>
-
-                    <!-- Checklist pinned to bottom -->
-                    <ul class="card-checklist">
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">B.Sc. in Software Engineering — <strong>DIU (Ongoing)</strong></span>
-                        </li>
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Higher Secondary (HSC) — <strong>Science</strong></span>
-                        </li>
-                        <li class="card-checklist-item">
-                            <i class="fas fa-check card-check-icon" aria-hidden="true"></i>
-                            <span class="card-check-text">Secondary School (SSC) — <strong>Science</strong></span>
-                        </li>
-                    </ul>
                 </article>
             </div>
         </div>

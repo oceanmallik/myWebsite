@@ -1330,6 +1330,234 @@
             });
     }
 
+    /* --- Number Counter Animation Helper --- */
+    function animateCounter(element, target, duration = 1200, suffix = '') {
+        if (!element) return;
+        const targetNum = parseInt(target, 10);
+        if (isNaN(targetNum)) {
+            element.textContent = target;
+            return;
+        }
+
+        const start = 0;
+        const startTime = performance.now();
+
+        function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Smooth easeOutExpo
+            const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+            const current = Math.floor(easeProgress * (targetNum - start) + start);
+            element.textContent = current + suffix;
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                element.textContent = targetNum + suffix;
+            }
+        }
+
+        requestAnimationFrame(update);
+    }
+
+    /* --- Profile Details & Stats Rendering from JSON --- */
+    function initProfileFromJson() {
+        const profileContainer = document.getElementById('profile-hero-card');
+        if (!profileContainer) return;
+
+        const sourcePath = profileContainer.dataset.profileSource || 'data/myProfile.json';
+
+        // Fetch profile JSON with fallbacks and cross-check works/certificates
+        Promise.all([
+            fetchJsonWithFallback([sourcePath, 'data/myProfile.json', './data/myProfile.json', './myProfile.json']),
+            fetchJsonWithFallback(['data/myWorks.json', './data/myWorks.json', 'myWorks.json']).catch(() => null),
+            fetchJsonWithFallback(['data/myCertificates.json', './data/myCertificates.json', 'myCertificates.json']).catch(() => null)
+        ]).then(([profile, worksData, certsData]) => {
+            if (!profile) return;
+
+            // Name
+            const nameEl = document.getElementById('profile-name');
+            if (nameEl && profile.name) nameEl.textContent = profile.name;
+
+            // Handle
+            const handleEl = document.getElementById('profile-handle');
+            if (handleEl && profile.handle) handleEl.textContent = `@${profile.handle.replace(/^@/, '')}`;
+
+            // Title / Tagline
+            const taglineEl = document.getElementById('profile-tagline');
+            if (taglineEl && (profile.tagline || profile.title)) {
+                taglineEl.textContent = profile.tagline || profile.title;
+            }
+
+            // Location
+            const locEl = document.getElementById('profile-location');
+            if (locEl && profile.location) {
+                locEl.innerHTML = `<i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${profile.location}`;
+            }
+
+            // Core focus
+            const focusEl = document.getElementById('profile-focus');
+            if (focusEl && profile.focus) {
+                focusEl.innerHTML = `<i class="fas fa-microchip" aria-hidden="true"></i> ${profile.focus}`;
+            }
+
+            // Status
+            const statusEl = document.getElementById('profile-status');
+            if (statusEl && profile.status) {
+                statusEl.innerHTML = `<span class="status-pulse-dot" aria-hidden="true"></span> ${profile.status}`;
+            }
+
+            // Bio
+            const bioEl = document.getElementById('profile-bio');
+            if (bioEl && profile.bio) {
+                bioEl.innerHTML = profile.bio;
+            }
+
+            // Avatar
+            const avatarEl = document.getElementById('profile-avatar');
+            if (avatarEl && profile.avatar) {
+                avatarEl.src = profile.avatar;
+                if (profile.name) avatarEl.alt = profile.name;
+            }
+
+            // Stats calculation with fallback:
+            const worksArray = Array.isArray(worksData) ? worksData : (worksData && worksData.works ? worksData.works : []);
+            let projectCount = worksArray.length > 0
+                ? worksArray.length
+                : (profile.stats && typeof profile.stats.projects === 'number' ? profile.stats.projects : 6);
+
+            // Apps counter: specifically mobile ones from myWorks.json
+            let appsCount = worksArray.length > 0
+                ? worksArray.filter((w) => (w.category || '').toLowerCase() === 'mobile').length
+                : (profile.stats && typeof profile.stats.apps === 'number' ? profile.stats.apps : 1);
+
+            const certsArray = Array.isArray(certsData) ? certsData : [];
+            let certsCount = certsArray.length > 0
+                ? certsArray.length
+                : (profile.stats && typeof profile.stats.certificates === 'number' ? profile.stats.certificates : 11);
+
+            // Animate local counts
+            const statProjectsEl = document.getElementById('stat-projects');
+            if (statProjectsEl) animateCounter(statProjectsEl, projectCount);
+
+            const statAppsEl = document.getElementById('stat-apps');
+            if (statAppsEl) animateCounter(statAppsEl, appsCount);
+
+            const statCertsEl = document.getElementById('stat-certs');
+            if (statCertsEl) animateCounter(statCertsEl, certsCount);
+
+            // Git repo count: dynamically fetched from mygit data source
+            const statReposEl = document.getElementById('stat-repos');
+            const MYGIT_CACHE_URL = 'https://raw.githubusercontent.com/oceanmallik/github-data-cache/refs/heads/seed/data.json';
+
+            fetch(MYGIT_CACHE_URL)
+                .then((res) => {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.json();
+                })
+                .then((gitData) => {
+                    const user = gitData && gitData.profile;
+                    let repoCount = user && typeof user.public_repos === 'number'
+                        ? user.public_repos
+                        : (gitData && Array.isArray(gitData.repos) ? gitData.repos.length : null);
+
+                    if (typeof repoCount === 'number' && statReposEl) {
+                        animateCounter(statReposEl, repoCount);
+                    } else if (profile.stats && profile.stats.repos && statReposEl) {
+                        animateCounter(statReposEl, profile.stats.repos);
+                    }
+                })
+                .catch(() => {
+                    // Fallback to GitHub public API
+                    fetch('https://api.github.com/users/oceanmallik')
+                        .then((res) => res.ok ? res.json() : null)
+                        .then((ghUser) => {
+                            if (ghUser && typeof ghUser.public_repos === 'number' && statReposEl) {
+                                animateCounter(statReposEl, ghUser.public_repos);
+                            } else if (profile.stats && profile.stats.repos && statReposEl) {
+                                animateCounter(statReposEl, profile.stats.repos);
+                            }
+                        })
+                        .catch(() => {
+                            if (profile.stats && profile.stats.repos && statReposEl) {
+                                animateCounter(statReposEl, profile.stats.repos);
+                            }
+                        });
+                });
+        }).catch((err) => {
+            console.error('Error loading profile from JSON:', err);
+        });
+    }
+
+    /* --- Links Hub Rendering from JSON --- */
+    function initLinksFromJson() {
+        const container = document.getElementById('profile-links-container');
+        if (!container) return;
+
+        const sourcePath = container.dataset.linksSource || 'data/myLinks.json';
+
+        fetchJsonWithFallback([sourcePath, 'data/myLinks.json', './data/myLinks.json', 'myLinks.json'])
+            .then((links) => {
+                if (!Array.isArray(links) || links.length === 0) return;
+
+                container.innerHTML = '';
+                links.forEach((link) => {
+                    const card = document.createElement('a');
+                    card.href = link.url || '#';
+                    card.className = 'profile-link-card';
+                    card.target = '_blank';
+                    card.rel = 'noopener noreferrer';
+                    card.setAttribute('aria-label', `${link.title || 'Link'}: ${link.description || ''}`);
+
+                    // Icon
+                    const iconBox = document.createElement('div');
+                    iconBox.className = 'profile-link-icon';
+                    iconBox.innerHTML = `<i class="${link.icon || 'fas fa-link'}" aria-hidden="true"></i>`;
+                    card.appendChild(iconBox);
+
+                    // Content
+                    const content = document.createElement('div');
+                    content.className = 'profile-link-content';
+
+                    const titleRow = document.createElement('div');
+                    titleRow.className = 'profile-link-title-row';
+
+                    const title = document.createElement('span');
+                    title.className = 'profile-link-title';
+                    title.textContent = link.title || 'Link';
+                    titleRow.appendChild(title);
+
+                    if (link.badge) {
+                        const badge = document.createElement('span');
+                        badge.className = 'profile-link-badge';
+                        badge.textContent = link.badge;
+                        titleRow.appendChild(badge);
+                    }
+                    content.appendChild(titleRow);
+
+                    if (link.description) {
+                        const desc = document.createElement('div');
+                        desc.className = 'profile-link-desc';
+                        desc.textContent = link.description;
+                        content.appendChild(desc);
+                    }
+
+                    card.appendChild(content);
+
+                    // Arrow
+                    const arrow = document.createElement('div');
+                    arrow.className = 'profile-link-arrow';
+                    arrow.innerHTML = '<i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>';
+                    card.appendChild(arrow);
+
+                    container.appendChild(card);
+                });
+            })
+            .catch((err) => {
+                console.error('Error loading links from JSON:', err);
+            });
+    }
+
     /* --- Scroll Reveal Animations --- */
     function initScrollReveal() {
         const reveals = document.querySelectorAll('.reveal');
@@ -1365,6 +1593,8 @@
         initThemeSwitcher();
         initTypingEffect();
         initHeroPointerLight();
+        initProfileFromJson();
+        initLinksFromJson();
         initActivitiesFromJson();
         initCertificatesFromJson();
         initSkillsFromJson();
