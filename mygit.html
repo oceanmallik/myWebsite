@@ -628,10 +628,17 @@
 
         /* Responsive */
         @media (max-width: 600px) {
-            .github-profile-strip {
+            .github-profile-strip,
+            .combined-profile-header {
                 flex-wrap: wrap;
                 justify-content: center;
                 text-align: center;
+            }
+
+            .combined-profile-user {
+                justify-content: center;
+                text-align: center;
+                width: 100%;
             }
 
             .profile-strip-info {
@@ -659,6 +666,377 @@
             .repo-skeleton-grid {
                 grid-template-columns: 1fr;
             }
+        }
+
+        /* --- GitHub Contributions Calendar & Heatmap --- */
+        :root {
+            --contrib-none: #161b22;
+            --contrib-level-1: #0e4429;
+            --contrib-level-2: #006d32;
+            --contrib-level-3: #26a641;
+            --contrib-level-4: #39d353;
+            --contrib-border: rgba(255, 255, 255, 0.04);
+            --contrib-tooltip-bg: #1c2128;
+            --contrib-tooltip-text: #ffffff;
+            --contrib-tooltip-border: #30363d;
+        }
+
+        body.theme-white {
+            --contrib-none: #ebedf0;
+            --contrib-level-1: #9be9a8;
+            --contrib-level-2: #40c463;
+            --contrib-level-3: #30a14e;
+            --contrib-level-4: #216e39;
+            --contrib-border: rgba(0, 0, 0, 0.05);
+            --contrib-tooltip-bg: #1f2937;
+            --contrib-tooltip-text: #ffffff;
+            --contrib-tooltip-border: #374151;
+        }
+
+        body.theme-soft {
+            --contrib-none: #eddcd0;
+            --contrib-level-1: #fed7aa;
+            --contrib-level-2: #fb923c;
+            --contrib-level-3: #ea580c;
+            --contrib-level-4: #9a3412;
+            --contrib-border: rgba(0, 0, 0, 0.06);
+            --contrib-tooltip-bg: #292524;
+            --contrib-tooltip-text: #fafaf9;
+            --contrib-tooltip-border: #44403c;
+        }
+
+        body.theme-aurora {
+            --contrib-none: #d6ede7;
+            --contrib-level-1: #a5f3fc;
+            --contrib-level-2: #22d3ee;
+            --contrib-level-3: #0891b2;
+            --contrib-level-4: #155e75;
+            --contrib-border: rgba(0, 0, 0, 0.06);
+            --contrib-tooltip-bg: #0f172a;
+            --contrib-tooltip-text: #f8fafc;
+            --contrib-tooltip-border: #334155;
+        }
+
+        body.theme-cyberpunk {
+            --contrib-none: #1a1033;
+            --contrib-level-1: #3b1d6e;
+            --contrib-level-2: #7c2d96;
+            --contrib-level-3: #c026d3;
+            --contrib-level-4: #ffd400;
+            --contrib-border: rgba(255, 212, 0, 0.1);
+            --contrib-tooltip-bg: #120a24;
+            --contrib-tooltip-text: #ffd400;
+            --contrib-tooltip-border: #ffd400;
+        }
+
+        .github-contributions-card,
+        .github-combined-card {
+            background: var(--bento-card-bg, #1c1c1c);
+            border: 1px solid var(--bento-card-border, #2a2a2a);
+            border-radius: 16px;
+            padding: 22px 26px;
+            max-width: 860px;
+            margin: 0 auto 2.25rem;
+            box-shadow: none;
+            position: relative;
+            transition: border-color 150ms ease, background-color 150ms ease;
+        }
+
+        .github-contributions-card:hover,
+        .github-combined-card:hover {
+            border-color: var(--bento-card-border-hover, #3a3a3a);
+        }
+
+        .combined-profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+        }
+
+        .combined-profile-user {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 180px;
+        }
+
+        .combined-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .combined-card-divider {
+            height: 1px;
+            background: var(--bento-card-border, #2a2a2a);
+            margin: 16px 0 18px 0;
+            width: 100%;
+        }
+
+        .combined-contributions-section {
+            width: 100%;
+        }
+
+        .contributions-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .contributions-title-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contributions-icon {
+            font-size: 1.15rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contributions-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--bento-card-title, #ffffff);
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .contributions-count {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+        }
+
+        .contributions-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            background: var(--bento-card-badge-bg, rgba(255, 255, 255, 0.03));
+            border: 1px solid var(--bento-card-border, #2a2a2a);
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-weight: 500;
+        }
+
+        .contributions-graph-scroll {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .contributions-graph-scroll::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        .contributions-graph-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .contributions-graph-scroll::-webkit-scrollbar-thumb {
+            background: var(--bento-card-border, #2a2a2a);
+            border-radius: 4px;
+        }
+
+        .contributions-graph-scroll::-webkit-scrollbar-thumb:hover {
+            background: var(--bento-card-border-hover, #3a3a3a);
+        }
+
+        .contributions-graph-inner {
+            min-width: 770px;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        .contributions-loading-state {
+            padding: 36px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .contrib-months-header {
+            position: relative;
+            height: 16px;
+            margin-left: 32px;
+            margin-bottom: 6px;
+        }
+
+        .contrib-month-label {
+            position: absolute;
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .contrib-body {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .contrib-day-labels {
+            width: 26px;
+            height: 95px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--text-muted);
+            padding-top: 2px;
+            flex-shrink: 0;
+            text-transform: capitalize;
+        }
+
+        .contrib-day-labels span {
+            height: 11px;
+            line-height: 11px;
+        }
+
+        .contrib-weeks {
+            display: flex;
+            gap: 3px;
+        }
+
+        .contrib-week-col {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .contrib-cell {
+            width: 11px;
+            height: 11px;
+            border-radius: 2px;
+            box-sizing: border-box;
+            background-color: var(--contrib-none);
+            border: 1px solid var(--contrib-border);
+            transition: transform 120ms ease, outline 120ms ease;
+            cursor: pointer;
+        }
+
+        .contrib-cell:hover {
+            transform: scale(1.3);
+            outline: 1.5px solid var(--bento-card-title, #ffffff);
+            outline-offset: 1px;
+            z-index: 5;
+        }
+
+        .contrib-cell.level-none {
+            background-color: var(--contrib-none);
+        }
+
+        .contrib-cell.level-1 {
+            background-color: var(--contrib-level-1);
+        }
+
+        .contrib-cell.level-2 {
+            background-color: var(--contrib-level-2);
+        }
+
+        .contrib-cell.level-3 {
+            background-color: var(--contrib-level-3);
+        }
+
+        .contrib-cell.level-4 {
+            background-color: var(--contrib-level-4);
+        }
+
+        .contributions-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+            padding-top: 12px;
+            border-top: 1px solid var(--bento-card-border, #2a2a2a);
+        }
+
+        .contributions-legend-link {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 150ms ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .contributions-legend-link:hover {
+            color: var(--primary-color);
+        }
+
+        .contributions-legend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .legend-text {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin: 0 4px;
+        }
+
+        .contributions-legend .contrib-cell {
+            cursor: default;
+        }
+
+        .contributions-legend .contrib-cell:hover {
+            transform: none;
+            outline: none;
+        }
+
+        .contrib-tooltip {
+            position: absolute;
+            background: var(--contrib-tooltip-bg, #1c2128);
+            color: var(--contrib-tooltip-text, #ffffff);
+            border: 1px solid var(--contrib-tooltip-border, #30363d);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            line-height: 1.3;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -100%) scale(0.95);
+            transition: opacity 120ms ease, transform 120ms ease;
+            white-space: nowrap;
+            z-index: 50;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+        }
+
+        .contrib-tooltip.visible {
+            opacity: 1;
+            transform: translate(-50%, -100%) scale(1);
+        }
+
+        .contrib-tooltip strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        body.theme-white .contrib-tooltip strong {
+            color: #ffffff;
         }
     </style>
     <script>
@@ -762,30 +1140,79 @@
                 <p class="description">A live showcase of my public repositories, browse, explore and see what I've been building.</p>
             </div>
 
-            <!-- GitHub Profile Strip -->
-            <div id="github-profile-strip" class="github-profile-strip reveal">
-                <img id="gh-avatar" src="https://github.com/oceanmallik.png" alt="Ocean Mallik" onerror="this.onerror=null; this.src='assets/images/me.jpg';">
-                <div class="profile-strip-info">
-                    <div class="name" id="gh-name">Ocean Mallik</div>
-                    <div class="login" id="gh-login">@oceanmallik</div>
+            <!-- Combined GitHub Profile & Contributions Card -->
+            <div id="github-combined-card" class="card bento-card github-combined-card reveal">
+                <!-- Top Section: GitHub Profile Header -->
+                <div class="combined-profile-header">
+                    <div class="combined-profile-user">
+                        <img id="gh-avatar" src="https://github.com/oceanmallik.png" alt="Ocean Mallik" onerror="this.onerror=null; this.src='assets/images/me.jpg';" class="combined-avatar">
+                        <div class="profile-strip-info">
+                            <div class="name" id="gh-name">Ocean Mallik</div>
+                            <div class="login" id="gh-login">@oceanmallik</div>
+                        </div>
+                    </div>
+
+                    <div class="profile-strip-stats">
+                        <div class="profile-stat">
+                            <span class="num" id="gh-repos">-</span>
+                            <span class="lbl">Repos</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="num" id="gh-followers">-</span>
+                            <span class="lbl">Followers</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="num" id="gh-following">-</span>
+                            <span class="lbl">Following</span>
+                        </div>
+                    </div>
+
+                    <a id="gh-profile-link" href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="profile-strip-link">
+                        <i class="fab fa-github"></i> View Profile <i class="fas fa-arrow-right" style="font-size:0.7rem;"></i>
+                    </a>
                 </div>
-                <div class="profile-strip-stats">
-                    <div class="profile-stat">
-                        <span class="num" id="gh-repos">-</span>
-                        <span class="lbl">Repos</span>
+
+                <!-- Divider -->
+                <div class="combined-card-divider"></div>
+
+                <!-- Bottom Section: Contributions Activity -->
+                <div class="combined-contributions-section">
+                    <div class="contributions-header">
+                        <div class="contributions-title-area">
+                            <span class="contributions-icon" aria-hidden="true"><i class="fas fa-chart-line"></i></span>
+                            <h3 class="contributions-title">
+                                <span id="contributions-total-count" class="contributions-count">--</span> contributions in the last year
+                            </h3>
+                        </div>
+                        <div class="contributions-meta" id="contributions-meta-range">Loading activity…</div>
                     </div>
-                    <div class="profile-stat">
-                        <span class="num" id="gh-followers">-</span>
-                        <span class="lbl">Followers</span>
+
+                    <div class="contributions-graph-scroll">
+                        <div id="contributions-graph-inner" class="contributions-graph-inner">
+                            <div class="contributions-loading-state" id="contributions-loading">
+                                <i class="fas fa-circle-notch fa-spin"></i> Loading contributions graph…
+                            </div>
+                        </div>
                     </div>
-                    <div class="profile-stat">
-                        <span class="num" id="gh-following">-</span>
-                        <span class="lbl">Following</span>
+
+                    <div class="contributions-footer">
+                        <span class="contributions-legend-link">
+                            <i class="fab fa-github"></i> Public contribution activity
+                        </span>
+                        <div class="contributions-legend">
+                            <span class="legend-text">Less</span>
+                            <span class="contrib-cell level-none" title="No contributions"></span>
+                            <span class="contrib-cell level-1" title="1-3 contributions"></span>
+                            <span class="contrib-cell level-2" title="4-6 contributions"></span>
+                            <span class="contrib-cell level-3" title="7-9 contributions"></span>
+                            <span class="contrib-cell level-4" title="10+ contributions"></span>
+                            <span class="legend-text">More</span>
+                        </div>
                     </div>
                 </div>
-                <a id="gh-profile-link" href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="profile-strip-link">
-                    <i class="fab fa-github"></i> View Profile <i class="fas fa-arrow-right" style="font-size:0.7rem;"></i>
-                </a>
+
+                <!-- Floating Tooltip -->
+                <div id="contrib-tooltip" class="contrib-tooltip" role="tooltip" aria-hidden="true"></div>
             </div>
 
             <!-- Filters -->
@@ -842,6 +1269,7 @@
     (function () {
         const GITHUB_USERNAME = 'oceanmallik';
         const DATA_CACHE_URL = 'https://raw.githubusercontent.com/oceanmallik/github-data-cache/refs/heads/seed/data.json';
+        const CONTRIBUTIONS_CACHE_URL = 'https://raw.githubusercontent.com/oceanmallik/github-data-cache/refs/heads/seed/contributions.json';
 
         // Language → colour mapping (GitHub colours)
         const LANG_COLORS = {
@@ -906,6 +1334,180 @@
             })();
 
             return gitDataPromise;
+        }
+
+        // ── Contributions Heatmap ─────────────────────────────────────────────
+        async function fetchContributionsData() {
+            try {
+                const res = await fetch(CONTRIBUTIONS_CACHE_URL);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                if (!data || !Array.isArray(data.weeks)) {
+                    throw new Error('Invalid contributions data structure');
+                }
+                return data;
+            } catch (err) {
+                console.warn('Failed to load contributions from cache:', err.message);
+                return null;
+            }
+        }
+
+        async function loadContributions() {
+            const container = document.getElementById('contributions-graph-inner');
+            const totalCountEl = document.getElementById('contributions-total-count');
+            const metaRangeEl = document.getElementById('contributions-meta-range');
+            if (!container) return;
+
+            const data = await fetchContributionsData();
+            if (!data || !Array.isArray(data.weeks) || data.weeks.length === 0) {
+                container.innerHTML = '<div class="contributions-loading-state"><i class="fas fa-chart-line"></i> Contributions activity temporarily unavailable.</div>';
+                return;
+            }
+
+            const total = typeof data.totalContributions === 'number' ? data.totalContributions : 0;
+            if (totalCountEl) totalCountEl.textContent = total.toLocaleString('en-US');
+
+            const weeks = data.weeks;
+            const firstWeek = weeks[0];
+            const lastWeek = weeks[weeks.length - 1];
+            const firstDay = firstWeek && firstWeek.contributionDays && firstWeek.contributionDays[0];
+            const lastDay = lastWeek && lastWeek.contributionDays && lastWeek.contributionDays[lastWeek.contributionDays.length - 1];
+
+            if (firstDay && lastDay && metaRangeEl) {
+                metaRangeEl.textContent = `${formatDateShort(firstDay.date)} — ${formatDateShort(lastDay.date)}`;
+            }
+
+            renderContributionsGraph(container, weeks);
+        }
+
+        function renderContributionsGraph(container, weeks) {
+            container.innerHTML = '';
+
+            // 1. Months Header Row
+            const monthsHeader = document.createElement('div');
+            monthsHeader.className = 'contrib-months-header';
+
+            let currentMonth = -1;
+            weeks.forEach((week, wIndex) => {
+                if (!week.contributionDays || week.contributionDays.length === 0) return;
+                const firstDayOfWeek = week.contributionDays[0];
+                if (!firstDayOfWeek || !firstDayOfWeek.date) return;
+
+                const parts = firstDayOfWeek.date.split('-');
+                const monthIndex = parseInt(parts[1], 10) - 1;
+
+                if (monthIndex !== currentMonth) {
+                    const monthDate = new Date(Date.UTC(+parts[0], monthIndex, +parts[2]));
+                    const monthName = monthDate.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
+
+                    const monthSpan = document.createElement('span');
+                    monthSpan.className = 'contrib-month-label';
+                    monthSpan.textContent = monthName;
+                    monthSpan.style.left = `${wIndex * 14}px`;
+                    monthsHeader.appendChild(monthSpan);
+
+                    currentMonth = monthIndex;
+                }
+            });
+            container.appendChild(monthsHeader);
+
+            // 2. Body: Day Labels + Week Columns
+            const body = document.createElement('div');
+            body.className = 'contrib-body';
+
+            const dayLabels = document.createElement('div');
+            dayLabels.className = 'contrib-day-labels';
+            dayLabels.innerHTML = `
+                <span></span>
+                <span>Mon</span>
+                <span></span>
+                <span>Wed</span>
+                <span></span>
+                <span>Fri</span>
+                <span></span>
+            `;
+            body.appendChild(dayLabels);
+
+            const weeksWrapper = document.createElement('div');
+            weeksWrapper.className = 'contrib-weeks';
+
+            const levelMap = {
+                'NONE': 'level-none',
+                'FIRST_QUARTILE': 'level-1',
+                'SECOND_QUARTILE': 'level-2',
+                'THIRD_QUARTILE': 'level-3',
+                'FOURTH_QUARTILE': 'level-4'
+            };
+
+            weeks.forEach((week) => {
+                const col = document.createElement('div');
+                col.className = 'contrib-week-col';
+
+                (week.contributionDays || []).forEach((day) => {
+                    const cell = document.createElement('span');
+                    const levelClass = levelMap[day.contributionLevel] || 'level-none';
+                    cell.className = `contrib-cell ${levelClass}`;
+                    cell.dataset.date = day.date || '';
+                    cell.dataset.count = day.contributionCount !== undefined ? day.contributionCount : 0;
+                    col.appendChild(cell);
+                });
+
+                weeksWrapper.appendChild(col);
+            });
+
+            body.appendChild(weeksWrapper);
+            container.appendChild(body);
+
+            // Tooltip interactions
+            initContribTooltip(container);
+        }
+
+        function initContribTooltip(container) {
+            const tooltip = document.getElementById('contrib-tooltip');
+            const card = document.getElementById('github-combined-card') || document.getElementById('github-contributions-card');
+            if (!tooltip || !card) return;
+
+            container.addEventListener('mouseover', (e) => {
+                const cell = e.target.closest('.contrib-cell');
+                if (!cell || !cell.dataset.date) return;
+
+                const date = cell.dataset.date;
+                const count = parseInt(cell.dataset.count, 10);
+                if (isNaN(count)) return;
+
+                const countText = count === 0 ? 'No contributions' : (count === 1 ? '1 contribution' : `${count.toLocaleString('en-US')} contributions`);
+                tooltip.innerHTML = `<strong>${countText}</strong> on ${formatDateFull(date)}`;
+                tooltip.classList.add('visible');
+
+                const cardRect = card.getBoundingClientRect();
+                const cellRect = cell.getBoundingClientRect();
+
+                const left = cellRect.left - cardRect.left + (cellRect.width / 2);
+                const top = cellRect.top - cardRect.top - 8;
+
+                tooltip.style.left = `${left}px`;
+                tooltip.style.top = `${top}px`;
+            });
+
+            container.addEventListener('mouseout', (e) => {
+                const cell = e.target.closest('.contrib-cell');
+                if (!cell) return;
+                tooltip.classList.remove('visible');
+            });
+        }
+
+        function formatDateShort(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            const d = new Date(Date.UTC(+parts[0], +parts[1] - 1, +parts[2]));
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+        }
+
+        function formatDateFull(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            const d = new Date(Date.UTC(+parts[0], +parts[1] - 1, +parts[2]));
+            return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
         }
 
         // ── Profile Strip ─────────────────────────────────────────────────────
@@ -1203,6 +1805,7 @@
         // ── Bootstrap ─────────────────────────────────────────────────────────
         renderSkeletons(6);
         loadProfile();
+        loadContributions();
         loadRepos();
     })();
     </script>
