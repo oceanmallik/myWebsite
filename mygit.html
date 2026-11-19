@@ -829,6 +829,64 @@
             font-weight: 500;
         }
 
+        .contributions-years-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 4px 2px 10px 2px;
+            margin-bottom: 14px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .contributions-years-bar::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .contributions-years-bar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .contributions-years-bar::-webkit-scrollbar-thumb {
+            background: var(--bento-card-border, #2a2a2a);
+            border-radius: 4px;
+        }
+
+        .contributions-years-bar::-webkit-scrollbar-thumb:hover {
+            background: var(--bento-card-border-hover, #3a3a3a);
+        }
+
+        .contrib-year-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--bento-card-border, #2a2a2a);
+            background: var(--bento-card-bg, #1c1c1c);
+            color: var(--bento-card-desc, #8f8f8f);
+            font-size: 0.76rem;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
+            user-select: none;
+        }
+
+        .contrib-year-btn:hover {
+            border-color: var(--bento-card-border-hover, #3a3a3a);
+            color: var(--bento-card-title, #ffffff);
+        }
+
+        .contrib-year-btn.active {
+            background: var(--bento-card-active-pill-bg, #262626);
+            border-color: var(--bento-card-border-hover, #3a3a3a);
+            color: var(--bento-card-active-pill-color, #ffffff);
+            font-weight: 600;
+        }
+
         .contributions-graph-scroll {
             width: 100%;
             overflow-x: auto;
@@ -939,6 +997,12 @@
             outline: 1.5px solid var(--bento-card-title, #ffffff);
             outline-offset: 1px;
             z-index: 5;
+        }
+
+        .contrib-cell.empty {
+            visibility: hidden;
+            pointer-events: none;
+            cursor: default;
         }
 
         .contrib-cell.level-none {
@@ -1181,11 +1245,14 @@
                         <div class="contributions-title-area">
                             <span class="contributions-icon" aria-hidden="true"><i class="fas fa-chart-line"></i></span>
                             <h3 class="contributions-title">
-                                <span id="contributions-total-count" class="contributions-count">--</span> contributions in the last year
+                                <span id="contributions-total-count" class="contributions-count">--</span> contributions in <span id="contributions-year-label">the last year</span>
                             </h3>
                         </div>
                         <div class="contributions-meta" id="contributions-meta-range">Loading activity…</div>
                     </div>
+
+                    <!-- Year Selector Tabs -->
+                    <div class="contributions-years-bar" id="contributions-years-bar" aria-label="Select year for contributions"></div>
 
                     <div class="contributions-graph-scroll">
                         <div id="contributions-graph-inner" class="contributions-graph-inner">
@@ -1337,37 +1404,127 @@
         }
 
         // ── Contributions Heatmap ─────────────────────────────────────────────
+        let rawContributionsData = null;
+        let selectedYearKey = 'lastYear';
+
         async function fetchContributionsData() {
+            if (rawContributionsData) return rawContributionsData;
             try {
                 const res = await fetch(CONTRIBUTIONS_CACHE_URL);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                if (!data || !Array.isArray(data.weeks)) {
+                if (!data) throw new Error('Empty contributions data');
+
+                const hasNewFormat = data.byYear || data.lastYear || Array.isArray(data.years);
+                const hasLegacyFormat = Array.isArray(data.weeks);
+                if (!hasNewFormat && !hasLegacyFormat) {
                     throw new Error('Invalid contributions data structure');
                 }
-                return data;
+                rawContributionsData = data;
+                return rawContributionsData;
             } catch (err) {
                 console.warn('Failed to load contributions from cache:', err.message);
                 return null;
             }
         }
 
-        async function loadContributions() {
+        function getAvailableYears(data) {
+            if (!data) return [];
+            if (Array.isArray(data.years) && data.years.length > 0) {
+                return [...data.years].sort((a, b) => b - a).map(String);
+            }
+            if (data.byYear && typeof data.byYear === 'object') {
+                return Object.keys(data.byYear).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+            }
+            return [];
+        }
+
+        function getYearData(data, yearKey) {
+            if (!data) return null;
+            if (yearKey === 'lastYear') {
+                if (data.lastYear && Array.isArray(data.lastYear.weeks)) {
+                    return data.lastYear;
+                }
+                if (Array.isArray(data.weeks)) {
+                    return data;
+                }
+            }
+            if (data.byYear && data.byYear[yearKey] && Array.isArray(data.byYear[yearKey].weeks)) {
+                return data.byYear[yearKey];
+            }
+            return null;
+        }
+
+        function renderYearButtons(data, activeKey) {
+            const bar = document.getElementById('contributions-years-bar');
+            if (!bar) return;
+            bar.innerHTML = '';
+
+            const items = [];
+            if (data.lastYear || Array.isArray(data.weeks)) {
+                const lyTotal = (data.lastYear && data.lastYear.totalContributions) || data.totalContributions || 0;
+                items.push({
+                    key: 'lastYear',
+                    label: 'Last Year',
+                    total: lyTotal
+                });
+            }
+
+            const years = getAvailableYears(data);
+            years.forEach((yr) => {
+                const yrData = data.byYear && data.byYear[yr];
+                const total = yrData && typeof yrData.totalContributions === 'number' ? yrData.totalContributions : 0;
+                items.push({
+                    key: yr,
+                    label: yr,
+                    total: total
+                });
+            });
+
+            items.forEach((item) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `contrib-year-btn ${item.key === activeKey ? 'active' : ''}`;
+                btn.dataset.year = item.key;
+                btn.textContent = item.label;
+                btn.title = `${item.total.toLocaleString('en-US')} contributions in ${item.label === 'Last Year' ? 'the last year' : item.label}`;
+
+                btn.addEventListener('click', () => {
+                    if (selectedYearKey === item.key) return;
+                    selectedYearKey = item.key;
+                    bar.querySelectorAll('.contrib-year-btn').forEach(b => {
+                        b.classList.toggle('active', b.dataset.year === selectedYearKey);
+                    });
+                    switchContributionYear(selectedYearKey);
+                });
+
+                bar.appendChild(btn);
+            });
+        }
+
+        function switchContributionYear(yearKey) {
+            if (!rawContributionsData) return;
+            const yearData = getYearData(rawContributionsData, yearKey);
             const container = document.getElementById('contributions-graph-inner');
             const totalCountEl = document.getElementById('contributions-total-count');
+            const yearLabelEl = document.getElementById('contributions-year-label');
             const metaRangeEl = document.getElementById('contributions-meta-range');
-            if (!container) return;
 
-            const data = await fetchContributionsData();
-            if (!data || !Array.isArray(data.weeks) || data.weeks.length === 0) {
-                container.innerHTML = '<div class="contributions-loading-state"><i class="fas fa-chart-line"></i> Contributions activity temporarily unavailable.</div>';
+            if (!yearData || !Array.isArray(yearData.weeks) || yearData.weeks.length === 0) {
+                if (container) {
+                    container.innerHTML = '<div class="contributions-loading-state"><i class="fas fa-info-circle"></i> No activity recorded for this period.</div>';
+                }
+                if (totalCountEl) totalCountEl.textContent = '0';
+                if (yearLabelEl) yearLabelEl.textContent = yearKey === 'lastYear' ? 'the last year' : yearKey;
+                if (metaRangeEl) metaRangeEl.textContent = yearKey;
                 return;
             }
 
-            const total = typeof data.totalContributions === 'number' ? data.totalContributions : 0;
+            const total = typeof yearData.totalContributions === 'number' ? yearData.totalContributions : 0;
             if (totalCountEl) totalCountEl.textContent = total.toLocaleString('en-US');
+            if (yearLabelEl) yearLabelEl.textContent = yearKey === 'lastYear' ? 'the last year' : yearKey;
 
-            const weeks = data.weeks;
+            const weeks = yearData.weeks;
             const firstWeek = weeks[0];
             const lastWeek = weeks[weeks.length - 1];
             const firstDay = firstWeek && firstWeek.contributionDays && firstWeek.contributionDays[0];
@@ -1380,6 +1537,27 @@
             renderContributionsGraph(container, weeks);
         }
 
+        async function loadContributions() {
+            const container = document.getElementById('contributions-graph-inner');
+            if (!container) return;
+
+            const data = await fetchContributionsData();
+            if (!data) {
+                container.innerHTML = '<div class="contributions-loading-state"><i class="fas fa-chart-line"></i> Contributions activity temporarily unavailable.</div>';
+                return;
+            }
+
+            const years = getAvailableYears(data);
+            if (data.lastYear || Array.isArray(data.weeks)) {
+                selectedYearKey = 'lastYear';
+            } else if (years.length > 0) {
+                selectedYearKey = years[0];
+            }
+
+            renderYearButtons(data, selectedYearKey);
+            switchContributionYear(selectedYearKey);
+        }
+
         function renderContributionsGraph(container, weeks) {
             container.innerHTML = '';
 
@@ -1390,23 +1568,25 @@
             let currentMonth = -1;
             weeks.forEach((week, wIndex) => {
                 if (!week.contributionDays || week.contributionDays.length === 0) return;
-                const firstDayOfWeek = week.contributionDays[0];
-                if (!firstDayOfWeek || !firstDayOfWeek.date) return;
+                for (let d = 0; d < week.contributionDays.length; d++) {
+                    const day = week.contributionDays[d];
+                    if (!day || !day.date) continue;
+                    const parts = day.date.split('-');
+                    const monthIndex = parseInt(parts[1], 10) - 1;
 
-                const parts = firstDayOfWeek.date.split('-');
-                const monthIndex = parseInt(parts[1], 10) - 1;
+                    if (monthIndex !== currentMonth) {
+                        const monthDate = new Date(Date.UTC(+parts[0], monthIndex, +parts[2]));
+                        const monthName = monthDate.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
 
-                if (monthIndex !== currentMonth) {
-                    const monthDate = new Date(Date.UTC(+parts[0], monthIndex, +parts[2]));
-                    const monthName = monthDate.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
+                        const monthSpan = document.createElement('span');
+                        monthSpan.className = 'contrib-month-label';
+                        monthSpan.textContent = monthName;
+                        monthSpan.style.left = `${wIndex * 14}px`;
+                        monthsHeader.appendChild(monthSpan);
 
-                    const monthSpan = document.createElement('span');
-                    monthSpan.className = 'contrib-month-label';
-                    monthSpan.textContent = monthName;
-                    monthSpan.style.left = `${wIndex * 14}px`;
-                    monthsHeader.appendChild(monthSpan);
-
-                    currentMonth = monthIndex;
+                        currentMonth = monthIndex;
+                        break;
+                    }
                 }
             });
             container.appendChild(monthsHeader);
@@ -1443,14 +1623,32 @@
                 const col = document.createElement('div');
                 col.className = 'contrib-week-col';
 
+                // Map the days of this week to their 0..6 weekday slots (Sunday = 0, Saturday = 6)
+                const slots = new Array(7).fill(null);
                 (week.contributionDays || []).forEach((day) => {
-                    const cell = document.createElement('span');
-                    const levelClass = levelMap[day.contributionLevel] || 'level-none';
-                    cell.className = `contrib-cell ${levelClass}`;
-                    cell.dataset.date = day.date || '';
-                    cell.dataset.count = day.contributionCount !== undefined ? day.contributionCount : 0;
-                    col.appendChild(cell);
+                    if (!day || !day.date) return;
+                    const parts = day.date.split('-');
+                    const d = new Date(Date.UTC(+parts[0], +parts[1] - 1, +parts[2]));
+                    const dow = d.getUTCDay();
+                    if (dow >= 0 && dow < 7) {
+                        slots[dow] = day;
+                    }
                 });
+
+                for (let dow = 0; dow < 7; dow++) {
+                    const day = slots[dow];
+                    const cell = document.createElement('span');
+                    if (day) {
+                        const levelClass = levelMap[day.contributionLevel] || 'level-none';
+                        cell.className = `contrib-cell ${levelClass}`;
+                        cell.dataset.date = day.date || '';
+                        cell.dataset.count = day.contributionCount !== undefined ? day.contributionCount : 0;
+                    } else {
+                        // Empty placeholder slot (e.g. before start or after end of year)
+                        cell.className = 'contrib-cell empty';
+                    }
+                    col.appendChild(cell);
+                }
 
                 weeksWrapper.appendChild(col);
             });
@@ -1467,8 +1665,11 @@
             const card = document.getElementById('github-combined-card') || document.getElementById('github-contributions-card');
             if (!tooltip || !card) return;
 
+            if (container.dataset.tooltipInitialized === 'true') return;
+            container.dataset.tooltipInitialized = 'true';
+
             container.addEventListener('mouseover', (e) => {
-                const cell = e.target.closest('.contrib-cell');
+                const cell = e.target.closest('.contrib-cell:not(.empty)');
                 if (!cell || !cell.dataset.date) return;
 
                 const date = cell.dataset.date;
