@@ -74,6 +74,7 @@
 
     /* --- Modern Mobile Drawer Navigation --- */
     function initMobileMenu() {
+        if (window.NAVBAR_INITIALIZED) return;
         const menuButton = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
 
@@ -137,10 +138,11 @@
 
     /* --- Theme Switcher --- */
     function initThemeSwitcher() {
+        if (window.NAVBAR_INITIALIZED) return;
         const themeButton = document.getElementById('theme-toggle');
         const body = document.body;
 
-        if (!themeButton) {
+        if (!themeButton || themeButton.classList.contains('nav-theme-toggle')) {
             applyBodyTheme(body, getStoredThemeIndex());
             return;
         }

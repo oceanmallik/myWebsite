@@ -1,0 +1,525 @@
+/* ==========================================================================
+   Top Navigation Bar - Ocean Mallik
+   ========================================================================== */
+
+/* --- Theme 1: Pitch Black (Default / Deep Dark) --- */
+:root,
+html[data-theme="dark"],
+html.theme-black,
+body.theme-black {
+    --nav-bg: rgba(12, 12, 12, 0.85);
+    --nav-border: rgba(255, 255, 255, 0.08);
+    --nav-text: #f4f4f5;
+    --nav-muted: #a1a1aa;
+    --nav-pill-bg: rgba(255, 255, 255, 0.08);
+    --nav-toggle-border: rgba(255, 255, 255, 0.12);
+    --nav-toggle-bg: rgba(255, 255, 255, 0.04);
+    --nav-toggle-hover: rgba(255, 255, 255, 0.08);
+    --nav-accent: #22c55e;
+    --nav-accent-glow: rgba(34, 197, 94, 0.5);
+    --nav-dot: #22c55e;
+    --nav-progress: #22c55e;
+    --nav-drawer-bg: rgba(12, 12, 12, 0.96);
+    --nav-focus-ring: rgba(34, 197, 94, 0.45);
+}
+
+/* --- Theme 2: Clean White (Modern Clean) --- */
+html[data-theme="light"],
+html.theme-white,
+body.theme-white {
+    --nav-bg: rgba(255, 255, 255, 0.88);
+    --nav-border: rgba(0, 0, 0, 0.08);
+    --nav-text: #18181b;
+    --nav-muted: #71717a;
+    --nav-pill-bg: rgba(0, 0, 0, 0.06);
+    --nav-toggle-border: rgba(0, 0, 0, 0.12);
+    --nav-toggle-bg: rgba(0, 0, 0, 0.03);
+    --nav-toggle-hover: rgba(0, 0, 0, 0.07);
+    --nav-accent: #22c55e;
+    --nav-accent-glow: rgba(34, 197, 94, 0.4);
+    --nav-dot: #22c55e;
+    --nav-progress: #22c55e;
+    --nav-drawer-bg: rgba(255, 255, 255, 0.98);
+    --nav-focus-ring: rgba(34, 197, 94, 0.45);
+}
+
+/* --- Theme 3: Soft Light (Warm Paper) --- */
+html.theme-soft,
+body.theme-soft {
+    --nav-bg: rgba(255, 240, 229, 0.88);
+    --nav-border: rgba(235, 216, 200, 0.85);
+    --nav-text: #1c1917;
+    --nav-muted: #78716c;
+    --nav-pill-bg: rgba(234, 88, 12, 0.08);
+    --nav-toggle-border: rgba(235, 216, 200, 0.9);
+    --nav-toggle-bg: rgba(255, 250, 246, 0.75);
+    --nav-toggle-hover: rgba(234, 88, 12, 0.12);
+    --nav-accent: #ea580c;
+    --nav-accent-glow: rgba(234, 88, 12, 0.45);
+    --nav-dot: #ea580c;
+    --nav-progress: #ea580c;
+    --nav-drawer-bg: rgba(255, 240, 229, 0.98);
+    --nav-focus-ring: rgba(234, 88, 12, 0.45);
+}
+
+/* --- Theme 4: Cyberpunk (Violet & Neon Yellow) --- */
+html.theme-cyberpunk,
+body.theme-cyberpunk {
+    --nav-bg: rgba(10, 6, 21, 0.88);
+    --nav-border: rgba(45, 29, 82, 0.85);
+    --nav-text: #ffffff;
+    --nav-muted: #a7a1d1;
+    --nav-pill-bg: rgba(255, 212, 0, 0.12);
+    --nav-toggle-border: rgba(255, 212, 0, 0.3);
+    --nav-toggle-bg: rgba(26, 16, 51, 0.7);
+    --nav-toggle-hover: rgba(255, 212, 0, 0.2);
+    --nav-accent: #ffd400;
+    --nav-accent-glow: rgba(255, 212, 0, 0.55);
+    --nav-dot: #ffd400;
+    --nav-progress: #ffd400;
+    --nav-drawer-bg: rgba(10, 6, 21, 0.98);
+    --nav-focus-ring: rgba(255, 212, 0, 0.5);
+}
+
+/* --- Sticky Header & Container --- */
+.navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: var(--nav-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--nav-border);
+    transition: background-color 250ms ease, border-color 250ms ease;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+/* --- Left: Plain Text Brand --- */
+.nav-brand {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    color: var(--nav-text);
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: opacity 150ms ease;
+    user-select: none;
+}
+
+.nav-brand:hover {
+    opacity: 0.85;
+}
+
+.nav-brand:focus-visible {
+    outline: 2px solid var(--nav-focus-ring);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+/* --- Center: Desktop Links & Sliding Pill --- */
+.nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    position: relative;
+    border-radius: 999px;
+}
+
+/* Sliding Pill Highlight */
+.nav-pill-indicator {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 0;
+    border-radius: 999px;
+    background-color: var(--nav-pill-bg);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(0);
+    width: 0;
+    transition: transform 250ms cubic-bezier(.4, 0, .2, 1),
+                width 250ms cubic-bezier(.4, 0, .2, 1),
+                opacity 200ms ease;
+    z-index: 0;
+}
+
+.nav-link {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 15px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--nav-muted);
+    text-decoration: none;
+    border-radius: 999px;
+    transition: color 200ms ease;
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    color: var(--nav-text);
+}
+
+.nav-link:focus-visible {
+    outline: 2px solid var(--nav-focus-ring);
+    outline-offset: 2px;
+}
+
+/* Active Page State with Animated Underline */
+.nav-link.active {
+    color: var(--nav-text);
+    font-weight: 600;
+}
+
+.nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 3px;
+    left: 14px;
+    right: 14px;
+    height: 2px;
+    border-radius: 2px;
+    background-color: var(--nav-accent, #22c55e);
+    box-shadow: 0 0 8px var(--nav-accent-glow, rgba(34, 197, 94, 0.5));
+    transform-origin: center;
+    animation: navUnderlineExpand 280ms cubic-bezier(.4, 0, .2, 1) forwards;
+}
+
+@keyframes navUnderlineExpand {
+    0% {
+        transform: scaleX(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scaleX(1);
+        opacity: 1;
+    }
+}
+
+/* --- Far Right: Theme Toggle Only --- */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.nav-theme-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--nav-toggle-border);
+    background: var(--nav-toggle-bg);
+    color: var(--nav-text);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background-color 200ms ease, border-color 200ms ease, transform 150ms ease;
+}
+
+.nav-theme-toggle:hover {
+    background: var(--nav-toggle-hover);
+    border-color: var(--nav-muted);
+}
+
+.nav-theme-toggle:active {
+    transform: scale(0.94);
+}
+
+.nav-theme-toggle:focus-visible {
+    outline: 2px solid var(--nav-focus-ring);
+    outline-offset: 2px;
+}
+
+/* Theme Icon Morphing Container */
+.theme-icon-container {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-icon-svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -9px;
+    margin-left: -9px;
+    width: 18px;
+    height: 18px;
+    opacity: 0;
+    transform: rotate(90deg) scale(0);
+    transform-origin: center;
+    transition: transform 400ms cubic-bezier(.4, 0, .2, 1),
+                opacity 300ms cubic-bezier(.4, 0, .2, 1);
+    pointer-events: none;
+}
+
+/* Reveal active theme icon with 400ms rotate & scale in */
+html.theme-black .theme-icon-moon,
+html[data-current-theme="theme-black"] .theme-icon-moon,
+body.theme-black .theme-icon-moon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+html.theme-white .theme-icon-sun,
+html[data-current-theme="theme-white"] .theme-icon-sun,
+body.theme-white .theme-icon-sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+html.theme-soft .theme-icon-cloud,
+html[data-current-theme="theme-soft"] .theme-icon-cloud,
+body.theme-soft .theme-icon-cloud {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+html.theme-cyberpunk .theme-icon-bolt,
+html[data-current-theme="theme-cyberpunk"] .theme-icon-bolt,
+body.theme-cyberpunk .theme-icon-bolt {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* --- Mobile Hamburger Button --- */
+.nav-hamburger {
+    display: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--nav-toggle-border);
+    background: var(--nav-toggle-bg);
+    color: var(--nav-text);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background-color 200ms ease, border-color 200ms ease;
+}
+
+.nav-hamburger:hover {
+    background: var(--nav-toggle-hover);
+    border-color: var(--nav-muted);
+}
+
+.nav-hamburger:focus-visible {
+    outline: 2px solid var(--nav-focus-ring);
+    outline-offset: 2px;
+}
+
+.hamburger-box {
+    width: 16px;
+    height: 12px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hamburger-line {
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--nav-text);
+    border-radius: 2px;
+    transition: transform 250ms cubic-bezier(.4, 0, .2, 1), opacity 200ms ease;
+}
+
+.nav-hamburger.open .hamburger-line:nth-child(1) {
+    transform: translateY(5.25px) rotate(45deg);
+}
+
+.nav-hamburger.open .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-hamburger.open .hamburger-line:nth-child(3) {
+    transform: translateY(-5.25px) rotate(-45deg);
+}
+
+/* --- Mobile Slide-Down Drawer (< 860px) --- */
+.mobile-nav-drawer {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--nav-drawer-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--nav-border);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height 300ms cubic-bezier(.4, 0, .2, 1), opacity 250ms ease;
+    z-index: 999;
+}
+
+.mobile-nav-drawer.open {
+    max-height: 360px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.mobile-nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 14px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mobile-nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: var(--nav-muted);
+    text-decoration: none;
+    transition: color 150ms ease, background-color 150ms ease;
+}
+
+.mobile-nav-link:hover {
+    color: var(--nav-text);
+    background-color: var(--nav-pill-bg);
+}
+
+.mobile-nav-link:focus-visible {
+    outline: 2px solid var(--nav-focus-ring);
+    outline-offset: 2px;
+}
+
+.mobile-nav-link.active {
+    color: var(--nav-text);
+    font-weight: 600;
+    background-color: var(--nav-pill-bg);
+}
+
+.mobile-nav-link.active::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    bottom: 5px;
+    width: 28px;
+    height: 2px;
+    border-radius: 2px;
+    background-color: var(--nav-accent, #22c55e);
+    box-shadow: 0 0 6px var(--nav-accent-glow, rgba(34, 197, 94, 0.5));
+    transform-origin: left;
+    animation: navUnderlineExpand 280ms cubic-bezier(.4, 0, .2, 1) forwards;
+}
+
+/* --- 2px Scroll Progress Line --- */
+.nav-scroll-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: var(--nav-progress, #22c55e);
+    pointer-events: none;
+    z-index: 1005;
+    transition: width 50ms linear, background-color 250ms ease;
+}
+
+/* --- View Transitions API Customization --- */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+    z-index: 1;
+}
+
+::view-transition-new(root) {
+    z-index: 9999;
+}
+
+/* Fallback color transition when View Transitions API is not supported */
+.theme-fade,
+.theme-fade * {
+    transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease !important;
+}
+
+/* --- Responsive Breakpoint (< 860px) --- */
+@media (max-width: 859.98px) {
+    .nav-center {
+        display: none !important;
+    }
+
+    .nav-hamburger {
+        display: inline-flex;
+    }
+
+    .mobile-nav-drawer {
+        display: block;
+    }
+}
+
+/* --- Reduced Motion Preferences --- */
+@media (prefers-reduced-motion: reduce) {
+    .navbar,
+    .nav-pill-indicator,
+    .theme-icon-svg,
+    .mobile-nav-drawer,
+    .hamburger-line,
+    .nav-scroll-progress,
+    .theme-fade,
+    .theme-fade * {
+        transition: none !important;
+        animation: none !important;
+    }
+
+    .nav-link.active::after,
+    .mobile-nav-link.active::after {
+        animation: none !important;
+        transform: scaleX(1) !important;
+        opacity: 1 !important;
+    }
+
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none !important;
+    }
+}
