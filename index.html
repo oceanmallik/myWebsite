@@ -100,55 +100,108 @@
         </div>
     </nav>
 
-    <section id="home" class="hero">
-        <div id="ambient-glow"></div>
+    <section id="home" class="hero" data-intro-source="data/intro.json">
         <div class="container hero-container">
+            <!-- Left Column: Identity, Bio, Tech Stack & Primary CTAs -->
             <div class="hero-text reveal">
-                <div class="hero-badge">
-                    <span class="status-pulse-dot"></span>
-                    <span>Available for Projects &amp; Collaborations</span>
-                </div>
-                <p class="subtitle">¡Hola visitante! Thanks for visiting.</p>
-                <h1 class="title">Ocean <span class="highlight">Mallik</span></h1>
-                <p class="description">
-                    <span id="typing-text">Software Engineer in training, currently powered by curiosity and caffeine.</span><span class="typing-caret" aria-hidden="true"></span>
-                </p>
-
-                <div class="hero-socials">
-                    <a href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="hero-social-pill" title="GitHub Profile">
-                        <i class="fab fa-github"></i> <span>GitHub</span>
-                    </a>
-                    <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="hero-social-pill" title="All Links Hub">
-                        <i class="fas fa-link"></i> <span>My Links</span>
-                    </a>
-                    <a href="https://blog.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="hero-social-pill" title="Dev Blog">
-                        <i class="fas fa-feather-alt"></i> <span>Blog</span>
-                    </a>
-                    <a href="about.html" class="hero-social-pill" title="About Ocean">
-                        <i class="fas fa-user-astronaut"></i> <span>About</span>
-                    </a>
+                <div class="hero-badge" id="hero-badge">
+                    <span class="status-pulse-dot" id="hero-badge-dot" aria-hidden="true"></span>
+                    <span id="hero-badge-text">Available for Projects &amp; Collaborations</span>
                 </div>
                 
-                <div class="hero-buttons">
-                    <a href="activities.html" class="btn btn-primary"><i class="fas fa-layer-group"></i> All My Projects</a>
-                    <a href="certificates.html" class="btn btn-outline"><i class="fas fa-certificate"></i> Certificates</a>
-                    <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="btn btn-accent"><i class="fas fa-external-link-alt"></i> All Links</a>
+                <h1 class="hero-title" id="hero-title">Ocean <span class="highlight">Mallik</span></h1>
+                <p class="hero-role" id="hero-role"><span class="hero-role-slash">//</span> Software Engineer in Training</p>
+                
+                <p class="hero-description" id="hero-description">
+                    Software Engineering student at DIU passionate about building native mobile apps, game engines, and developer tools. Exploring computer systems and open-source software.
+                </p>
+
+                <!-- Core Tech Stack Micro-Chips -->
+                <div class="hero-stack-chips" id="hero-stack-chips" aria-label="Core Technologies">
+                    <span class="hero-tech-chip"><i class="fab fa-react"></i> React Native</span>
+                    <span class="hero-tech-chip"><i class="fas fa-file-code"></i> TypeScript</span>
+                    <span class="hero-tech-chip"><i class="fas fa-gamepad"></i> Godot</span>
+                    <span class="hero-tech-chip"><i class="fas fa-hashtag"></i> C#</span>
+                    <span class="hero-tech-chip"><i class="fas fa-microchip"></i> C++</span>
+                </div>
+
+                <!-- Primary Action Buttons -->
+                <div class="hero-buttons" id="hero-buttons">
+                    <a href="activities.html" class="btn btn-primary"><i class="fas fa-layer-group"></i> Explore Projects</a>
+                    <a href="about.html" class="btn btn-outline"><i class="fas fa-user-astronaut"></i> About Me</a>
+                </div>
+
+                <!-- Minimalist Social Presence Row -->
+                <div class="hero-social-row" id="hero-social-row" aria-label="Social and External Links">
+                    <a href="https://github.com/oceanmallik" target="_blank" rel="noopener noreferrer" class="hero-social-link" title="GitHub Profile">
+                        <i class="fab fa-github"></i> <span>GitHub</span>
+                    </a>
+                    <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="hero-social-link" title="All Links Hub">
+                        <i class="fas fa-link"></i> <span>My Links</span>
+                    </a>
+                    <a href="https://blog.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="hero-social-link" title="Developer Blog">
+                        <i class="fas fa-feather-alt"></i> <span>Blog</span>
+                    </a>
                 </div>
             </div>
-            
-            <div class="hero-image reveal">
-                <div class="hero-avatar-wrapper">
-                    <div class="hero-aura-glow"></div>
-                    <div class="image-frame-squircle">
-                        <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" title="Ocean Mallik: Explore Links">
-                            <img src="assets/images/me.jpg" alt="Ocean Mallik">
+
+            <!-- Right Column: Bento Developer Profile Card -->
+            <div class="hero-bento-wrapper reveal">
+                <div class="hero-bento-card" id="hero-bento-card">
+                    <!-- Top Window Bar -->
+                    <div class="bento-card-topbar">
+                        <div class="bento-dots" aria-hidden="true">
+                            <span class="bento-dot dot-close"></span>
+                            <span class="bento-dot dot-min"></span>
+                            <span class="bento-dot dot-max"></span>
+                            <span class="bento-file-label" id="bento-file-label"><i class="fas fa-code"></i> oceanmallik.dev</span>
+                        </div>
+                        <span class="bento-badge-loc" id="bento-badge-loc"><i class="fas fa-map-marker-alt"></i> Dhaka, BD</span>
+                    </div>
+
+                    <!-- Profile Row -->
+                    <div class="bento-profile-row">
+                        <div class="bento-avatar-wrap">
+                            <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" title="View Links" id="bento-avatar-link">
+                                <img src="assets/images/me.jpg" alt="Ocean Mallik" class="bento-avatar-img" id="bento-avatar-img">
+                            </a>
+                            <span class="bento-status-indicator" id="bento-status-indicator" title="Active &amp; Available"></span>
+                        </div>
+                        <div class="bento-profile-meta">
+                            <div class="bento-name-line">
+                                <h2 class="bento-name" id="bento-name">Ocean Mallik</h2>
+                                <span class="bento-handle" id="bento-handle">@oceanmallik</span>
+                            </div>
+                            <p class="bento-inst" id="bento-inst">Daffodil International University</p>
+                            <p class="bento-focus-tag" id="bento-focus-tag"><i class="fas fa-terminal"></i> Native Mobile &amp; Systems</p>
+                        </div>
+                    </div>
+
+                    <!-- Bento Stat Tiles -->
+                    <div class="bento-stats-grid" id="bento-stats-grid">
+                        <a href="activities.html" class="bento-stat-tile" title="View all projects">
+                            <div class="bento-stat-val">6+</div>
+                            <div class="bento-stat-lbl">Projects Built</div>
+                        </a>
+                        <a href="https://play.google.com/store/apps/dev?id=5168944414714193607" target="_blank" rel="noopener noreferrer" class="bento-stat-tile" title="View published Play Store apps">
+                            <div class="bento-stat-val"><i class="fab fa-google-play"></i></div>
+                            <div class="bento-stat-lbl">Play Store Dev</div>
+                        </a>
+                        <a href="certificates.html" class="bento-stat-tile" title="View verified certificates">
+                            <div class="bento-stat-val">11</div>
+                            <div class="bento-stat-lbl">Certifications</div>
                         </a>
                     </div>
-                    <div class="avatar-tag avatar-tag-top">
-                        <i class="fab fa-react"></i> <span>React Native &bull; TS</span>
-                    </div>
-                    <div class="avatar-tag avatar-tag-bottom">
-                        <i class="fas fa-gamepad"></i> <span>Godot &bull; C#</span>
+
+                    <!-- Bottom Status Bar -->
+                    <div class="bento-card-bottom">
+                        <div class="bento-bottom-status" id="bento-bottom-status">
+                            <span class="bento-pulse-dot" aria-hidden="true"></span>
+                            <span id="bento-status-text">Open for software engineering internships</span>
+                        </div>
+                        <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="bento-arrow-btn" id="bento-arrow-btn" title="Explore All Links" aria-label="Explore All Links">
+                            <i class="fas fa-arrow-up-right-from-square"></i>
+                        </a>
                     </div>
                 </div>
             </div>

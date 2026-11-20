@@ -1558,6 +1558,224 @@
         requestAnimationFrame(update);
     }
 
+    /* --- Escape HTML Helper --- */
+    function escapeHtml(str) {
+        if (typeof str !== 'string') return String(str ?? '');
+        return str.replace(/&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;')
+                  .replace(/"/g, '&quot;')
+                  .replace(/'/g, '&#039;');
+    }
+
+    /* --- Intro & Hero Section Rendering from intro.json --- */
+    function initIntroFromJson() {
+        const heroSection = document.getElementById('home');
+        if (!heroSection) return;
+
+        const sourcePath = heroSection.dataset.introSource || 'data/intro.json';
+
+        fetchJsonWithFallback([
+            sourcePath,
+            'data/intro.json',
+            './data/intro.json',
+            'intro.json',
+            './intro.json',
+            '../data/intro.json'
+        ]).then((data) => {
+            if (!data) return;
+
+            // 1. Status Badge
+            if (data.badge) {
+                const badgeTextEl = document.getElementById('hero-badge-text');
+                if (badgeTextEl && data.badge.text) {
+                    badgeTextEl.textContent = data.badge.text;
+                }
+                const badgeDotEl = document.getElementById('hero-badge-dot');
+                if (badgeDotEl && data.badge.showPulse === false) {
+                    badgeDotEl.style.display = 'none';
+                }
+                const badgeEl = document.getElementById('hero-badge');
+                if (badgeEl && data.badge.url) {
+                    badgeEl.style.cursor = 'pointer';
+                    badgeEl.onclick = () => { window.location.href = data.badge.url; };
+                }
+            }
+
+            // 2. Heading, Role, and Description
+            if (data.heading) {
+                const titleEl = document.getElementById('hero-title');
+                if (titleEl && (data.heading.firstName || data.heading.lastName)) {
+                    const first = data.heading.firstName || '';
+                    const last = data.heading.lastName || '';
+                    titleEl.innerHTML = `${escapeHtml(first)} <span class="highlight">${escapeHtml(last)}</span>`;
+                }
+
+                const roleEl = document.getElementById('hero-role');
+                if (roleEl && data.heading.role) {
+                    const prefix = data.heading.rolePrefix || '//';
+                    roleEl.innerHTML = `<span class="hero-role-slash">${escapeHtml(prefix)}</span> ${escapeHtml(data.heading.role)}`;
+                }
+
+                const descEl = document.getElementById('hero-description');
+                if (descEl && data.heading.description) {
+                    descEl.textContent = data.heading.description;
+                }
+            }
+
+            // 3. Tech Stack Tags / Chips
+            if (Array.isArray(data.tags)) {
+                const stackContainer = document.getElementById('hero-stack-chips');
+                if (stackContainer) {
+                    stackContainer.innerHTML = '';
+                    data.tags.forEach((tag) => {
+                        if (!tag || !tag.name) return;
+                        const chip = document.createElement('span');
+                        chip.className = 'hero-tech-chip';
+                        const iconHtml = tag.icon ? `<i class="${escapeHtml(tag.icon)}" aria-hidden="true"></i> ` : '';
+                        chip.innerHTML = `${iconHtml}${escapeHtml(tag.name)}`;
+                        stackContainer.appendChild(chip);
+                    });
+                }
+            }
+
+            // 4. Action Buttons
+            if (Array.isArray(data.buttons)) {
+                const buttonsContainer = document.getElementById('hero-buttons');
+                if (buttonsContainer) {
+                    buttonsContainer.innerHTML = '';
+                    data.buttons.forEach((btn) => {
+                        if (!btn || !btn.text) return;
+                        const a = document.createElement('a');
+                        a.href = btn.url || '#';
+                        a.className = `btn btn-${btn.style || 'primary'}`;
+                        if (btn.target) a.target = btn.target;
+                        if (btn.target === '_blank') a.rel = 'noopener noreferrer';
+                        const iconHtml = btn.icon ? `<i class="${escapeHtml(btn.icon)}" aria-hidden="true"></i> ` : '';
+                        a.innerHTML = `${iconHtml}${escapeHtml(btn.text)}`;
+                        buttonsContainer.appendChild(a);
+                    });
+                }
+            }
+
+            // 5. Social Links
+            if (Array.isArray(data.socialLinks)) {
+                const socialsContainer = document.getElementById('hero-social-row');
+                if (socialsContainer) {
+                    socialsContainer.innerHTML = '';
+                    data.socialLinks.forEach((link) => {
+                        if (!link || !link.label) return;
+                        const a = document.createElement('a');
+                        a.href = link.url || '#';
+                        a.className = 'hero-social-link';
+                        a.title = link.title || link.label;
+                        if (link.target) a.target = link.target;
+                        if (link.target === '_blank') a.rel = 'noopener noreferrer';
+                        const iconHtml = link.icon ? `<i class="${escapeHtml(link.icon)}" aria-hidden="true"></i> ` : '';
+                        a.innerHTML = `${iconHtml}<span>${escapeHtml(link.label)}</span>`;
+                        socialsContainer.appendChild(a);
+                    });
+                }
+            }
+
+            // 6. Bento Developer Profile Card
+            if (data.bentoCard) {
+                const bc = data.bentoCard;
+
+                // File label in topbar
+                const fileLabelEl = document.getElementById('bento-file-label');
+                if (fileLabelEl && bc.fileName) {
+                    fileLabelEl.innerHTML = `<i class="fas fa-code"></i> ${escapeHtml(bc.fileName)}`;
+                }
+
+                // Location badge in topbar
+                const locBadgeEl = document.getElementById('bento-badge-loc');
+                if (locBadgeEl && bc.location) {
+                    locBadgeEl.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(bc.location)}`;
+                }
+
+                // Avatar
+                const avatarImg = document.getElementById('bento-avatar-img');
+                if (avatarImg && bc.avatar) {
+                    avatarImg.src = bc.avatar;
+                }
+                const avatarLink = document.getElementById('bento-avatar-link');
+                if (avatarLink && bc.avatarUrl) {
+                    avatarLink.href = bc.avatarUrl;
+                }
+
+                // Name & Handle
+                const nameEl = document.getElementById('bento-name');
+                if (nameEl && bc.name) {
+                    nameEl.textContent = bc.name;
+                }
+                const handleEl = document.getElementById('bento-handle');
+                if (handleEl && bc.handle) {
+                    handleEl.textContent = bc.handle.startsWith('@') ? bc.handle : `@${bc.handle}`;
+                }
+
+                // Institution
+                const instEl = document.getElementById('bento-inst');
+                if (instEl && bc.institution) {
+                    instEl.textContent = bc.institution;
+                }
+
+                // Focus Tag
+                const focusEl = document.getElementById('bento-focus-tag');
+                if (focusEl && bc.focusTag) {
+                    focusEl.innerHTML = `<i class="fas fa-terminal"></i> ${escapeHtml(bc.focusTag)}`;
+                }
+
+                // Stat Tiles
+                if (Array.isArray(bc.statTiles)) {
+                    const statsGrid = document.getElementById('bento-stats-grid');
+                    if (statsGrid) {
+                        statsGrid.innerHTML = '';
+                        bc.statTiles.forEach((tile) => {
+                            if (!tile) return;
+                            const tileEl = document.createElement('a');
+                            tileEl.href = tile.url || '#';
+                            tileEl.className = 'bento-stat-tile';
+                            if (tile.title || tile.label) tileEl.title = tile.title || tile.label;
+                            if (tile.target) tileEl.target = tile.target;
+                            if (tile.target === '_blank') tileEl.rel = 'noopener noreferrer';
+
+                            const valIcon = tile.icon ? `<i class="${escapeHtml(tile.icon)}"></i>` : '';
+                            const valText = tile.value ? escapeHtml(tile.value) : '';
+                            const lblText = tile.label ? escapeHtml(tile.label) : '';
+
+                            tileEl.innerHTML = `
+                                <div class="bento-stat-val">${valIcon}${valText}</div>
+                                <div class="bento-stat-lbl">${lblText}</div>
+                            `;
+                            statsGrid.appendChild(tileEl);
+                        });
+                    }
+                }
+
+                // Bottom Status Text
+                const statusTextEl = document.getElementById('bento-status-text');
+                if (statusTextEl && bc.statusText) {
+                    statusTextEl.textContent = bc.statusText;
+                }
+
+                // Bottom Arrow Link Button
+                const arrowBtn = document.getElementById('bento-arrow-btn');
+                if (arrowBtn && bc.linkBtn) {
+                    if (bc.linkBtn.url) arrowBtn.href = bc.linkBtn.url;
+                    if (bc.linkBtn.title) {
+                        arrowBtn.title = bc.linkBtn.title;
+                        arrowBtn.setAttribute('aria-label', bc.linkBtn.title);
+                    }
+                    if (bc.linkBtn.target) arrowBtn.target = bc.linkBtn.target;
+                    if (bc.linkBtn.target === '_blank') arrowBtn.rel = 'noopener noreferrer';
+                }
+            }
+        }).catch((err) => {
+            console.warn('Could not load intro.json data:', err);
+        });
+    }
+
     /* --- Profile Details & Stats Rendering from JSON --- */
     function initProfileFromJson() {
         const profileContainer = document.getElementById('profile-hero-card');
@@ -1791,6 +2009,7 @@
         initThemeSwitcher();
         initTypingEffect();
         initHeroPointerLight();
+        initIntroFromJson();
         initProfileFromJson();
         initLinksFromJson();
         initActivitiesFromJson();

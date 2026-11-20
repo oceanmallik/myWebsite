@@ -1,0 +1,102 @@
+{
+  "badge": {
+    "text": "Available for Collaborations",
+    "showPulse": true,
+    "url": ""
+  },
+  "heading": {
+    "firstName": "Ocean",
+    "lastName": "Mallik",
+    "role": "Software Engineer in Training",
+    "rolePrefix": ">>>",
+    "description": "Software Engineering student at DIU passionate about building native mobile apps, games and developer tools. Exploring computer systems and open-source software."
+  },
+  "tags": [
+    { "name": "React Native", "icon": "fab fa-react" },
+    { "name": "TypeScript", "icon": "fas fa-file-code" },
+    { "name": "Godot", "icon": "fas fa-gamepad" },
+    { "name": "C#", "icon": "fas fa-hashtag" },
+    { "name": "C++", "icon": "fas fa-microchip" }
+  ],
+  "buttons": [
+    {
+      "text": "Explore Projects",
+      "icon": "fas fa-layer-group",
+      "url": "activities.html",
+      "style": "primary",
+      "target": "_self"
+    },
+    {
+      "text": "About Me",
+      "icon": "fas fa-user-astronaut",
+      "url": "about.html",
+      "style": "outline",
+      "target": "_self"
+    }
+  ],
+  "socialLinks": [
+    {
+      "label": "GitHub",
+      "icon": "fab fa-github",
+      "url": "https://github.com/oceanmallik",
+      "title": "GitHub Profile",
+      "target": "_blank"
+    },
+    {
+      "label": "My Links",
+      "icon": "fas fa-link",
+      "url": "https://link.oceanmallik.com/",
+      "title": "All Links Hub",
+      "target": "_blank"
+    },
+    {
+      "label": "Blog",
+      "icon": "fas fa-feather-alt",
+      "url": "https://www.bartawire.com/#/@oceanmallik",
+      "title": "Developer Blog",
+      "target": "_blank"
+    }
+  ],
+  "bentoCard": {
+    "fileName": "oceanmallik.com",
+    "location": "Dhaka, Bangladesh",
+    "name": "Ocean Mallik",
+    "handle": "@oceanmallik",
+    "institution": "Daffodil International University",
+    "focusTag": "Mobile and Web Developer",
+    "avatar": "assets/images/me.jpg",
+    "avatarUrl": "https://link.oceanmallik.com/",
+    "statTiles": [
+      {
+        "value": " 6+",
+        "icon": "fas fa-cubes",
+        "label": "Projects Built",
+        "url": "activities.html",
+        "title": "View all projects",
+        "target": "_self"
+      },
+      {
+        "value": " 1",
+        "icon": "fab fa-google-play",
+        "label": "Mobile Apps",
+        "url": "https://play.google.com/store/apps/dev?id=5168944414714193607",
+        "title": "View published Play Store apps",
+        "target": "_blank"
+      },
+      {
+        "value": " 10+",
+        "icon": "fas fa-certificate",
+        "label": "Certifications",
+        "url": "certificates.html",
+        "title": "View verified certificates",
+        "target": "_self"
+      }
+    ],
+    "statusText": "Open for Collaborations on Hackathon (Contact Me)",
+    "linkBtn": {
+      "url": "https://link.oceanmallik.com/",
+      "title": "Explore All Links",
+      "target": "_blank"
+    }
+  }
+}
