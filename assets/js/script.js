@@ -594,6 +594,191 @@
         document.body.style.overflow = 'hidden';
     }
 
+    /* --- Demo Video Modal Lightbox --- */
+    let videoModalEl = null;
+
+    function parseVideoUrl(url) {
+        if (!url || typeof url !== 'string') return null;
+        const trimmed = url.trim();
+        if (!trimmed || trimmed === '#') return null;
+
+        // YouTube: standard watch, embed, youtu.be, shorts
+        const ytMatch = trimmed.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/i);
+        if (ytMatch) {
+            return {
+                type: 'youtube',
+                embedUrl: `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?autoplay=1&rel=0`,
+                rawUrl: trimmed
+            };
+        }
+
+        // Vimeo
+        const vimeoMatch = trimmed.match(/(?:vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/[^\/]*\/videos\/|album\/(?:\d+\/)?video\/|video\/|))(\d+)/i);
+        if (vimeoMatch) {
+            return {
+                type: 'vimeo',
+                embedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`,
+                rawUrl: trimmed
+            };
+        }
+
+        // Direct video files
+        if (/\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(trimmed)) {
+            return {
+                type: 'direct',
+                embedUrl: trimmed,
+                rawUrl: trimmed
+            };
+        }
+
+        // Generic URL
+        return {
+            type: 'generic',
+            embedUrl: trimmed,
+            rawUrl: trimmed
+        };
+    }
+
+    function initVideoModal() {
+        if (videoModalEl) return;
+
+        videoModalEl = document.createElement('div');
+        videoModalEl.id = 'video-modal';
+        videoModalEl.className = 'video-modal';
+        videoModalEl.setAttribute('role', 'dialog');
+        videoModalEl.setAttribute('aria-modal', 'true');
+        videoModalEl.setAttribute('aria-labelledby', 'video-modal-heading');
+        videoModalEl.innerHTML = `
+            <div class="video-modal-panel">
+                <div class="video-modal-header">
+                    <h3 class="video-modal-title" id="video-modal-heading">
+                        <i class="fas fa-circle-play" aria-hidden="true"></i>
+                        <span id="video-modal-title-text">Demo Video</span>
+                    </h3>
+                    <button type="button" class="video-modal-close" id="video-modal-close" aria-label="Close Video" title="Close Video">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="video-modal-body" id="video-modal-body"></div>
+                <div class="video-modal-footer">
+                    <span class="video-modal-subtitle" id="video-modal-subtitle">Project Demonstration</span>
+                    <div class="video-modal-actions">
+                        <a id="video-modal-external" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="display: none;">
+                            <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Open External Video
+                        </a>
+                        <button type="button" class="btn btn-secondary" id="video-modal-close-btn">Close</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(videoModalEl);
+
+        const closeBtn = videoModalEl.querySelector('#video-modal-close');
+        const closeActionBtn = videoModalEl.querySelector('#video-modal-close-btn');
+
+        const closeVideoModal = () => {
+            videoModalEl.classList.remove('show');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                const body = document.getElementById('video-modal-body');
+                if (body) body.innerHTML = '';
+            }, 300);
+        };
+
+        if (closeBtn) closeBtn.addEventListener('click', closeVideoModal);
+        if (closeActionBtn) closeActionBtn.addEventListener('click', closeVideoModal);
+
+        videoModalEl.addEventListener('click', (event) => {
+            if (event.target === videoModalEl) {
+                closeVideoModal();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && videoModalEl.classList.contains('show')) {
+                closeVideoModal();
+            }
+        });
+    }
+
+    function openVideoModal(project, videoUrl) {
+        initVideoModal();
+
+        const titleTextEl = document.getElementById('video-modal-title-text');
+        const bodyEl = document.getElementById('video-modal-body');
+        const subtitleEl = document.getElementById('video-modal-subtitle');
+        const externalEl = document.getElementById('video-modal-external');
+
+        const projectTitle = (project && project.title) ? project.title : 'Project';
+        if (titleTextEl) titleTextEl.textContent = `${projectTitle} — Demo Video`;
+        if (subtitleEl) subtitleEl.textContent = project.category ? `Category: ${project.category.charAt(0).toUpperCase() + project.category.slice(1)}` : 'Project Demonstration';
+
+        const parsed = parseVideoUrl(videoUrl);
+
+        if (bodyEl) {
+            if (parsed && (parsed.type === 'youtube' || parsed.type === 'vimeo')) {
+                bodyEl.innerHTML = `
+                    <div class="video-modal-container">
+                        <iframe src="${parsed.embedUrl}" title="${projectTitle} Demo Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                `;
+            } else if (parsed && parsed.type === 'direct') {
+                bodyEl.innerHTML = `
+                    <div class="video-modal-container">
+                        <video controls autoplay playsinline class="video-modal-player">
+                            <source src="${parsed.embedUrl}">
+                            Your browser does not support HTML video.
+                        </video>
+                    </div>
+                `;
+            } else {
+                // Video Coming Soon / URL not set yet placeholder
+                const links = Array.isArray(project && project.links) ? project.links : [];
+                const otherLinks = links.filter((l) => {
+                    const lbl = (l.label || '').toLowerCase();
+                    return !lbl.includes('video') && !lbl.includes('demo') && l.url && l.url.trim() && l.url !== '#';
+                });
+
+                let otherLinksHtml = '';
+                if (otherLinks.length > 0) {
+                    otherLinksHtml = otherLinks.map((l) => `
+                        <a href="${l.url}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 14px;">
+                            <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> ${l.label}
+                        </a>
+                    `).join('');
+                }
+
+                bodyEl.innerHTML = `
+                    <div class="video-modal-placeholder">
+                        <div class="video-modal-placeholder-icon">
+                            <i class="fas fa-circle-play" aria-hidden="true"></i>
+                        </div>
+                        <h4>Demo Video Coming Soon</h4>
+                        <p>The demonstration video for <strong>${projectTitle}</strong> is currently being prepared and will be available here shortly.</p>
+                        ${otherLinksHtml ? `
+                        <div style="margin-top: 6px;">
+                            <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 8px;">Explore project resources:</span>
+                            <div class="video-modal-placeholder-links">${otherLinksHtml}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+        }
+
+        if (externalEl) {
+            if (parsed && parsed.rawUrl) {
+                externalEl.href = parsed.rawUrl;
+                externalEl.style.display = 'inline-flex';
+            } else {
+                externalEl.style.display = 'none';
+            }
+        }
+
+        videoModalEl.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
     /* --- Reusable Supabase-Style Bento Feature Card Component --- */
     function formatDescriptionWithKeyPhrase(desc, techArr = [], fallbackTerm = '') {
         if (!desc) return '';
@@ -889,7 +1074,8 @@
                 const links = Array.isArray(activity.links) ? activity.links : [];
                 const screenshots = Array.isArray(activity.screenshots) ? activity.screenshots : [];
 
-                const primaryLink = links.find((l) => l.type === 'live' || !l.label.toLowerCase().includes('github')) || links[0] || null;
+                // Primary link for browser address bar & title link (live demo links are always the last entry)
+                const primaryLink = (links.length > 0 ? links[links.length - 1] : null);
                 const primaryUrl = primaryLink ? primaryLink.url : '#';
                 const displayHost = getDomainFromUrl(primaryUrl, activity.title);
                 const fallbackUri = getFallbackSvgDataUri(activity.title, category);
@@ -959,15 +1145,22 @@
                 // Stack as small pill tags
                 const stackPillsHtml = stack.map((tech) => `<span class="featured-stack-pill">${tech}</span>`).join('');
 
-                // Links (Github Code, Live/Play Store)
+                // Links (Github Code, Demo Video, Live/Play Store)
                 const linksHtml = links.map((link) => {
                     const lLower = (link.label || '').toLowerCase();
                     const uLower = (link.url || '').toLowerCase();
                     let iconClass = 'fas fa-arrow-up-right-from-square';
                     let isPrimary = false;
+                    let isVideo = false;
 
                     if (lLower.includes('github') || uLower.includes('github.com')) {
                         iconClass = 'fab fa-github';
+                    } else if (lLower.includes('video') || lLower.includes('demo') || uLower.includes('vimeo')) {
+                        iconClass = 'fas fa-circle-play';
+                        isVideo = true;
+                    } else if (uLower.includes('youtube.com') || uLower.includes('youtu.be') || lLower.includes('youtube')) {
+                        iconClass = 'fab fa-youtube';
+                        isVideo = true;
                     } else if (lLower.includes('play') || lLower.includes('store') || uLower.includes('google.com')) {
                         iconClass = 'fab fa-google-play';
                         isPrimary = true;
@@ -979,8 +1172,12 @@
                         isPrimary = true;
                     }
 
+                    const safeHref = link.url && link.url.trim() ? link.url : '#';
+                    const videoAttr = isVideo ? `data-video-action="true" data-project-id="${activity.id || ''}" data-video-url="${link.url || ''}"` : '';
+                    const videoClass = isVideo ? 'featured-link-btn-video' : '';
+
                     return `
-                        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="featured-link-btn ${isPrimary ? 'primary' : ''}">
+                        <a href="${safeHref}" ${link.url && link.url.trim() && !isVideo ? 'target="_blank" rel="noopener noreferrer"' : ''} class="featured-link-btn ${isPrimary ? 'primary' : ''} ${videoClass}" ${videoAttr}>
                             <i class="${iconClass}" aria-hidden="true"></i>
                             <span>${link.label}</span>
                         </a>
@@ -1095,7 +1292,8 @@
                 itemEl.dataset.category = category;
 
                 // Primary link for browser address bar & title link
-                const primaryLink = links.find((l) => l.type === 'live' || !l.label.toLowerCase().includes('github')) || links[0] || null;
+                // Primary link for browser address bar & title link (live demo links are always the last entry)
+                const primaryLink = (links.length > 0 ? links[links.length - 1] : null);
                 const primaryUrl = primaryLink ? primaryLink.url : '#';
                 const displayHost = getDomainFromUrl(primaryUrl, project.title);
 
@@ -1158,9 +1356,16 @@
                     const lLower = (link.label || '').toLowerCase();
                     const uLower = (link.url || '').toLowerCase();
                     let iconClass = 'fas fa-arrow-up-right-from-square';
+                    let isVideo = false;
 
                     if (lLower.includes('github') || uLower.includes('github.com')) {
                         iconClass = 'fab fa-github';
+                    } else if (lLower.includes('video') || lLower.includes('demo') || uLower.includes('vimeo')) {
+                        iconClass = 'fas fa-circle-play';
+                        isVideo = true;
+                    } else if (uLower.includes('youtube.com') || uLower.includes('youtu.be') || lLower.includes('youtube')) {
+                        iconClass = 'fab fa-youtube';
+                        isVideo = true;
                     } else if (lLower.includes('play') || lLower.includes('store') || uLower.includes('google.com')) {
                         iconClass = 'fab fa-google-play';
                     } else if (lLower.includes('game') || category === 'game') {
@@ -1170,8 +1375,12 @@
                     }
 
                     const btnClass = lIdx === 0 ? 'showcase-btn showcase-btn-primary' : 'showcase-btn showcase-btn-secondary';
+                    const videoClass = isVideo ? 'showcase-btn-video' : '';
+                    const safeHref = link.url && link.url.trim() ? link.url : '#';
+                    const videoAttr = isVideo ? `data-video-action="true" data-project-id="${project.id || ''}" data-video-url="${link.url || ''}"` : '';
+
                     return `
-                        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="${btnClass}">
+                        <a href="${safeHref}" ${link.url && link.url.trim() && !isVideo ? 'target="_blank" rel="noopener noreferrer"' : ''} class="${btnClass} ${videoClass}" ${videoAttr}>
                             <i class="${iconClass}" aria-hidden="true"></i>
                             <span>${link.label}</span>
                         </a>
@@ -1285,17 +1494,34 @@
                     return;
                 }
 
+                const handleVideoClick = (event) => {
+                    const videoBtn = event.target.closest('[data-video-action="true"]');
+                    if (videoBtn) {
+                        event.preventDefault();
+                        const videoUrl = videoBtn.dataset.videoUrl || '';
+                        const projectId = videoBtn.dataset.projectId;
+                        const project = allActivities.find((p) => (p.id || '') === projectId) || {
+                            title: videoBtn.closest('article')?.querySelector('h2, h3')?.textContent?.trim() || 'Project Demo',
+                            links: []
+                        };
+                        openVideoModal(project, videoUrl);
+                    }
+                };
+
                 // Render preview grid (homepage)
                 if (activitiesPreviewGrid) {
                     renderPreviewGrid(activitiesPreviewGrid, allActivities);
+                    activitiesPreviewGrid.addEventListener('click', handleVideoClick);
                 }
 
                 // Render showcase list (activities.html)
                 if (showcaseList) {
                     renderShowcase(showcaseList, allActivities);
+                    showcaseList.addEventListener('click', handleVideoClick);
                 } else if (activitiesGrid) {
                     // Fallback for legacy activitiesGrid if ever loaded
                     renderPreviewGrid(activitiesGrid, allActivities);
+                    activitiesGrid.addEventListener('click', handleVideoClick);
                 }
             })
             .catch((err) => {
