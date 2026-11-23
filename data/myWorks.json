@@ -72,28 +72,29 @@
 		]
 	},
 	{
-		"id": "personal-portfolio",
-		"title": "Personal Portfolio Website",
+		"id": "hackdeck",
+		"title": "A Notepad for Devs",
 		"category": "web",
 		"featured": true,
-		"description": "Built from scratch with multiple themes and responsive sections.",
+		"description": "The collaborative board where devs draft project blueprints, plan tasks on a live Kanban board, chat in real time, and beat the hackathon clock.",
 		"stack": [
 			"HTML",
 			"CSS",
-			"JavaScript"
+			"JavaScript",
+			"supabase"
 		],
-		"status": "In Development",
+		"status": "Completed",
 		"screenshots": [
-			"assets/images/works/myWebsite.png"
+			"assets/images/works/hackdeck.png"
 		],
 		"links": [
 			{
 				"label": "Github Code",
-				"url": "https://github.com/oceanmallik/myWebsite"
+				"url": "https://github.com/oceanmallik/Hackdeck"
 			},
 			{
 				"label": "Live Website",
-				"url": "https://www.oceanmallik.com"
+				"url": "https://hackdeck.devs.surf/"
 			}
 		],
 		"contributors": [
@@ -145,6 +146,41 @@
 				"url": "https://www.facebook.com/zeniabishash",
 				"contribution": "Team Lead, research & communication"
 			},
+			{
+				"name": "Ocean Mallik",
+				"image": "assets/images/me.jpg",
+				"link": "https://github.com/oceanmallik",
+				"url": "https://github.com/oceanmallik",
+				"contribution": "Lead Developer"
+			}
+		]
+	},
+	{
+		"id": "personal-portfolio",
+		"title": "Personal Portfolio Website",
+		"category": "web",
+		"featured": true,
+		"description": "Built from scratch with multiple themes and responsive sections.",
+		"stack": [
+			"HTML",
+			"CSS",
+			"JavaScript"
+		],
+		"status": "In Development",
+		"screenshots": [
+			"assets/images/works/myWebsite.png"
+		],
+		"links": [
+			{
+				"label": "Github Code",
+				"url": "https://github.com/oceanmallik/myWebsite"
+			},
+			{
+				"label": "Live Website",
+				"url": "https://www.oceanmallik.com"
+			}
+		],
+		"contributors": [
 			{
 				"name": "Ocean Mallik",
 				"image": "assets/images/me.jpg",
