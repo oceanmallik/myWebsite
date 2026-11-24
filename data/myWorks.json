@@ -37,7 +37,7 @@
 	},
 	{
 		"id": "diu-notes-app",
-		"title": "DIU Notes, a Mobile App",
+		"title": "DIU Notes - a Mobile App",
 		"category": "mobile",
 		"featured": true,
 		"description": "A simple note-hosting website ported to a native Android app for DIU students.",
@@ -73,7 +73,7 @@
 	},
 	{
 		"id": "hackdeck",
-		"title": "A Notepad for Devs",
+		"title": "Hackdeck - A Notepad for Devs",
 		"category": "web",
 		"featured": true,
 		"description": "The collaborative board where devs draft project blueprints, plan tasks on a live Kanban board, chat in real time, and beat the hackathon clock.",
