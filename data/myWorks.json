@@ -72,6 +72,41 @@
 		]
 	},
 	{
+		"id": "git-to-pdf",
+		"title": "git2PDF - Turn any repository into printable PDF",
+		"category": "web",
+		"featured": true,
+		"description": "A project where it converts github codes to printable pdfs.",
+		"stack": [
+			"HTML",
+			"CSS",
+			"JavaScript"
+		],
+		"status": "Completed",
+		"screenshots": [
+			"assets/images/works/git2pdf.png"
+		],
+		"links": [
+			{
+				"label": "Github Code",
+				"url": "https://github.com/oceanmallik/git2pdf"
+			},
+			{
+				"label": "Try git2PDF",
+				"url": "https://git2pdf.devs.surf/"
+			}
+		],
+		"contributors": [
+			{
+				"name": "Ocean Mallik",
+				"image": "assets/images/me.jpg",
+				"link": "https://github.com/oceanmallik",
+				"url": "https://github.com/oceanmallik",
+				"contribution": "Lead Developer"
+			}
+		]
+	},
+	{
 		"id": "hackdeck",
 		"title": "Hackdeck - A Notepad for Devs",
 		"category": "web",
@@ -93,7 +128,7 @@
 				"url": "https://github.com/oceanmallik/Hackdeck"
 			},
 			{
-				"label": "Live Website",
+				"label": "Access Hackdeck",
 				"url": "https://hackdeck.devs.surf/"
 			}
 		],
