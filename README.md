@@ -12,7 +12,7 @@ This repository holds a small, multi-page personal website for oceanmallik.com b
 	<tr>
 		<td>
 			<picture>
-				<img src="./assets/images/myWebsite.png" alt="Ocean Mallik Website" width="100%" />
+				<img src="./assets/images/works/myWebsite.png" alt="Ocean Mallik Website" width="100%" />
 			</picture>
 		</td>
 	</tr>
