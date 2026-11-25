@@ -1262,6 +1262,16 @@ body.theme-cyberpunk .theme-list-item.active i {
     width: 100%;
 }
 
+#certificates-accordion.cert-grid-full {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+@media (max-width: 1080px) {
+    #certificates-accordion.cert-grid-full {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
 @media (max-width: 1024px) {
     .bento-grid,
     .projects-grid,
@@ -1624,333 +1634,276 @@ body.theme-cyberpunk .theme-list-item.active i {
     color: var(--bento-card-check-strong);
 }
 
-/* Certificate Card Actions (Inspect & Verify Online) */
-.certificate-item .cert-card-actions {
+/* --- Certificate Filter Bar & Redesigned Certificate Cards --- */
+.cert-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 1.75rem;
+}
+
+.cert-filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    background: var(--bento-card-bg);
+    border: 1px solid var(--bento-card-border);
+    color: var(--bento-card-desc);
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
+}
+
+.cert-filter-pill:hover {
+    border-color: var(--bento-card-border-hover);
+    color: var(--bento-card-title);
+}
+
+.cert-filter-pill.active {
+    background: var(--bento-card-active-pill-bg);
+    border-color: var(--bento-card-border-hover);
+    color: var(--bento-card-active-pill-color);
+}
+
+.cert-card {
+    background: var(--bento-card-bg);
+    border: 1px solid var(--bento-card-border);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 150ms ease, transform 150ms ease, background-color 150ms ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cert-card:hover {
+    border-color: var(--bento-card-border-hover);
+    transform: translateY(-2px);
+}
+
+.cert-card-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--bento-card-badge-bg);
+    border: 1px solid var(--bento-card-badge-border);
+    cursor: pointer;
+    padding: 0;
+    display: block;
+    text-align: left;
+}
+
+.cert-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    transition: transform 250ms ease;
+}
+
+.cert-card:hover .cert-card-img {
+    transform: scale(1.03);
+}
+
+.cert-card-media-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, transparent 45%);
+    opacity: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 10px;
+    transition: opacity 180ms ease;
+}
+
+.cert-card-media:hover .cert-card-media-overlay,
+.cert-card-media:focus-visible .cert-card-media-overlay {
+    opacity: 1;
+}
+
+.cert-zoom-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgba(13, 13, 13, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #f5f5f5;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.cert-card-badges {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    pointer-events: none;
+}
+
+.cert-cat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(13, 13, 13, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #f5f5f5;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.66rem;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+}
+
+.cert-featured-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(18, 18, 22, 0.88);
+    border: 1px solid rgba(245, 158, 11, 0.45);
+    color: #fbbf24;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    backdrop-filter: blur(4px);
+    margin-left: auto;
+}
+
+.cert-card-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 0;
+}
+
+.cert-icon-box {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--bento-card-badge-bg);
+    border: 1px solid var(--bento-card-badge-border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bento-card-icon);
+    font-size: 0.92rem;
+    flex-shrink: 0;
+    transition: border-color 150ms ease, color 150ms ease;
+}
+
+.cert-card:hover .cert-icon-box {
+    border-color: var(--bento-card-border-hover);
+    color: var(--primary-color);
+}
+
+.cert-title-wrap {
+    min-width: 0;
+    flex: 1;
+}
+
+.cert-card-title {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--bento-card-title);
+    line-height: 1.3;
+    margin: 0 0 3px;
+}
+
+.cert-card-issuer {
+    font-size: 0.78rem;
+    color: var(--bento-card-desc);
+    margin: 0;
+    line-height: 1.35;
+}
+
+.cert-card-issuer strong {
+    color: var(--bento-card-check-text);
+    font-weight: 600;
+}
+
+.cert-card-footer {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 16px;
-    position: relative;
-    z-index: 3;
-    flex-wrap: wrap;
-    max-width: 60%;
+    padding-top: 10px;
+    margin-top: auto;
+    border-top: 1px solid var(--bento-card-border);
 }
 
 .cert-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 7px 15px;
-    border-radius: 999px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    font-family: inherit;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    line-height: 1.4;
-    transition: all 180ms ease;
-    border: 1px solid var(--border-color);
+    line-height: 1.3;
+    transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
 }
 
 .cert-btn-inspect {
-    background: var(--bento-card-bg);
-    color: var(--text-title);
-    border-color: var(--border-color);
+    background: var(--bento-card-badge-bg);
+    color: var(--bento-card-title);
+    border: 1px solid var(--bento-card-badge-border);
 }
 
 .cert-btn-inspect:hover {
-    background: var(--text-title);
-    color: var(--bg-main);
-    border-color: var(--text-title);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    border-color: var(--bento-card-border-hover);
+    background: var(--bento-card-active-pill-bg);
+    color: var(--bento-card-active-pill-color);
 }
 
 .cert-btn-verify {
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text-muted);
-    border-color: var(--border-color);
+    background: transparent;
+    color: var(--bento-card-desc);
+    border: 1px solid var(--bento-card-badge-border);
+    margin-left: auto;
 }
 
 .cert-btn-verify:hover {
-    color: var(--text-title);
-    border-color: var(--border-hover);
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-1px);
-}
-
-body.theme-white .cert-btn-verify:hover,
-body.theme-soft .cert-btn-verify:hover {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-/* Featured Badge on the right down side of the card */
-.cert-featured-badge {
-    position: absolute;
-    bottom: 16px;
-    right: 18px;
-    z-index: 5;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    font-size: 0.74rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #fbbf24;
-    background: rgba(18, 18, 22, 0.88);
-    border: 1px solid rgba(245, 158, 11, 0.35);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), 0 0 10px rgba(245, 158, 11, 0.15);
-    pointer-events: auto;
-    transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
-}
-
-/* === Light Theme Certificate Cards (White, Soft) === */
-body.theme-white .certificate-item,
-body.theme-soft .certificate-item {
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    border: 1px solid #d9dbe0 !important;
-    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 6px 20px rgba(16, 24, 40, 0.06) !important;
-}
-
-body.theme-white .certificate-item:hover,
-body.theme-soft .certificate-item:hover {
-    border-color: #cbd5e1 !important;
-    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.08), 0 8px 24px rgba(16, 24, 40, 0.08) !important;
-}
-
-/* 1. Subtle gradient overlay for smooth blend into card background on the left */
-body.theme-white .certificate-item .card-photo-fade-overlay,
-body.theme-soft .certificate-item .card-photo-fade-overlay {
-    display: block !important;
-    background: linear-gradient(to right, #ffffff 0%, rgba(255, 255, 255, 0.7) 10%, transparent 28%) !important;
-}
-
-/* 2. Thumbnail container: transparent background, no border-left so there is no cut-off line */
-body.theme-white .certificate-item .card-photo-visual,
-body.theme-soft .certificate-item .card-photo-visual {
-    background: transparent !important;
-    padding: 0 !important;
-    border-left: none !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-sizing: border-box !important;
-    opacity: 1 !important;
-}
-
-/* 3. Thumbnail image: soft left fade so the edge blends smoothly into the card */
-body.theme-white .certificate-item .card-photo-img,
-body.theme-soft .certificate-item .card-photo-img {
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.35) 8%, rgba(0, 0, 0, 1) 24%) !important;
-    mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.35) 8%, rgba(0, 0, 0, 1) 24%) !important;
-    opacity: 1 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    position: absolute !important;
-    top: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    object-position: right center !important;
-    transition: transform 300ms ease, opacity 200ms ease !important;
-}
-
-body.theme-white .certificate-item:hover .card-photo-img,
-body.theme-soft .certificate-item:hover .card-photo-img {
-    transform: scale(1.03);
-    box-shadow: none !important;
-}
-
-/* 5. FEATURED badge: background #fff7e0, border 1px solid #f0c24b, text color #8a5a00 */
-body.theme-white .certificate-item .cert-featured-badge,
-body.theme-soft .certificate-item .cert-featured-badge {
-    background: #fff7e0 !important;
-    border: 1px solid #f0c24b !important;
-    color: #8a5a00 !important;
-    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-body.theme-white .certificate-item .cert-featured-badge i,
-body.theme-soft .certificate-item .cert-featured-badge i {
-    color: #8a5a00 !important;
-}
-
-body.theme-white .certificate-item:hover .cert-featured-badge,
-body.theme-soft .certificate-item:hover .cert-featured-badge {
-    transform: translateY(-2px);
-    border-color: #d97706 !important;
-    box-shadow: 0 4px 10px rgba(16, 24, 40, 0.12) !important;
-}
-
-/* 6. Text and buttons contrast on white background */
-body.theme-white .certificate-item .card-title,
-body.theme-white .certificate-item .card-title a,
-body.theme-soft .certificate-item .card-title,
-body.theme-soft .certificate-item .card-title a {
-    color: #111111 !important;
-}
-
-body.theme-white .certificate-item .card-title a:hover,
-body.theme-soft .certificate-item .card-title a:hover {
-    color: #000000 !important;
-}
-
-body.theme-white .certificate-item .card-header-icon i,
-body.theme-soft .certificate-item .card-header-icon i {
-    color: #444444 !important;
-}
-
-body.theme-white .certificate-item .card-check-text,
-body.theme-soft .certificate-item .card-check-text {
-    color: #444444 !important;
-}
-
-body.theme-white .certificate-item .card-check-text strong,
-body.theme-soft .certificate-item .card-check-text strong {
-    color: #111111 !important;
-}
-
-body.theme-white .certificate-item .card-check-icon i,
-body.theme-soft .certificate-item .card-check-icon i {
-    color: #444444 !important;
-}
-
-/* Action Buttons */
-body.theme-white .certificate-item .cert-btn,
-body.theme-soft .certificate-item .cert-btn {
-    border: 1px solid #d0d3d9 !important;
-}
-
-body.theme-white .certificate-item .cert-btn-inspect,
-body.theme-soft .certificate-item .cert-btn-inspect {
-    background: #ffffff !important;
-    color: #111111 !important;
-    border: 1px solid #d0d3d9 !important;
-}
-
-body.theme-white .certificate-item .cert-btn-inspect:hover,
-body.theme-soft .certificate-item .cert-btn-inspect:hover {
-    background: #111111 !important;
-    color: #ffffff !important;
-    border-color: #111111 !important;
-    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.15) !important;
-}
-
-body.theme-white .certificate-item .cert-btn-verify,
-body.theme-soft .certificate-item .cert-btn-verify {
-    background: #ffffff !important;
-    color: #444444 !important;
-    border: 1px solid #d0d3d9 !important;
-}
-
-body.theme-white .certificate-item .cert-btn-verify:hover,
-body.theme-soft .certificate-item .cert-btn-verify:hover {
-    background: #eef0f4 !important;
-    color: #111111 !important;
-    border-color: #b0b4bc !important;
-}
-
-/* Mobile alignment (prevent text collision with solid panel on <= 480px) */
-@media (max-width: 480px) {
-    body.theme-white .certificate-item .card-main,
-    body.theme-soft .certificate-item .card-main,
-    body.theme-white .certificate-item .card-description,
-    body.theme-soft .certificate-item .card-description,
-    body.theme-white .certificate-item .card-checklist,
-    body.theme-soft .certificate-item .card-checklist,
-    body.theme-white .certificate-item .cert-card-actions,
-    body.theme-soft .certificate-item .cert-card-actions {
-        max-width: 54% !important;
-    }
-
-    body.theme-white .certificate-item .card-photo-visual,
-    body.theme-soft .certificate-item .card-photo-visual {
-        padding: 0 !important;
-    }
-}
-
-body.theme-cyberpunk .cert-featured-badge {
-    background: rgba(18, 10, 36, 0.92);
-    border-color: rgba(255, 212, 0, 0.45);
-    color: #ffd400;
-    box-shadow: 0 0 12px rgba(255, 212, 0, 0.3);
-}
-
-.cert-featured-badge i {
-    font-size: 0.76rem;
-    color: #f59e0b;
-}
-
-body.theme-cyberpunk .cert-featured-badge i {
-    color: #ffd400;
-}
-
-.card:hover .cert-featured-badge {
-    transform: translateY(-2px);
-    border-color: rgba(245, 158, 11, 0.6);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), 0 0 14px rgba(245, 158, 11, 0.3);
-}
-
-/* Backward compatibility for legacy button class if referenced */
-.cert-inspect-btn {
-    background: transparent;
-    border: none;
-    color: var(--bento-card-check-text);
-    font-size: 14px;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    cursor: pointer;
-    padding: 0;
-    font-family: inherit;
-    transition: color 150ms ease;
-}
-
-.cert-inspect-btn:hover {
-    color: var(--bento-card-check-strong);
-}
-
-@media (max-width: 768px) {
-    .card-photo-visual {
-        width: 44%;
-    }
-    .card-description {
-        max-width: 72%;
-    }
-    .certificate-item .card-description,
-    .certificate-item .card-checklist,
-    .certificate-item .cert-card-actions {
-        max-width: 60%;
-    }
+    color: var(--primary-color);
+    border-color: var(--bento-card-border-hover);
+    background: var(--bento-card-badge-bg);
+    text-decoration: none;
 }
 
 @media (max-width: 480px) {
-    .card-photo-visual {
-        width: 40%;
-        opacity: 0.7;
+    .cert-card-footer {
+        flex-wrap: wrap;
     }
-    .card-description,
-    .certificate-item .card-description,
-    .certificate-item .card-checklist,
-    .certificate-item .cert-card-actions {
-        max-width: 100%;
+    .cert-btn {
+        flex: 1 1 auto;
     }
-    .certificate-item .cert-card-actions {
-        margin-bottom: 28px;
-    }
-    .cert-featured-badge {
-        bottom: 12px;
-        right: 12px;
-        padding: 4px 9px;
-        font-size: 0.68rem;
+    .cert-btn-verify {
+        margin-left: 0;
     }
 }
 
