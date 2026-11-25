@@ -1744,7 +1744,7 @@
                     content.appendChild(h3);
 
                     const p = document.createElement('p');
-                    p.innerHTML = `${item.degree || ''} ${item.result ? `<span class="highlight">(${item.result})</span>` : ''}`.trim();
+                    p.innerHTML = `${escapeHtml(item.degree || '')}${item.result ? ` <span class="timeline-result-pill">${escapeHtml(item.result)}</span>` : ''}`.trim();
                     content.appendChild(p);
 
                     itemEl.appendChild(content);
@@ -1954,11 +1954,12 @@
                     focusEl.innerHTML = `<i class="fas fa-terminal"></i> ${escapeHtml(bc.focusTag)}`;
                 }
 
-                // Stat Tiles
+                // Stat Tiles (auto-synced with works & certificates JSON)
                 if (Array.isArray(bc.statTiles)) {
                     const statsGrid = document.getElementById('bento-stats-grid');
                     if (statsGrid) {
                         statsGrid.innerHTML = '';
+                        const tileValEls = {};
                         bc.statTiles.forEach((tile) => {
                             if (!tile) return;
                             const tileEl = document.createElement('a');
@@ -1973,10 +1974,35 @@
                             const lblText = tile.label ? escapeHtml(tile.label) : '';
 
                             tileEl.innerHTML = `
-                                <div class="bento-stat-val">${valIcon}${valText}</div>
+                                <div class="bento-stat-val">${valIcon}<span class="bento-stat-num">${valText}</span></div>
                                 <div class="bento-stat-lbl">${lblText}</div>
                             `;
                             statsGrid.appendChild(tileEl);
+
+                            const numEl = tileEl.querySelector('.bento-stat-num');
+                            const keyHint = (tile.key || tile.label || '').toLowerCase();
+                            if (keyHint.includes('project')) tileValEls.projects = numEl;
+                            else if (keyHint.includes('app') || keyHint.includes('mobile')) tileValEls.apps = numEl;
+                            else if (keyHint.includes('cert')) tileValEls.certificates = numEl;
+                            else if (keyHint.includes('repo')) tileValEls.repos = numEl;
+                        });
+
+                        Promise.all([
+                            fetchJsonWithFallback(['data/myWorks.json', './data/myWorks.json', 'myWorks.json']).catch(() => null),
+                            fetchJsonWithFallback(['data/myCertificates.json', './data/myCertificates.json', 'myCertificates.json']).catch(() => null)
+                        ]).then(([worksData, certsData]) => {
+                            const worksArr = Array.isArray(worksData) ? worksData : (worksData && worksData.works ? worksData.works : []);
+                            const certsArr = Array.isArray(certsData) ? certsData : [];
+                            if (worksArr.length > 0) {
+                                if (tileValEls.projects) tileValEls.projects.textContent = ` ${worksArr.length}`;
+                                if (tileValEls.apps) {
+                                    const mobileCount = worksArr.filter((w) => (w.category || '').toLowerCase() === 'mobile').length;
+                                    tileValEls.apps.textContent = ` ${mobileCount}`;
+                                }
+                            }
+                            if (certsArr.length > 0 && tileValEls.certificates) {
+                                tileValEls.certificates.textContent = ` ${certsArr.length}`;
+                            }
                         });
                     }
                 }
@@ -2002,6 +2028,14 @@
         ]).then(([profile, worksData, certsData]) => {
             if (!profile) return;
 
+            // Heading
+            const headingEl = document.getElementById('profile-heading');
+            if (headingEl && profile.heading) {
+                const first = escapeHtml(profile.heading.first || 'About');
+                const highlight = escapeHtml(profile.heading.highlight || 'Me');
+                headingEl.innerHTML = `${first} <span class="highlight">${highlight}</span>`;
+            }
+
             // Name
             const nameEl = document.getElementById('profile-name');
             if (nameEl && profile.name) nameEl.textContent = profile.name;
@@ -2019,19 +2053,25 @@
             // Location
             const locEl = document.getElementById('profile-location');
             if (locEl && profile.location) {
-                locEl.innerHTML = `<i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${profile.location}`;
+                locEl.innerHTML = `<i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${escapeHtml(profile.location)}`;
+            }
+
+            // Institution
+            const instEl = document.getElementById('profile-institution');
+            if (instEl && profile.institution) {
+                instEl.innerHTML = `<i class="fas fa-university" aria-hidden="true"></i> ${escapeHtml(profile.institution)}`;
             }
 
             // Core focus
             const focusEl = document.getElementById('profile-focus');
             if (focusEl && profile.focus) {
-                focusEl.innerHTML = `<i class="fas fa-microchip" aria-hidden="true"></i> ${profile.focus}`;
+                focusEl.innerHTML = `<i class="fas fa-microchip" aria-hidden="true"></i> ${escapeHtml(profile.focus)}`;
             }
 
             // Status
             const statusEl = document.getElementById('profile-status');
             if (statusEl && profile.status) {
-                statusEl.innerHTML = `<span class="status-pulse-dot" aria-hidden="true"></span> ${profile.status}`;
+                statusEl.innerHTML = `<span class="status-pulse-dot" aria-hidden="true"></span><span>${escapeHtml(profile.status)}</span>`;
             }
 
             // Bio
@@ -2047,33 +2087,131 @@
                 if (profile.name) avatarEl.alt = profile.name;
             }
 
-            // Stats calculation with fallback:
-            const worksArray = Array.isArray(worksData) ? worksData : (worksData && worksData.works ? worksData.works : []);
-            let projectCount = worksArray.length > 0
-                ? worksArray.length
-                : (profile.stats && typeof profile.stats.projects === 'number' ? profile.stats.projects : 6);
+            // Identity Card Metadata
+            if (profile.identityCard) {
+                const ic = profile.identityCard;
+                const fileEl = document.getElementById('profile-card-filename');
+                if (fileEl && ic.fileName) {
+                    fileEl.innerHTML = `<i class="fas fa-id-card" aria-hidden="true"></i> ${escapeHtml(ic.fileName)}`;
+                }
+                const subEl = document.getElementById('profile-card-subtitle');
+                if (subEl && ic.subtitle) {
+                    subEl.textContent = ic.subtitle;
+                }
+                const tagEl = document.getElementById('profile-card-tag');
+                if (tagEl && ic.tag) {
+                    const tagIcon = ic.tagIcon ? escapeHtml(ic.tagIcon) : 'fas fa-terminal';
+                    tagEl.innerHTML = `<i class="${tagIcon}" aria-hidden="true"></i> ${escapeHtml(ic.tag)}`;
+                }
+            }
 
-            // Apps counter: specifically mobile ones from myWorks.json
-            let appsCount = worksArray.length > 0
-                ? worksArray.filter((w) => (w.category || '').toLowerCase() === 'mobile').length
-                : (profile.stats && typeof profile.stats.apps === 'number' ? profile.stats.apps : 1);
+            // Hero CTA Actions
+            const actionsEl = document.getElementById('profile-actions');
+            if (actionsEl && Array.isArray(profile.actions)) {
+                actionsEl.innerHTML = '';
+                profile.actions.forEach((btn) => {
+                    if (!btn || !btn.text) return;
+                    const a = document.createElement('a');
+                    a.href = btn.url || '#';
+                    a.className = `btn ${btn.style === 'outline' ? 'btn-outline' : 'btn-primary'}`;
+                    if (btn.target) a.target = btn.target;
+                    if (btn.target === '_blank') a.rel = 'noopener noreferrer';
+                    const iconHtml = btn.icon ? `<i class="${escapeHtml(btn.icon)}" aria-hidden="true"></i> ` : '';
+                    a.innerHTML = `${iconHtml}${escapeHtml(btn.text)}`;
+                    actionsEl.appendChild(a);
+                });
+            }
+
+            // Telemetry Cards Grid
+            const telemetryEl = document.getElementById('profile-telemetry-grid');
+            if (telemetryEl && Array.isArray(profile.telemetry)) {
+                telemetryEl.innerHTML = '';
+                profile.telemetry.forEach((item) => {
+                    if (!item) return;
+                    const a = document.createElement('a');
+                    a.href = item.url || '#';
+                    a.className = 'about-telemetry-tile';
+                    if (item.title) a.title = item.title;
+                    if (item.target) a.target = item.target;
+                    if (item.target === '_blank') a.rel = 'noopener noreferrer';
+
+                    const valId = item.id || (item.key ? `stat-${item.key}` : '');
+
+                    a.innerHTML = `
+                        <div class="about-telemetry-top">
+                            <i class="${escapeHtml(item.icon || 'fas fa-chart-simple')}" aria-hidden="true"></i>
+                            <span>${escapeHtml(item.pill || '')}</span>
+                        </div>
+                        <div${valId ? ` id="${escapeHtml(valId)}"` : ''} class="about-telemetry-val">-</div>
+                        <div class="about-telemetry-lbl">${escapeHtml(item.label || '')}</div>
+                    `;
+                    telemetryEl.appendChild(a);
+                });
+            }
+
+            // Engineering Focus Pillars
+            const focusStripEl = document.getElementById('about-focus-strip');
+            if (focusStripEl && Array.isArray(profile.focusAreas)) {
+                focusStripEl.innerHTML = '';
+                profile.focusAreas.forEach((area) => {
+                    if (!area) return;
+                    const card = document.createElement('article');
+                    card.className = 'about-focus-card';
+                    card.innerHTML = `
+                        <div class="about-focus-icon"><i class="${escapeHtml(area.icon || 'fas fa-code')}" aria-hidden="true"></i></div>
+                        <div>
+                            <h3 class="about-focus-title">${escapeHtml(area.title || '')}</h3>
+                            <p class="about-focus-desc">${escapeHtml(area.description || '')}</p>
+                        </div>
+                    `;
+                    focusStripEl.appendChild(card);
+                });
+            }
+
+            // Section Headings, Subtitles, Icons & Badges
+            if (profile.sections) {
+                const hydrateSectionHeader = (prefix, cfg) => {
+                    if (!cfg) return;
+                    const titleEl = document.getElementById(`about-${prefix}-title`);
+                    const subEl = document.getElementById(`about-${prefix}-sub`);
+                    const iconEl = document.getElementById(`about-${prefix}-icon`);
+                    const badgeEl = document.getElementById(`about-${prefix}-badge`);
+                    const actionEl = document.getElementById(`about-${prefix}-action`);
+
+                    if (titleEl && cfg.title) titleEl.textContent = cfg.title;
+                    if (subEl && cfg.subtitle) subEl.textContent = cfg.subtitle;
+                    if (iconEl && cfg.icon) iconEl.innerHTML = `<i class="${escapeHtml(cfg.icon)}" aria-hidden="true"></i>`;
+                    if (badgeEl && cfg.badge) badgeEl.textContent = cfg.badge;
+                    if (actionEl && cfg.actionText) {
+                        if (cfg.actionUrl) actionEl.href = cfg.actionUrl;
+                        if (cfg.actionTarget) actionEl.target = cfg.actionTarget;
+                        if (cfg.actionTarget === '_blank') actionEl.rel = 'noopener noreferrer';
+                        actionEl.innerHTML = `${escapeHtml(cfg.actionText)} <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>`;
+                    }
+                };
+                hydrateSectionHeader('skills', profile.sections.skills);
+                hydrateSectionHeader('education', profile.sections.education);
+                hydrateSectionHeader('links', profile.sections.links);
+            }
+
+            // Live counts calculated directly from site data sources
+            const worksArray = Array.isArray(worksData) ? worksData : (worksData && worksData.works ? worksData.works : []);
+            const projectCount = worksArray.length;
+            const appsCount = worksArray.filter((w) => (w.category || '').toLowerCase() === 'mobile').length;
 
             const certsArray = Array.isArray(certsData) ? certsData : [];
-            let certsCount = certsArray.length > 0
-                ? certsArray.length
-                : (profile.stats && typeof profile.stats.certificates === 'number' ? profile.stats.certificates : 11);
+            const certsCount = certsArray.length;
 
-            // Animate local counts
             const statProjectsEl = document.getElementById('stat-projects');
-            if (statProjectsEl) animateCounter(statProjectsEl, projectCount);
+            if (statProjectsEl && worksData !== null) animateCounter(statProjectsEl, projectCount);
 
             const statAppsEl = document.getElementById('stat-apps');
-            if (statAppsEl) animateCounter(statAppsEl, appsCount);
+            if (statAppsEl && worksData !== null) animateCounter(statAppsEl, appsCount);
 
             const statCertsEl = document.getElementById('stat-certs');
-            if (statCertsEl) animateCounter(statCertsEl, certsCount);
+            if (statCertsEl && certsData !== null) animateCounter(statCertsEl, certsCount);
 
-            // Git repo count: dynamically fetched from mygit data source
+            // Git repo count: dynamically fetched from mygit data cache with GitHub API fallback
             const statReposEl = document.getElementById('stat-repos');
             const MYGIT_CACHE_URL = 'https://raw.githubusercontent.com/oceanmallik/github-data-cache/refs/heads/seed/data.json';
 
@@ -2084,32 +2222,23 @@
                 })
                 .then((gitData) => {
                     const user = gitData && gitData.profile;
-                    let repoCount = user && typeof user.public_repos === 'number'
+                    const repoCount = user && typeof user.public_repos === 'number'
                         ? user.public_repos
                         : (gitData && Array.isArray(gitData.repos) ? gitData.repos.length : null);
 
                     if (typeof repoCount === 'number' && statReposEl) {
                         animateCounter(statReposEl, repoCount);
-                    } else if (profile.stats && profile.stats.repos && statReposEl) {
-                        animateCounter(statReposEl, profile.stats.repos);
                     }
                 })
                 .catch(() => {
-                    // Fallback to GitHub public API
                     fetch('https://api.github.com/users/oceanmallik')
                         .then((res) => res.ok ? res.json() : null)
                         .then((ghUser) => {
                             if (ghUser && typeof ghUser.public_repos === 'number' && statReposEl) {
                                 animateCounter(statReposEl, ghUser.public_repos);
-                            } else if (profile.stats && profile.stats.repos && statReposEl) {
-                                animateCounter(statReposEl, profile.stats.repos);
                             }
                         })
-                        .catch(() => {
-                            if (profile.stats && profile.stats.repos && statReposEl) {
-                                animateCounter(statReposEl, profile.stats.repos);
-                            }
-                        });
+                        .catch(() => {});
                 });
         }).catch((err) => {
             console.error('Error loading profile from JSON:', err);

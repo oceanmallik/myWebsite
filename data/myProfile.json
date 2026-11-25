@@ -1,4 +1,8 @@
 {
+  "heading": {
+    "first": "About",
+    "highlight": "Me"
+  },
   "name": "Ocean Mallik",
   "handle": "oceanmallik",
   "title": "Software Engineer in Training",
@@ -8,10 +12,107 @@
   "avatar": "assets/images/me.jpg",
   "bio": "Software Engineering student at Daffodil International University. Passionate about exploring computer systems, building native mobile apps, and contributing to open-source software.",
   "focus": "Native Mobile & Systems",
-  "stats": {
-    "projects": 6,
-    "apps": 1,
-    "certificates": 11,
-    "repos": null
+  "identityCard": {
+    "fileName": "profile.json",
+    "subtitle": "BSc in Software Engineering • DIU",
+    "tag": "Open Source & Mobile",
+    "tagIcon": "fas fa-terminal"
+  },
+  "actions": [
+    {
+      "text": "Explore Projects",
+      "icon": "fas fa-layer-group",
+      "url": "activities.html",
+      "style": "primary",
+      "target": "_self"
+    },
+    {
+      "text": "Contact Me",
+      "icon": "fas fa-paper-plane",
+      "url": "mailto:oceanmallik@oceanmallik.com",
+      "style": "outline",
+      "target": "_self"
+    }
+  ],
+  "telemetry": [
+    {
+      "key": "projects",
+      "id": "stat-projects",
+      "pill": "Works",
+      "label": "Projects Built",
+      "icon": "fas fa-layer-group",
+      "url": "activities.html",
+      "title": "View all projects",
+      "target": "_self"
+    },
+    {
+      "key": "apps",
+      "id": "stat-apps",
+      "pill": "Mobile",
+      "label": "Play Store Apps",
+      "icon": "fab fa-google-play",
+      "url": "https://play.google.com/store/apps/dev?id=5168944414714193607",
+      "title": "View published mobile apps",
+      "target": "_blank"
+    },
+    {
+      "key": "certificates",
+      "id": "stat-certs",
+      "pill": "Verified",
+      "label": "Certifications",
+      "icon": "fas fa-certificate",
+      "url": "certificates.html",
+      "title": "View all certifications",
+      "target": "_self"
+    },
+    {
+      "key": "repos",
+      "id": "stat-repos",
+      "pill": "Git",
+      "label": "Repositories",
+      "icon": "fab fa-github",
+      "url": "mygit.html",
+      "title": "View GitHub repositories",
+      "target": "_self"
+    }
+  ],
+  "focusAreas": [
+    {
+      "title": "Native Mobile Apps",
+      "icon": "fas fa-mobile-alt",
+      "description": "Building fast, student-focused Android applications with React Native and TypeScript."
+    },
+    {
+      "title": "Systems & Game Dev",
+      "icon": "fas fa-gamepad",
+      "description": "Exploring low-level computing in C, C++, and Rust alongside interactive mechanics in Godot & C#."
+    },
+    {
+      "title": "Developer Tooling",
+      "icon": "fas fa-terminal",
+      "description": "Designing clean web interfaces, automation workflows, and open-source developer utilities."
+    }
+  ],
+  "sections": {
+    "skills": {
+      "title": "Technical Skillset & Stack",
+      "subtitle": "Languages, frameworks, and tools across mobile, systems, and web.",
+      "icon": "fas fa-layer-group",
+      "badge": "Stack"
+    },
+    "education": {
+      "title": "Education",
+      "subtitle": "Academic background & milestones.",
+      "icon": "fas fa-graduation-cap",
+      "badge": "Timeline"
+    },
+    "links": {
+      "title": "Verified Links & Profiles",
+      "subtitle": "Official repositories, blog articles, Play Store apps, and direct contact.",
+      "icon": "fas fa-link",
+      "actionText": "All Links",
+      "actionUrl": "https://link.oceanmallik.com/",
+      "actionTarget": "_blank"
+    }
   }
 }

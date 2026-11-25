@@ -68,7 +68,8 @@
     "avatarUrl": "https://link.oceanmallik.com/",
     "statTiles": [
       {
-        "value": " 6+",
+        "key": "projects",
+        "value": " -",
         "icon": "fas fa-cubes",
         "label": "Projects Built",
         "url": "activities.html",
@@ -76,7 +77,8 @@
         "target": "_self"
       },
       {
-        "value": " 1",
+        "key": "apps",
+        "value": " -",
         "icon": "fab fa-google-play",
         "label": "Mobile Apps",
         "url": "https://play.google.com/store/apps/dev?id=5168944414714193607",
@@ -84,7 +86,8 @@
         "target": "_blank"
       },
       {
-        "value": " 10+",
+        "key": "certificates",
+        "value": " -",
         "icon": "fas fa-certificate",
         "label": "Certifications",
         "url": "certificates.html",

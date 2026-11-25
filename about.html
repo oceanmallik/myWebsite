@@ -117,171 +117,188 @@
         <div class="nav-scroll-progress" id="scroll-progress"></div>
     </nav>
 
-    <section class="section bg-secondary" style="padding-top: 40px; min-height: 100vh;">
+    <main class="about-page section bg-secondary">
         <div class="container">
-            <!-- Header Section -->
-            <div class="about-header reveal">
-                <p class="subtitle"><i class="fas fa-user-astronaut"></i> &nbsp;Developer Profile</p>
-                <h1 class="title">About <span class="highlight">Me</span></h1>
-                <p class="description">A quick peek into my background, technical skillset, verified profiles, and engineering journey.</p>
-            </div>
-
-            <div class="bento-grid">
-                <!-- 1. Profile Section Hero Card with Projects & Apps Counters (col-span-full) -->
-                <article id="profile-hero-card" class="card bento-card profile-hero-card col-span-full reveal" data-profile-source="data/myProfile.json">
-                    <div class="profile-hero-top">
-                        <div class="profile-avatar-box">
-                            <img id="profile-avatar" class="profile-avatar-img" src="assets/images/me.jpg" alt="Ocean Mallik" loading="lazy">
-                            <span class="profile-avatar-badge" title="Online &amp; Active"></span>
-                        </div>
-
-                        <div class="profile-hero-details">
-                            <div class="profile-name-row">
-                                <h2 id="profile-name" class="profile-name-heading">Ocean Mallik</h2>
-                                <span id="profile-handle" class="profile-handle-tag">@oceanmallik</span>
-                            </div>
-                            <p id="profile-tagline" class="profile-tagline">Software Engineer in Training &bull; DIU</p>
-
-                            <div class="profile-meta-chips">
-                                <span id="profile-location" class="profile-chip">
-                                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i> Dhaka, Bangladesh
-                                </span>
-                                <span id="profile-focus" class="profile-chip">
-                                    <i class="fas fa-microchip" aria-hidden="true"></i> Native Mobile &amp; Systems
-                                </span>
-                                <span id="profile-status" class="profile-chip profile-chip-active">
-                                    <span class="status-pulse-dot" aria-hidden="true"></span> Available for Projects &amp; Collaborations
-                                </span>
-                            </div>
-
-                            <p id="profile-bio" class="profile-bio-text">
-                                Software Engineering student at <strong>Daffodil International University</strong>. Exploring computer systems, building native mobile apps, and contributing to open-source software.
-                            </p>
-                        </div>
+            <!-- 1. Editorial Hero Split -->
+            <section id="profile-hero-card" class="about-hero-split reveal" data-profile-source="data/myProfile.json" aria-label="Developer introduction">
+                <div class="about-hero-intro">
+                    <div id="profile-status" class="hero-badge about-status-badge">
+                        <span class="status-pulse-dot" aria-hidden="true"></span>
+                        <span>Available for Projects &amp; Collaborations</span>
                     </div>
 
-                    <!-- Profile Counters & Stats Row -->
-                    <div class="profile-stats-grid">
-                        <a href="activities.html" class="profile-stat-box" title="View all projects">
-                            <div class="profile-stat-header">
-                                <i class="fas fa-layer-group profile-stat-icon" aria-hidden="true"></i>
-                                <span class="profile-stat-pill">Works</span>
-                            </div>
-                            <div id="stat-projects" class="profile-stat-value">6</div>
-                            <div class="profile-stat-label">Projects Built</div>
-                            <div class="profile-stat-subtext">Explore activities <i class="fas fa-arrow-right" aria-hidden="true"></i></div>
-                        </a>
+                    <h1 id="profile-heading" class="about-hero-title">About <span class="highlight">Me</span></h1>
+                    <p class="about-hero-role">
+                        <span class="hero-role-slash">//</span>
+                        <span id="profile-tagline">Software Engineer in Training</span>
+                    </p>
 
-                        <a href="https://play.google.com/store/apps/dev?id=5168944414714193607" target="_blank" rel="noopener noreferrer" class="profile-stat-box" title="View published mobile apps">
-                            <div class="profile-stat-header">
-                                <i class="fab fa-google-play profile-stat-icon" aria-hidden="true"></i>
-                                <span class="profile-stat-pill">Mobile</span>
-                            </div>
-                            <div id="stat-apps" class="profile-stat-value">1</div>
-                            <div class="profile-stat-label">Apps Published</div>
-                            <div class="profile-stat-subtext">Google Play &amp; Android <i class="fas fa-arrow-right" aria-hidden="true"></i></div>
-                        </a>
+                    <p id="profile-bio" class="about-hero-bio">
+                        Software Engineering student at Daffodil International University. Passionate about exploring computer systems, building native mobile apps, and contributing to open-source software.
+                    </p>
 
-                        <a href="certificates.html" class="profile-stat-box" title="View all certifications">
-                            <div class="profile-stat-header">
-                                <i class="fas fa-certificate profile-stat-icon" aria-hidden="true"></i>
-                                <span class="profile-stat-pill">Verified</span>
-                            </div>
-                            <div id="stat-certs" class="profile-stat-value">11</div>
-                            <div class="profile-stat-label">Certifications</div>
-                            <div class="profile-stat-subtext">Inspect credentials <i class="fas fa-arrow-right" aria-hidden="true"></i></div>
-                        </a>
+                    <div class="about-meta-pills">
+                        <span id="profile-location" class="about-meta-pill">
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i> Dhaka, Bangladesh
+                        </span>
+                        <span id="profile-institution" class="about-meta-pill">
+                            <i class="fas fa-university" aria-hidden="true"></i> Daffodil International University
+                        </span>
+                        <span id="profile-focus" class="about-meta-pill">
+                            <i class="fas fa-microchip" aria-hidden="true"></i> Native Mobile &amp; Systems
+                        </span>
+                    </div>
 
-                        <a href="mygit.html" class="profile-stat-box" title="View GitHub repositories">
-                            <div class="profile-stat-header">
-                                <i class="fab fa-github profile-stat-icon" aria-hidden="true"></i>
-                                <span class="profile-stat-pill">Git</span>
-                            </div>
-                            <div id="stat-repos" class="profile-stat-value">-</div>
-                            <div class="profile-stat-label">Repositories</div>
-                            <div class="profile-stat-subtext">View Git Repositories<i class="fas fa-arrow-right" aria-hidden="true"></i></div>
+                    <div id="profile-actions" class="about-hero-actions">
+                        <a href="activities.html" class="btn btn-primary">
+                            <i class="fas fa-layer-group" aria-hidden="true"></i> Explore Projects
+                        </a>
+                        <a href="mailto:oceanmallik@oceanmallik.com" class="btn btn-outline">
+                            <i class="fas fa-paper-plane" aria-hidden="true"></i> Contact Me
                         </a>
                     </div>
-                </article>
+                </div>
 
-                <!-- 2. Required Links Hub Card (col-span-full) -->
-                <article class="card bento-card col-span-full reveal">
-                    <div class="card-main">
-                        <div class="card-header">
-                            <span class="card-header-icon" aria-hidden="true"><i class="fas fa-link"></i></span>
-                            <h3 class="card-title">Verified Links &amp; Profiles</h3>
+                <!-- Right Column: Identity & Live Telemetry Card -->
+                <aside class="about-identity-card" aria-label="Profile overview and live metrics">
+                    <div class="bento-card-topbar">
+                        <div class="bento-dots" aria-hidden="true">
+                            <span class="bento-dot dot-close"></span>
+                            <span class="bento-dot dot-min"></span>
+                            <span class="bento-dot dot-max"></span>
+                            <span id="profile-card-filename" class="bento-file-label"><i class="fas fa-id-card"></i> profile.json</span>
                         </div>
-                        <p class="card-description">
-                            All official developer profiles, central link hubs, dev articles, and direct communication channels.
-                        </p>
-                        <!-- Dynamic Links Container from myLinks.json -->
-                        <div id="profile-links-container" class="profile-links-grid" data-links-source="data/myLinks.json"></div>
-                    </div>
-                </article>
-
-                <!-- 3. Technical Skills Matrix (33% - 1 col) -->
-                <article class="card bento-card reveal">
-                    <div class="card-main">
-                        <div class="card-header">
-                            <span class="card-header-icon" aria-hidden="true"><i class="fas fa-layer-group"></i></span>
-                            <h3 class="card-title">Technical Skillset &amp; Stack</h3>
-                        </div>
-                        <p class="card-description">
-                            Core engineering competencies across <strong>frontend, backend, native mobile, and systems</strong> programming.
-                        </p>
-                        <div id="skills-container" class="skills-categories" data-skills-source="data/mySkills.json"></div>
+                        <span id="profile-handle" class="bento-badge-loc about-handle-pill">@oceanmallik</span>
                     </div>
 
-                    <!-- Illustration area on the right -->
-                    <div class="card-illustration" aria-hidden="true">
-                        <div class="concentric-squares">
-                            <span class="concentric-square square-1"></span>
-                            <span class="concentric-square square-2"></span>
-                            <span class="concentric-square square-3"></span>
-                            <span class="concentric-square square-4"></span>
+                    <div class="about-identity-profile">
+                        <div class="about-avatar-wrap">
+                            <img id="profile-avatar" class="about-avatar-img" src="assets/images/me.jpg" alt="Ocean Mallik">
+                            <span class="bento-status-indicator" title="Active &amp; Available"></span>
                         </div>
-                        <div class="card-illustration-graphic">
-                            <i class="fas fa-laptop-code" aria-hidden="true"></i>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- 4. Verified Developer Credentials (33% - Middle 1 col, Photo Only) -->
-                <article class="card bento-card credential-photo-card reveal">
-                    <a href="assets/images/fcCard.png" target="_blank" rel="noopener noreferrer" class="credential-photo-link" title="freeCodeCamp Verified Developer Card">
-                        <img src="assets/images/fcCard.png" alt="freeCodeCamp Verified Developer Card - Ocean Mallik" class="credential-full-img" loading="lazy">
-                    </a>
-                </article>
-
-                <!-- 5. Educational Background (33% - 1 col) -->
-                <article class="card bento-card reveal">
-                    <div class="card-main">
-                        <div class="card-header">
-                            <span class="card-header-icon" aria-hidden="true"><i class="fas fa-graduation-cap"></i></span>
-                            <h3 class="card-title">Educational Background</h3>
-                        </div>
-                        <p class="card-description">
-                            Academic qualifications in <strong>Software Engineering</strong> and foundation schooling.
-                        </p>
-                        <div id="education-timeline" class="timeline" data-education-source="data/myEducation.json"></div>
-                    </div>
-
-                    <!-- Illustration area on the right -->
-                    <div class="card-illustration" aria-hidden="true">
-                        <div class="concentric-squares">
-                            <span class="concentric-square square-1"></span>
-                            <span class="concentric-square square-2"></span>
-                            <span class="concentric-square square-3"></span>
-                            <span class="concentric-square square-4"></span>
-                        </div>
-                        <div class="card-illustration-graphic">
-                            <i class="fas fa-university" aria-hidden="true"></i>
+                        <div class="about-identity-meta">
+                            <h2 id="profile-name" class="about-identity-name">Ocean Mallik</h2>
+                            <p id="profile-card-subtitle" class="about-identity-sub">BSc in Software Engineering &bull; DIU</p>
+                            <span id="profile-card-tag" class="about-identity-tag"><i class="fas fa-terminal" aria-hidden="true"></i> Open Source &amp; Mobile</span>
                         </div>
                     </div>
+
+                    <div id="profile-telemetry-grid" class="about-telemetry-grid">
+                        <a href="activities.html" class="about-telemetry-tile" title="View all projects">
+                            <div class="about-telemetry-top">
+                                <i class="fas fa-layer-group" aria-hidden="true"></i>
+                                <span>Works</span>
+                            </div>
+                            <div id="stat-projects" class="about-telemetry-val">-</div>
+                            <div class="about-telemetry-lbl">Projects Built</div>
+                        </a>
+
+                        <a href="https://play.google.com/store/apps/dev?id=5168944414714193607" target="_blank" rel="noopener noreferrer" class="about-telemetry-tile" title="View published mobile apps">
+                            <div class="about-telemetry-top">
+                                <i class="fab fa-google-play" aria-hidden="true"></i>
+                                <span>Mobile</span>
+                            </div>
+                            <div id="stat-apps" class="about-telemetry-val">-</div>
+                            <div class="about-telemetry-lbl">Play Store Apps</div>
+                        </a>
+
+                        <a href="certificates.html" class="about-telemetry-tile" title="View all certifications">
+                            <div class="about-telemetry-top">
+                                <i class="fas fa-certificate" aria-hidden="true"></i>
+                                <span>Verified</span>
+                            </div>
+                            <div id="stat-certs" class="about-telemetry-val">-</div>
+                            <div class="about-telemetry-lbl">Certifications</div>
+                        </a>
+
+                        <a href="mygit.html" class="about-telemetry-tile" title="View GitHub repositories">
+                            <div class="about-telemetry-top">
+                                <i class="fab fa-github" aria-hidden="true"></i>
+                                <span>Git</span>
+                            </div>
+                            <div id="stat-repos" class="about-telemetry-val">-</div>
+                            <div class="about-telemetry-lbl">Repositories</div>
+                        </a>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- 2. Engineering Focus Pillars -->
+            <section id="about-focus-strip" class="about-focus-strip reveal" aria-label="Core engineering focus">
+                <article class="about-focus-card">
+                    <div class="about-focus-icon"><i class="fas fa-mobile-alt" aria-hidden="true"></i></div>
+                    <div>
+                        <h3 class="about-focus-title">Native Mobile Apps</h3>
+                        <p class="about-focus-desc">Building fast, student-focused Android applications with React Native and TypeScript.</p>
+                    </div>
                 </article>
-            </div>
+                <article class="about-focus-card">
+                    <div class="about-focus-icon"><i class="fas fa-gamepad" aria-hidden="true"></i></div>
+                    <div>
+                        <h3 class="about-focus-title">Systems &amp; Game Dev</h3>
+                        <p class="about-focus-desc">Exploring low-level computing in C, C++, and Rust alongside interactive mechanics in Godot &amp; C#.</p>
+                    </div>
+                </article>
+                <article class="about-focus-card">
+                    <div class="about-focus-icon"><i class="fas fa-terminal" aria-hidden="true"></i></div>
+                    <div>
+                        <h3 class="about-focus-title">Developer Tooling</h3>
+                        <p class="about-focus-desc">Designing clean web interfaces, automation workflows, and open-source developer utilities.</p>
+                    </div>
+                </article>
+            </section>
+
+            <!-- 3. Asymmetric Bento Details Grid -->
+            <section class="about-bento-grid" aria-label="Skills, education, and verified links">
+                <!-- Technical Skillset (7 cols) -->
+                <article class="about-panel about-panel-span-7 reveal">
+                    <div class="about-panel-header">
+                        <div class="about-panel-title-wrap">
+                            <span id="about-skills-icon" class="about-panel-icon" aria-hidden="true"><i class="fas fa-layer-group"></i></span>
+                            <div>
+                                <h2 id="about-skills-title" class="about-panel-title">Technical Skillset &amp; Stack</h2>
+                                <p id="about-skills-sub" class="about-panel-sub">Languages, frameworks, and tools across mobile, systems, and web.</p>
+                            </div>
+                        </div>
+                        <span id="about-skills-badge" class="about-panel-badge">Stack</span>
+                    </div>
+                    <div id="skills-container" class="about-skills-list" data-skills-source="data/mySkills.json"></div>
+                </article>
+
+                <!-- Educational Background (5 cols) -->
+                <article class="about-panel about-panel-span-5 reveal">
+                    <div class="about-panel-header">
+                        <div class="about-panel-title-wrap">
+                            <span id="about-education-icon" class="about-panel-icon" aria-hidden="true"><i class="fas fa-graduation-cap"></i></span>
+                            <div>
+                                <h2 id="about-education-title" class="about-panel-title">Education</h2>
+                                <p id="about-education-sub" class="about-panel-sub">Academic background &amp; milestones.</p>
+                            </div>
+                        </div>
+                        <span id="about-education-badge" class="about-panel-badge">Timeline</span>
+                    </div>
+                    <div id="education-timeline" class="about-timeline" data-education-source="data/myEducation.json"></div>
+                </article>
+
+                <!-- Verified Links Hub (12 cols full width) -->
+                <article class="about-panel about-panel-span-12 reveal">
+                    <div class="about-panel-header">
+                        <div class="about-panel-title-wrap">
+                            <span id="about-links-icon" class="about-panel-icon" aria-hidden="true"><i class="fas fa-link"></i></span>
+                            <div>
+                                <h2 id="about-links-title" class="about-panel-title">Verified Links &amp; Profiles</h2>
+                                <p id="about-links-sub" class="about-panel-sub">Official repositories, blog articles, Play Store apps, and direct contact.</p>
+                            </div>
+                        </div>
+                        <a id="about-links-action" href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="about-panel-action">
+                            All Links <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div id="profile-links-container" class="about-links-grid" data-links-source="data/myLinks.json"></div>
+                </article>
+            </section>
         </div>
-    </section>
+    </main>
 
     <footer>
         <p>Built with curiosity and too much caffeine.<br>&copy; <span id="current-year"></span> Ocean Mallik</p>
