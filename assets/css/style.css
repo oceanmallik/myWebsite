@@ -1248,28 +1248,12 @@ body.theme-cyberpunk .theme-list-item.active i {
 .repo-grid,
 #activities-grid,
 #activities-preview-grid,
-#repos-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 16px !important;
-    width: 100%;
-}
-
+#repos-grid,
 #certificates-accordion {
     display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     gap: 16px !important;
     width: 100%;
-}
-
-#certificates-accordion.cert-grid-full {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-}
-
-@media (max-width: 1080px) {
-    #certificates-accordion.cert-grid-full {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    }
 }
 
 @media (max-width: 1024px) {
