@@ -2413,6 +2413,37 @@
             ducking: false
         };
 
+        const themePalette = {
+            bg: '#0d0d0d',
+            surface: '#141414',
+            border: '#262626',
+            ink: '#f5f5f5',
+            visor: '#0d0d0d',
+            accent: '#22c55e',
+            accentSoft: 'rgba(34, 197, 94, 0.35)',
+            track: '#161616',
+            trackDot: '#1f1f1f',
+            danger: '#ef4444'
+        };
+
+        function syncThemePalette() {
+            const styles = window.getComputedStyle(stage);
+            const pick = (name, fallback) => {
+                const v = styles.getPropertyValue(name);
+                return v ? v.trim() || fallback : fallback;
+            };
+            themePalette.bg = pick('--gr-bg', '#0d0d0d');
+            themePalette.surface = pick('--gr-surface', '#141414');
+            themePalette.border = pick('--gr-border', '#262626');
+            themePalette.ink = pick('--gr-ink', '#f5f5f5');
+            themePalette.visor = pick('--gr-visor', themePalette.bg);
+            themePalette.accent = pick('--gr-accent', '#22c55e');
+            themePalette.accentSoft = pick('--gr-accent-soft', 'rgba(34, 197, 94, 0.35)');
+            themePalette.track = pick('--gr-track', '#161616');
+            themePalette.trackDot = pick('--gr-track-dot', '#1f1f1f');
+            themePalette.danger = pick('--gr-danger', '#ef4444');
+        }
+
         function readHighScore() {
             try {
                 const raw = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
@@ -2716,11 +2747,11 @@
         }
 
         function drawBackground() {
-            ctx.fillStyle = '#0d0d0d';
+            ctx.fillStyle = themePalette.bg;
             ctx.fillRect(0, 0, viewW, viewH);
 
             // Subtle distant git branch track
-            ctx.strokeStyle = '#161616';
+            ctx.strokeStyle = themePalette.track;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(0, 22);
@@ -2728,25 +2759,25 @@
             ctx.stroke();
 
             for (let x = -((groundOffset * 0.4) % 72); x < viewW + 10; x += 72) {
-                ctx.fillStyle = '#1f1f1f';
+                ctx.fillStyle = themePalette.trackDot;
                 ctx.beginPath();
                 ctx.arc(x, 22, 2, 0, Math.PI * 2);
                 ctx.fill();
             }
 
             // Ground baseline
-            ctx.strokeStyle = '#262626';
+            ctx.strokeStyle = themePalette.border;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(0, groundY + 0.5);
             ctx.lineTo(viewW, groundY + 0.5);
             ctx.stroke();
 
-            // Scrolling ground pebbles & emerald commit ticks
+            // Scrolling ground pebbles & theme-accent commit ticks
             for (let x = -groundOffset; x < viewW + 24; x += 24) {
-                ctx.fillStyle = '#262626';
+                ctx.fillStyle = themePalette.border;
                 ctx.fillRect(x, groundY + 5, 8, 1.5);
-                ctx.fillStyle = 'rgba(34, 197, 94, 0.35)';
+                ctx.fillStyle = themePalette.accentSoft;
                 ctx.fillRect(x + 14, groundY + 8, 3, 1.5);
             }
         }
@@ -2758,7 +2789,7 @@
             if (player.onGround && player.ducking) {
                 const top = groundY - 15;
                 // Trailing tail
-                ctx.strokeStyle = '#f5f5f5';
+                ctx.strokeStyle = themePalette.ink;
                 ctx.lineWidth = 2.2;
                 ctx.lineCap = 'round';
                 ctx.beginPath();
@@ -2767,7 +2798,7 @@
                 ctx.stroke();
 
                 // Flattened crouching silhouette
-                ctx.fillStyle = '#f5f5f5';
+                ctx.fillStyle = themePalette.ink;
                 traceRoundedRect(x + 2, top + 3, 17, 9, 4.5);
                 ctx.fill();
 
@@ -2785,20 +2816,20 @@
                 ctx.lineTo(x + 26, top + 2);
                 ctx.fill();
 
-                // Emerald collar highlight
-                ctx.fillStyle = '#22c55e';
+                // Accent collar highlight
+                ctx.fillStyle = themePalette.accent;
                 ctx.fillRect(x + 13, top + 10, 4, 1.5);
 
-                // Visor & glowing emerald eyes
-                ctx.fillStyle = '#0d0d0d';
+                // Visor & glowing accent eyes
+                ctx.fillStyle = themePalette.visor;
                 traceRoundedRect(x + 19, top + 4, 8, 4.5, 2);
                 ctx.fill();
-                ctx.fillStyle = '#22c55e';
+                ctx.fillStyle = themePalette.accent;
                 ctx.fillRect(x + 21, top + 5.5, 2, 2);
                 ctx.fillRect(x + 24.5, top + 5.5, 2, 2);
 
                 // Scuttling legs
-                ctx.fillStyle = '#f5f5f5';
+                ctx.fillStyle = themePalette.ink;
                 const legShift = animFrame === 0 ? 0 : 3;
                 ctx.fillRect(x + 6 + legShift, groundY - 3, 3, 3);
                 ctx.fillRect(x + 16 - legShift, groundY - 3, 3, 3);
@@ -2809,7 +2840,7 @@
             const top = y - 26 + bob;
 
             // Tail
-            ctx.strokeStyle = '#f5f5f5';
+            ctx.strokeStyle = themePalette.ink;
             ctx.lineWidth = 2.2;
             ctx.lineCap = 'round';
             ctx.beginPath();
@@ -2819,7 +2850,7 @@
             ctx.stroke();
 
             // Torso
-            ctx.fillStyle = '#f5f5f5';
+            ctx.fillStyle = themePalette.ink;
             traceRoundedRect(x + 6, top + 12, 12, 10, 4);
             ctx.fill();
 
@@ -2842,32 +2873,32 @@
             traceRoundedRect(x + 4, top + 2, 16, 12, 5.5);
             ctx.fill();
 
-            // Emerald ear highlights
-            ctx.fillStyle = '#22c55e';
+            // Accent ear highlights
+            ctx.fillStyle = themePalette.accent;
             ctx.fillRect(x + 6.5, top + 1.5, 1.8, 1.8);
             ctx.fillRect(x + 15.8, top + 1.5, 1.8, 1.8);
 
             // Face visor
-            ctx.fillStyle = '#0d0d0d';
+            ctx.fillStyle = themePalette.visor;
             traceRoundedRect(x + 7, top + 5.5, 11, 5.5, 2.5);
             ctx.fill();
 
-            // Glowing emerald eyes
-            ctx.fillStyle = '#22c55e';
+            // Glowing accent eyes
+            ctx.fillStyle = themePalette.accent;
             ctx.fillRect(x + 9, top + 7.2, 2.2, 2.4);
             ctx.fillRect(x + 14, top + 7.2, 2.2, 2.4);
 
-            // Emerald collar accent
+            // Accent collar highlight
             ctx.fillRect(x + 8, top + 13.5, 8, 1.6);
 
             // Legs
-            ctx.fillStyle = '#f5f5f5';
+            ctx.fillStyle = themePalette.ink;
             if (!player.onGround) {
                 // Static mid-air jump pose
                 ctx.fillRect(x + 7, top + 20, 3, 4.5);
                 ctx.fillRect(x + 14, top + 19, 3, 4.5);
-                // Subtle emerald jump sparks
-                ctx.fillStyle = 'rgba(34, 197, 94, 0.75)';
+                // Subtle accent jump sparks
+                ctx.fillStyle = themePalette.accent;
                 ctx.fillRect(x + 6, top + 25.5, 3, 1.5);
                 ctx.fillRect(x + 14, top + 25, 3, 1.5);
             } else if (animFrame === 0) {
@@ -2885,14 +2916,14 @@
             if (kind === 'react') {
                 const cx = x + w / 2;
                 const cy = y + h / 2;
-                ctx.fillStyle = '#141414';
-                ctx.strokeStyle = '#262626';
+                ctx.fillStyle = themePalette.surface;
+                ctx.strokeStyle = themePalette.border;
                 ctx.lineWidth = 1;
                 traceRoundedRect(x, y, w, h, 5);
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.strokeStyle = '#f5f5f5';
+                ctx.strokeStyle = themePalette.ink;
                 ctx.lineWidth = 1.2;
                 for (let a = 0; a < 3; a++) {
                     ctx.save();
@@ -2903,7 +2934,7 @@
                     ctx.stroke();
                     ctx.restore();
                 }
-                ctx.fillStyle = '#22c55e';
+                ctx.fillStyle = themePalette.accent;
                 ctx.beginPath();
                 ctx.arc(cx, cy, 2.2, 0, Math.PI * 2);
                 ctx.fill();
@@ -2911,17 +2942,17 @@
             }
 
             if (kind === 'ts' || kind === 'js') {
-                ctx.fillStyle = '#141414';
-                ctx.strokeStyle = kind === 'ts' ? '#f5f5f5' : '#262626';
+                ctx.fillStyle = themePalette.surface;
+                ctx.strokeStyle = kind === 'ts' ? themePalette.ink : themePalette.border;
                 ctx.lineWidth = 1.2;
                 traceRoundedRect(x, y, w, h, 4);
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.fillStyle = '#22c55e';
+                ctx.fillStyle = themePalette.accent;
                 ctx.fillRect(x + 3, y + 3, kind === 'ts' ? 6 : 3, 2);
 
-                ctx.fillStyle = '#f5f5f5';
+                ctx.fillStyle = themePalette.ink;
                 ctx.font = '700 8.5px "Space Grotesk", monospace';
                 ctx.textAlign = 'right';
                 ctx.textBaseline = 'bottom';
@@ -2934,8 +2965,8 @@
                 const cy = y + h / 2;
                 const rx = w / 2 - 1;
                 const ry = h / 2 - 1;
-                ctx.fillStyle = '#141414';
-                ctx.strokeStyle = '#f5f5f5';
+                ctx.fillStyle = themePalette.surface;
+                ctx.strokeStyle = themePalette.ink;
                 ctx.lineWidth = 1.2;
                 ctx.beginPath();
                 ctx.moveTo(cx, cy - ry);
@@ -2948,10 +2979,10 @@
                 ctx.fill();
                 ctx.stroke();
 
-                ctx.fillStyle = '#22c55e';
+                ctx.fillStyle = themePalette.accent;
                 ctx.fillRect(cx - 4, y + 3, 8, 1.5);
 
-                ctx.fillStyle = '#f5f5f5';
+                ctx.fillStyle = themePalette.ink;
                 ctx.font = '700 8px "Space Grotesk", monospace';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
@@ -2961,7 +2992,7 @@
 
             if (kind === 'godot') {
                 // Sharp vector Godot-style robot silhouette
-                ctx.fillStyle = '#f5f5f5';
+                ctx.fillStyle = themePalette.ink;
                 traceRoundedRect(x + 2, y + 4, w - 4, h - 5, 5);
                 ctx.fill();
                 // Top gear notches
@@ -2969,23 +3000,23 @@
                 ctx.fillRect(x + w / 2 - 2, y, 4, 5);
                 ctx.fillRect(x + w - 8, y + 1, 4, 4);
                 // Eyes & visor line
-                ctx.fillStyle = '#0d0d0d';
+                ctx.fillStyle = themePalette.visor;
                 ctx.beginPath();
                 ctx.arc(x + 8, y + 11, 2.2, 0, Math.PI * 2);
                 ctx.arc(x + w - 8, y + 11, 2.2, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.fillStyle = '#22c55e';
+                ctx.fillStyle = themePalette.accent;
                 ctx.fillRect(x + 7.2, y + 10.2, 1.6, 1.6);
                 ctx.fillRect(x + w - 8.8, y + 10.2, 1.6, 1.6);
                 // Jaw line
-                ctx.fillStyle = '#0d0d0d';
+                ctx.fillStyle = themePalette.visor;
                 ctx.fillRect(x + 7, y + 17, w - 14, 1.6);
                 return;
             }
 
             // Default: '</>' code badge
-            ctx.fillStyle = '#141414';
-            ctx.strokeStyle = '#262626';
+            ctx.fillStyle = themePalette.surface;
+            ctx.strokeStyle = themePalette.border;
             ctx.lineWidth = 1.2;
             traceRoundedRect(x, y, w, h, 4);
             ctx.fill();
@@ -2996,11 +3027,11 @@
             ctx.textBaseline = 'middle';
             const midX = x + w / 2;
             const midY = y + h / 2 + 0.5;
-            ctx.fillStyle = '#f5f5f5';
+            ctx.fillStyle = themePalette.ink;
             ctx.fillText('<', midX - 6, midY);
-            ctx.fillStyle = '#22c55e';
+            ctx.fillStyle = themePalette.accent;
             ctx.fillText('/', midX, midY);
-            ctx.fillStyle = '#f5f5f5';
+            ctx.fillStyle = themePalette.ink;
             ctx.fillText('>', midX + 6, midY);
         }
 
@@ -3009,7 +3040,7 @@
             const midY = y + h / 2;
 
             // 2-frame flapping bat/bug wings
-            ctx.fillStyle = '#f5f5f5';
+            ctx.fillStyle = themePalette.ink;
             ctx.beginPath();
             if (animFrame === 0) {
                 // Wings swept up
@@ -3027,15 +3058,15 @@
             ctx.fill();
 
             // Drone body
-            ctx.fillStyle = '#141414';
-            ctx.strokeStyle = '#f5f5f5';
+            ctx.fillStyle = themePalette.surface;
+            ctx.strokeStyle = themePalette.ink;
             ctx.lineWidth = 1.2;
             traceRoundedRect(x + 3, midY - 4, w - 6, 8, 4);
             ctx.fill();
             ctx.stroke();
 
             // Merge-conflict antennae facing left
-            ctx.strokeStyle = '#22c55e';
+            ctx.strokeStyle = themePalette.accent;
             ctx.lineWidth = 1.2;
             ctx.beginPath();
             ctx.moveTo(x + 4, midY - 2);
@@ -3045,7 +3076,7 @@
             ctx.stroke();
 
             // Conflict eye
-            ctx.fillStyle = '#ef4444';
+            ctx.fillStyle = themePalette.danger;
             ctx.fillRect(x + 6, midY - 1.5, 3, 3);
         }
 
@@ -3286,6 +3317,17 @@
             intersectionObserver.observe(stage);
         }
 
+        if (window.MutationObserver) {
+            const onThemeMutation = () => {
+                syncThemePalette();
+                render();
+            };
+            const themeObserver = new MutationObserver(onThemeMutation);
+            themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-current-theme'] });
+        }
+
+        syncThemePalette();
         enterAutopilot();
     }
 

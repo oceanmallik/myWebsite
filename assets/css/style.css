@@ -2953,29 +2953,127 @@ body.theme-soft .back-to-top-btn:hover {
     display: none !important;
 }
 
-.git-runner-dot {
-    background-color: #22c55e;
-    box-shadow: 0 0 8px rgba(34, 197, 94, 0.75);
-}
-
 .git-runner-stage {
+    --gr-bg: #0d0d0d;
+    --gr-hud-bg: #111111;
+    --gr-surface: #141414;
+    --gr-border: #262626;
+    --gr-border-hover: #333333;
+    --gr-hud-border: #1f1f1f;
+    --gr-ink: #f5f5f5;
+    --gr-visor: #0d0d0d;
+    --gr-muted: #888888;
+    --gr-accent: #22c55e;
+    --gr-accent-soft: rgba(34, 197, 94, 0.35);
+    --gr-accent-border: rgba(34, 197, 94, 0.55);
+    --gr-accent-glow: rgba(34, 197, 94, 0.16);
+    --gr-track: #161616;
+    --gr-track-dot: #1f1f1f;
+    --gr-scrim: rgba(13, 13, 13, 0.16);
+    --gr-overlay-bg: rgba(13, 13, 13, 0.88);
+    --gr-btn-bg: rgba(20, 20, 20, 0.88);
+    --gr-btn-hover-bg: rgba(20, 20, 20, 0.96);
+    --gr-btn-border: #333333;
+    --gr-btn-shadow: rgba(0, 0, 0, 0.36);
+    --gr-danger: #ef4444;
+
     width: 100%;
     height: 132px;
     display: flex;
     flex-direction: column;
-    background: #0d0d0d;
-    border: 1px solid #262626;
+    background: var(--gr-bg);
+    border: 1px solid var(--gr-border);
     border-radius: 10px;
     overflow: hidden;
-    transition: border-color 150ms ease;
+    transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+body.theme-white .git-runner-stage,
+html.theme-white .git-runner-stage {
+    --gr-bg: #f8fafc;
+    --gr-hud-bg: #f1f5f9;
+    --gr-surface: #ffffff;
+    --gr-border: #e2e8f0;
+    --gr-border-hover: #cbd5e1;
+    --gr-hud-border: #e5e7eb;
+    --gr-ink: #111827;
+    --gr-visor: #f8fafc;
+    --gr-muted: #6b7280;
+    --gr-accent: #059669;
+    --gr-accent-soft: rgba(5, 150, 105, 0.35);
+    --gr-accent-border: rgba(5, 150, 105, 0.55);
+    --gr-accent-glow: rgba(5, 150, 105, 0.14);
+    --gr-track: #e2e8f0;
+    --gr-track-dot: #cbd5e1;
+    --gr-scrim: rgba(248, 250, 252, 0.14);
+    --gr-overlay-bg: rgba(248, 250, 252, 0.92);
+    --gr-btn-bg: rgba(255, 255, 255, 0.92);
+    --gr-btn-hover-bg: #ffffff;
+    --gr-btn-border: #cbd5e1;
+    --gr-btn-shadow: rgba(15, 23, 42, 0.12);
+}
+
+body.theme-soft .git-runner-stage,
+html.theme-soft .git-runner-stage {
+    --gr-bg: #fdf5ee;
+    --gr-hud-bg: #fae1cf;
+    --gr-surface: #fffaf6;
+    --gr-border: #ebd8c8;
+    --gr-border-hover: #d5c0ad;
+    --gr-hud-border: #ebd8c8;
+    --gr-ink: #1c1917;
+    --gr-visor: #fdf5ee;
+    --gr-muted: #78716c;
+    --gr-accent: #ea580c;
+    --gr-accent-soft: rgba(234, 88, 12, 0.35);
+    --gr-accent-border: rgba(234, 88, 12, 0.55);
+    --gr-accent-glow: rgba(234, 88, 12, 0.15);
+    --gr-track: #ebd8c8;
+    --gr-track-dot: #d5c0ad;
+    --gr-scrim: rgba(253, 245, 238, 0.14);
+    --gr-overlay-bg: rgba(253, 245, 238, 0.92);
+    --gr-btn-bg: rgba(255, 250, 246, 0.92);
+    --gr-btn-hover-bg: #fffaf6;
+    --gr-btn-border: #d5c0ad;
+    --gr-btn-shadow: rgba(28, 25, 23, 0.12);
+}
+
+body.theme-cyberpunk .git-runner-stage,
+html.theme-cyberpunk .git-runner-stage {
+    --gr-bg: #0f0821;
+    --gr-hud-bg: #221444;
+    --gr-surface: #1a1033;
+    --gr-border: #2d1d52;
+    --gr-border-hover: #483080;
+    --gr-hud-border: #2d1d52;
+    --gr-ink: #f5f3ff;
+    --gr-visor: #0f0821;
+    --gr-muted: #a7a1d1;
+    --gr-accent: #ffd400;
+    --gr-accent-soft: rgba(255, 212, 0, 0.35);
+    --gr-accent-border: rgba(255, 212, 0, 0.6);
+    --gr-accent-glow: rgba(255, 212, 0, 0.18);
+    --gr-track: #221444;
+    --gr-track-dot: #3b256b;
+    --gr-scrim: rgba(15, 8, 33, 0.18);
+    --gr-overlay-bg: rgba(15, 8, 33, 0.9);
+    --gr-btn-bg: rgba(26, 16, 51, 0.9);
+    --gr-btn-hover-bg: rgba(34, 20, 68, 0.96);
+    --gr-btn-border: #483080;
+    --gr-btn-shadow: rgba(0, 0, 0, 0.4);
+}
+
+.git-runner-dot {
+    background-color: var(--gr-accent);
+    box-shadow: 0 0 8px var(--gr-accent-soft);
 }
 
 .git-runner-stage:hover {
-    border-color: #333333;
+    border-color: var(--gr-border-hover);
 }
 
 .git-runner-stage.is-playing {
-    border-color: rgba(34, 197, 94, 0.45);
+    border-color: var(--gr-accent-border);
 }
 
 .git-runner-hud {
@@ -2986,11 +3084,12 @@ body.theme-soft .back-to-top-btn:hover {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    background: #111111;
-    border-bottom: 1px solid #1f1f1f;
+    background: var(--gr-hud-bg);
+    border-bottom: 1px solid var(--gr-hud-border);
     font-family: 'Space Grotesk', monospace;
     font-size: 0.68rem;
-    color: #888888;
+    color: var(--gr-muted);
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
 
 .git-runner-controls {
@@ -3014,11 +3113,11 @@ body.theme-soft .back-to-top-btn:hover {
 }
 
 .git-runner-hi {
-    color: #737373;
+    color: var(--gr-muted);
 }
 
 .git-runner-score {
-    color: #22c55e;
+    color: var(--gr-accent);
     font-weight: 700;
 }
 
@@ -3032,7 +3131,7 @@ body.theme-soft .back-to-top-btn:hover {
     justify-content: center;
     background: transparent;
     border: 1px solid transparent;
-    color: #888888;
+    color: var(--gr-muted);
     font-size: 0.7rem;
     line-height: 1;
     cursor: pointer;
@@ -3042,9 +3141,9 @@ body.theme-soft .back-to-top-btn:hover {
 .git-runner-close:hover,
 .git-runner-close:focus-visible {
     outline: none;
-    color: #f5f5f5;
-    background: #1f1f1f;
-    border-color: #262626;
+    color: var(--gr-ink);
+    background: var(--gr-surface);
+    border-color: var(--gr-border);
 }
 
 .git-runner-canvas-wrap {
@@ -3052,7 +3151,7 @@ body.theme-soft .back-to-top-btn:hover {
     flex: 1;
     width: 100%;
     min-height: 0;
-    background: #0d0d0d;
+    background: var(--gr-bg);
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
@@ -3076,9 +3175,9 @@ body.theme-soft .back-to-top-btn:hover {
     justify-content: center;
     padding: 4px 8px;
     border-radius: 5px;
-    background: rgba(20, 20, 20, 0.86);
-    border: 1px solid #262626;
-    color: #d4d4d4;
+    background: var(--gr-btn-bg);
+    border: 1px solid var(--gr-border);
+    color: var(--gr-ink);
     font-family: 'Space Grotesk', monospace;
     font-size: 0.64rem;
     font-weight: 600;
@@ -3090,9 +3189,9 @@ body.theme-soft .back-to-top-btn:hover {
 
 .git-runner-duck-btn.is-active,
 .git-runner-duck-btn:active {
-    border-color: #22c55e;
-    color: #22c55e;
-    background: rgba(34, 197, 94, 0.14);
+    border-color: var(--gr-accent);
+    color: var(--gr-accent);
+    background: var(--gr-accent-glow);
 }
 
 @media (hover: none), (pointer: coarse), (max-width: 768px) {
@@ -3113,7 +3212,7 @@ body.theme-soft .back-to-top-btn:hover {
     align-items: center;
     justify-content: center;
     padding: 8px;
-    background: rgba(13, 13, 13, 0.16);
+    background: var(--gr-scrim);
     cursor: pointer;
     touch-action: none;
     transition: background-color 150ms ease;
@@ -3122,7 +3221,7 @@ body.theme-soft .back-to-top-btn:hover {
 .git-runner-start-overlay:hover,
 .git-runner-start-overlay:focus-visible {
     outline: none;
-    background: rgba(13, 13, 13, 0.08);
+    background: transparent;
 }
 
 .git-runner-start-btn {
@@ -3131,27 +3230,27 @@ body.theme-soft .back-to-top-btn:hover {
     font-weight: 600;
     letter-spacing: 0.2px;
     gap: 7px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(20, 20, 20, 0.9));
-    background-color: rgba(20, 20, 20, 0.88);
-    border: 1px solid #333333;
-    color: #f5f5f5 !important;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.36);
+    background: var(--gr-btn-bg);
+    background-color: var(--gr-btn-bg);
+    border: 1px solid var(--gr-btn-border);
+    color: var(--gr-ink) !important;
+    box-shadow: 0 8px 20px var(--gr-btn-shadow);
     backdrop-filter: blur(4px);
 }
 
 .git-runner-start-icon {
     font-size: 0.65rem;
-    color: #22c55e;
+    color: var(--gr-accent);
     transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .git-runner-start-overlay:hover .git-runner-start-btn,
 .git-runner-start-overlay:focus-visible .git-runner-start-btn {
     transform: translateY(-2px);
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.18), rgba(20, 20, 20, 0.94));
-    border-color: rgba(34, 197, 94, 0.65);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(34, 197, 94, 0.16);
-    color: #ffffff !important;
+    background: var(--gr-btn-hover-bg);
+    border-color: var(--gr-accent-border);
+    box-shadow: 0 12px 24px var(--gr-btn-shadow), 0 0 16px var(--gr-accent-glow);
+    color: var(--gr-ink) !important;
 }
 
 .git-runner-start-overlay:hover .git-runner-start-btn::before,
@@ -3181,7 +3280,7 @@ body.theme-soft .back-to-top-btn:hover {
     justify-content: center;
     gap: 3px;
     padding: 8px;
-    background: rgba(13, 13, 13, 0.88);
+    background: var(--gr-overlay-bg);
     text-align: center;
     cursor: pointer;
 }
@@ -3191,20 +3290,20 @@ body.theme-soft .back-to-top-btn:hover {
     font-size: 0.74rem;
     font-weight: 700;
     letter-spacing: 0.04em;
-    color: #f5f5f5;
+    color: var(--gr-ink);
 }
 
 .git-runner-overlay-meta {
     font-family: 'Space Grotesk', monospace;
     font-size: 0.7rem;
     font-weight: 600;
-    color: #22c55e;
+    color: var(--gr-accent);
 }
 
 .git-runner-overlay-hint {
     font-family: 'Space Grotesk', monospace;
     font-size: 0.64rem;
-    color: #888888;
+    color: var(--gr-muted);
     margin-top: 1px;
 }
 
