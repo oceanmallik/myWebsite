@@ -175,22 +175,23 @@
             }
         }
 
-        /* Repo Card - Supabase Bento Feature Card style */
+        /* Repo Card - Developer Git Bento Card */
         .repo-card {
-            background-color: var(--bento-card-bg, #1c1c1c) !important;
-            background: var(--bento-card-bg, #1c1c1c) !important;
-            border: 1px solid var(--bento-card-border, #2a2a2a) !important;
-            border-radius: 16px !important;
-            padding: 24px !important;
+            background-color: var(--bento-card-bg, #141414) !important;
+            background: var(--bento-card-bg, #141414) !important;
+            border: 1px solid var(--bento-card-border, #222222) !important;
+            border-radius: 14px !important;
+            padding: 18px 20px !important;
             display: flex !important;
             flex-direction: column !important;
-            justify-content: space-between !important;
+            justify-content: flex-start !important;
+            gap: 12px;
             box-shadow: none !important;
-            transform: none !important;
-            transition: border-color 150ms ease, background-color 150ms ease !important;
+            transform: translateY(0) !important;
+            transition: border-color 150ms ease, transform 150ms ease, background-color 150ms ease !important;
             position: relative !important;
             overflow: hidden !important;
-            min-height: 240px;
+            min-height: 204px;
         }
 
         .repo-card::before,
@@ -199,8 +200,8 @@
         }
 
         .repo-card:hover {
-            border-color: var(--bento-card-border-hover, #3a3a3a) !important;
-            transform: none !important;
+            border-color: var(--bento-card-border-hover, #333333) !important;
+            transform: translateY(-2px) !important;
             box-shadow: none !important;
         }
 
@@ -209,60 +210,106 @@
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            gap: 0.75rem;
+            gap: 10px;
         }
 
         .repo-name-row {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             min-width: 0;
+            flex: 1;
+        }
+
+        .repo-icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--bento-card-badge-bg, #0e0e0e);
+            border: 1px solid var(--bento-card-badge-border, #1f1f1f);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: border-color 150ms ease;
         }
 
         .repo-icon {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            flex-shrink: 0;
-            transition: color 0.2s ease;
+            color: var(--bento-card-icon, #9c9c9c);
+            font-size: 0.9rem;
+            transition: color 150ms ease;
+        }
+
+        .repo-card:hover .repo-icon-box {
+            border-color: var(--bento-card-border-hover, #333333);
         }
 
         .repo-card:hover .repo-icon {
             color: var(--primary-color);
         }
 
+        .repo-title-group {
+            min-width: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .repo-title-line {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
         .repo-name {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
             font-weight: 700;
-            font-size: 0.98rem;
-            color: var(--primary-color);
+            font-size: 0.96rem;
+            color: var(--bento-card-title, #ffffff);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            transition: opacity 0.2s ease;
+            text-decoration: none;
+            transition: color 150ms ease;
         }
 
         .repo-name:hover {
-            opacity: 0.8;
-            text-decoration: underline;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .repo-sub-meta {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.7rem;
+            color: var(--bento-card-desc, #888888);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .repo-fork-badge {
             display: inline-flex;
             align-items: center;
             gap: 3px;
-            font-size: 0.68rem;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.64rem;
             font-weight: 600;
-            color: var(--text-muted);
-            background: rgba(128,128,128,0.12);
-            border: 1px solid rgba(128,128,128,0.2);
-            border-radius: 4px;
-            padding: 1px 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--bento-card-desc, #888888);
+            background: var(--bento-card-badge-bg, #0e0e0e);
+            border: 1px solid var(--bento-card-badge-border, #1f1f1f);
+            border-radius: 999px;
+            padding: 1px 7px;
             white-space: nowrap;
             flex-shrink: 0;
         }
 
         .repo-card-actions {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-shrink: 0;
             align-items: center;
         }
@@ -271,15 +318,15 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: rgba(128,128,128,0.06);
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            border: 1px solid var(--bento-card-badge-border, #1f1f1f);
+            background: var(--bento-card-badge-bg, #0e0e0e);
+            color: var(--bento-card-icon, #9c9c9c);
+            font-size: 0.82rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
             text-decoration: none;
         }
 
@@ -291,41 +338,45 @@
 
         /* Description */
         .repo-description {
-            font-size: 0.86rem;
-            color: var(--text-muted);
+            font-size: 0.84rem;
+            color: var(--bento-card-desc, #888888);
             line-height: 1.55;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-            max-height: calc(1.55em * 2);
         }
 
         .repo-description.empty {
             font-style: italic;
-            opacity: 0.5;
+            opacity: 0.65;
         }
 
         /* Topics / Tags */
         .repo-topics {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
-            min-height: 0;
+            gap: 6px;
+            margin-top: auto;
         }
 
         .repo-topic {
-            display: inline-block;
-            padding: 2px 9px;
-            border-radius: 999px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            background: color-mix(in srgb, var(--primary-color) 14%, transparent);
-            color: var(--primary-color);
-            border: 1px solid color-mix(in srgb, var(--primary-color) 28%, transparent);
-            transition: background 0.2s ease;
-            cursor: default;
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.69rem;
+            font-weight: 500;
+            background: var(--bento-card-badge-bg, #0e0e0e);
+            color: var(--bento-card-check-text, #d0d0d0);
+            border: 1px solid var(--bento-card-badge-border, #1f1f1f);
+            transition: border-color 150ms ease, color 150ms ease;
         }
 
-        .repo-topic:hover {
-            background: color-mix(in srgb, var(--primary-color) 24%, transparent);
+        .repo-card:hover .repo-topic {
+            border-color: var(--bento-card-border-hover, #333333);
         }
 
         /* Card Footer */
@@ -334,16 +385,20 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid var(--glass-border);
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 1px solid var(--bento-card-border, #222222);
             margin-top: auto;
+        }
+
+        .repo-topics + .repo-card-footer {
+            margin-top: 2px;
         }
 
         .repo-meta {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
@@ -351,17 +406,19 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            transition: color 0.2s ease;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.74rem;
+            color: var(--bento-card-desc, #888888);
+            font-variant-numeric: tabular-nums;
+            transition: color 150ms ease;
         }
 
         .repo-stat:hover {
-            color: var(--text-title);
+            color: var(--bento-card-title, #ffffff);
         }
 
         .repo-stat i {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
         }
 
         .repo-stat.stars i {
@@ -375,16 +432,32 @@
         .repo-lang {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.76rem;
-            color: var(--text-muted);
+            gap: 6px;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: var(--bento-card-check-text, #d0d0d0);
         }
 
         .lang-dot {
-            width: 10px;
-            height: 10px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
             flex-shrink: 0;
+        }
+
+        .repo-footer-right {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .repo-updated {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.7rem;
+            color: var(--bento-card-desc, #888888);
+            white-space: nowrap;
         }
 
         /* Contributors */
@@ -392,7 +465,6 @@
             display: inline-flex;
             align-items: center;
             flex-shrink: 0;
-            margin-left: 6px;
             vertical-align: middle;
         }
 
@@ -1307,25 +1379,24 @@
             skeletonGrid.innerHTML = '';
             for (let i = 0; i < count; i++) {
                 skeletonGrid.innerHTML += `
-                    <div class="card bento-card repo-skeleton" style="min-height: 240px; display: flex; flex-direction: column; justify-content: space-between;">
-                        <div class="card-main">
-                            <div class="skeleton-line title" style="height: 18px; width: 140px; border-radius: 4px; background: var(--bento-card-border, #262626); margin-bottom: 12px;"></div>
-                            <div class="skeleton-line body" style="height: 14px; width: 55%; border-radius: 4px; background: var(--bento-card-badge-bg, #222222); margin-bottom: 8px;"></div>
-                            <div class="skeleton-line body short" style="height: 14px; width: 40%; border-radius: 4px; background: var(--bento-card-badge-bg, #222222);"></div>
-                        </div>
-                        <div class="card-illustration" aria-hidden="true">
-                            <div class="concentric-squares">
-                                <span class="concentric-square square-1"></span>
-                                <span class="concentric-square square-2"></span>
-                                <span class="concentric-square square-3"></span>
-                                <span class="concentric-square square-4"></span>
+                    <div class="repo-skeleton" style="min-height: 204px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+                                <div class="skeleton-line" style="width: 32px; height: 32px; border-radius: 8px;"></div>
+                                <div class="skeleton-line title" style="height: 16px; width: 52%;"></div>
                             </div>
+                            <div class="skeleton-line" style="width: 30px; height: 30px; border-radius: 8px;"></div>
                         </div>
-                        <ul class="card-checklist">
-                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 60%; border-radius: 4px; background: var(--bento-card-badge-bg, #222222);"></span></li>
-                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 45%; border-radius: 4px; background: var(--bento-card-badge-bg, #222222);"></span></li>
-                            <li class="card-checklist-item"><span class="skeleton-line" style="height: 14px; width: 70%; border-radius: 4px; background: var(--bento-card-badge-bg, #222222);"></span></li>
-                        </ul>
+                        <div class="skeleton-line body" style="height: 13px; width: 92%;"></div>
+                        <div class="skeleton-line body short" style="height: 13px; width: 68%;"></div>
+                        <div class="skeleton-tags">
+                            <span class="skeleton-line tag"></span>
+                            <span class="skeleton-line tag"></span>
+                        </div>
+                        <div class="skeleton-footer" style="justify-content: space-between;">
+                            <div class="skeleton-line" style="height: 12px; width: 110px;"></div>
+                            <div class="skeleton-line" style="height: 12px; width: 64px;"></div>
+                        </div>
                     </div>`;
             }
         }
@@ -1783,57 +1854,152 @@
 
         function buildRepoCard(repo) {
             const updatedAgo = timeAgo(repo.updated_at || repo.pushed_at || Date.now());
-            const isFeatured = ((repo.stargazers_count || 0) > 0 || (repo.forks_count || 0) > 0);
+            const langName = repo.language || 'Multi-stack';
+            const langColor = LANG_COLORS[repo.language] || '#888888';
 
-            let desc = repo.description || 'Open source software repository hosted on GitHub.';
-            let descHtml = desc;
-            try {
-                descHtml = window.formatDescriptionWithKeyPhrase
-                    ? window.formatDescriptionWithKeyPhrase(desc, [repo.language, 'open source', 'repository'])
-                    : (desc.includes('<strong>') ? desc : `<strong>${escapeHtml(desc)}</strong>`);
-            } catch (_) {
-                descHtml = desc.includes('<strong>') ? desc : `<strong>${escapeHtml(desc)}</strong>`;
+            const card = document.createElement('article');
+            card.className = 'repo-card';
+            card.setAttribute('data-repo', repo.full_name || repo.name || '');
+
+            // 1. Top Header Row
+            const top = document.createElement('div');
+            top.className = 'repo-card-top';
+
+            const nameRow = document.createElement('div');
+            nameRow.className = 'repo-name-row';
+
+            const iconBox = document.createElement('span');
+            iconBox.className = 'repo-icon-box';
+            iconBox.setAttribute('aria-hidden', 'true');
+            iconBox.innerHTML = `<i class="${repo.fork ? 'fas fa-code-branch' : 'fas fa-book-bookmark'} repo-icon"></i>`;
+
+            const titleGroup = document.createElement('div');
+            titleGroup.className = 'repo-title-group';
+
+            const titleLine = document.createElement('div');
+            titleLine.className = 'repo-title-line';
+
+            const nameLink = document.createElement('a');
+            nameLink.className = 'repo-name';
+            nameLink.href = repo.html_url || '#';
+            nameLink.target = '_blank';
+            nameLink.rel = 'noopener noreferrer';
+            nameLink.textContent = repo.name || 'repository';
+            nameLink.title = repo.full_name || repo.name || '';
+            titleLine.appendChild(nameLink);
+
+            if (repo.fork) {
+                const forkBadge = document.createElement('span');
+                forkBadge.className = 'repo-fork-badge';
+                forkBadge.innerHTML = '<i class="fas fa-code-branch" aria-hidden="true"></i> Fork';
+                titleLine.appendChild(forkBadge);
             }
+
+            const subMeta = document.createElement('div');
+            subMeta.className = 'repo-sub-meta';
+            subMeta.textContent = repo.full_name || `${GITHUB_USERNAME}/${repo.name || ''}`;
+
+            titleGroup.appendChild(titleLine);
+            titleGroup.appendChild(subMeta);
+            nameRow.appendChild(iconBox);
+            nameRow.appendChild(titleGroup);
+
+            const actions = document.createElement('div');
+            actions.className = 'repo-card-actions';
+
+            if (repo.homepage) {
+                const liveBtn = document.createElement('a');
+                liveBtn.className = 'repo-action-btn';
+                liveBtn.href = repo.homepage;
+                liveBtn.target = '_blank';
+                liveBtn.rel = 'noopener noreferrer';
+                liveBtn.title = `Live Site: ${formatUrl(repo.homepage)}`;
+                liveBtn.setAttribute('aria-label', `Open live site for ${repo.name}`);
+                liveBtn.innerHTML = '<i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>';
+                actions.appendChild(liveBtn);
+            }
+
+            const ghBtn = document.createElement('a');
+            ghBtn.className = 'repo-action-btn';
+            ghBtn.href = repo.html_url || '#';
+            ghBtn.target = '_blank';
+            ghBtn.rel = 'noopener noreferrer';
+            ghBtn.title = 'Open on GitHub';
+            ghBtn.setAttribute('aria-label', `View ${repo.name} on GitHub`);
+            ghBtn.innerHTML = '<i class="fab fa-github" aria-hidden="true"></i>';
+            actions.appendChild(ghBtn);
+
+            top.appendChild(nameRow);
+            top.appendChild(actions);
+            card.appendChild(top);
+
+            // 2. Description
+            const descP = document.createElement('p');
+            if (repo.description) {
+                descP.className = 'repo-description';
+                descP.textContent = repo.description;
+            } else {
+                descP.className = 'repo-description empty';
+                descP.textContent = 'Open-source repository hosted on GitHub.';
+            }
+            card.appendChild(descP);
+
+            // 3. Topics (up to 4)
+            const topics = Array.isArray(repo.topics) ? repo.topics.slice(0, 4) : [];
+            if (topics.length > 0) {
+                const topicsWrap = document.createElement('div');
+                topicsWrap.className = 'repo-topics';
+                topics.forEach((topic) => {
+                    const tag = document.createElement('span');
+                    tag.className = 'repo-topic';
+                    tag.textContent = topic;
+                    topicsWrap.appendChild(tag);
+                });
+                card.appendChild(topicsWrap);
+            }
+
+            // 4. Footer (Language dot, Stars, Forks, Contributors & Updated)
+            const footer = document.createElement('div');
+            footer.className = 'repo-card-footer';
+
+            const meta = document.createElement('div');
+            meta.className = 'repo-meta';
+
+            const langSpan = document.createElement('span');
+            langSpan.className = 'repo-lang';
+            langSpan.innerHTML = `<span class="lang-dot" style="background:${langColor};" aria-hidden="true"></span><span>${escapeHtml(langName)}</span>`;
+            meta.appendChild(langSpan);
+
+            const starsSpan = document.createElement('span');
+            starsSpan.className = 'repo-stat stars';
+            starsSpan.title = `${repo.stargazers_count || 0} stars`;
+            starsSpan.innerHTML = `<i class="fas fa-star" aria-hidden="true"></i><span>${formatNum(repo.stargazers_count || 0)}</span>`;
+            meta.appendChild(starsSpan);
+
+            const forksSpan = document.createElement('span');
+            forksSpan.className = 'repo-stat forks';
+            forksSpan.title = `${repo.forks_count || 0} forks`;
+            forksSpan.innerHTML = `<i class="fas fa-code-fork" aria-hidden="true"></i><span>${formatNum(repo.forks_count || 0)}</span>`;
+            meta.appendChild(forksSpan);
+
+            footer.appendChild(meta);
+
+            const footerRight = document.createElement('div');
+            footerRight.className = 'repo-footer-right';
 
             const contributors = contributorsCache[repo.full_name] || repo.contributors;
-            const contributorsEl = (contributors && contributors.length > 0)
-                ? buildContributorAvatars(contributors)
-                : null;
-
-            const siteLinkHtml = repo.homepage
-                ? ` • <a href="${escapeHtml(repo.homepage)}" target="_blank" rel="noopener noreferrer" class="card-inline-link">Live Site</a>`
-                : '';
-
-            const checklist = [
-                { html: `Language: <strong>${escapeHtml(repo.language || 'Multi-stack')}</strong>` },
-                { html: `Metrics: <strong>${formatNum(repo.stargazers_count || 0)} stars</strong> • <strong>${formatNum(repo.forks_count || 0)} forks</strong>` },
-                { html: `Activity: Updated ${updatedAgo} • <a href="${escapeHtml(repo.html_url)}" target="_blank" rel="noopener noreferrer" class="card-inline-link">GitHub</a>${siteLinkHtml}` }
-            ];
-
-            let card;
-            if (window.createBentoCard) {
-                card = window.createBentoCard({
-                    iconClass: 'fab fa-github',
-                    title: repo.name,
-                    titleUrl: repo.html_url,
-                    headerRightEl: contributorsEl,
-                    descriptionHtml: descHtml,
-                    graphicIcon: 'fab fa-github',
-                    checklist,
-                    className: 'repo-card',
-                    colSpan2: false,
-                    dataset: { repo: repo.full_name }
-                });
-            } else {
-                card = document.createElement('div');
-                card.className = 'repo-card';
-                card.setAttribute('data-repo', repo.full_name);
+            if (contributors && contributors.length > 0) {
+                footerRight.appendChild(buildContributorAvatars(contributors));
             }
 
-            if (contributorsEl && !card.querySelector('.card-header .repo-contributors')) {
-                const header = card.querySelector('.card-header');
-                if (header) header.appendChild(contributorsEl);
-            }
+            const updatedSpan = document.createElement('span');
+            updatedSpan.className = 'repo-updated';
+            updatedSpan.textContent = updatedAgo;
+            updatedSpan.title = `Updated ${updatedAgo}`;
+            footerRight.appendChild(updatedSpan);
+
+            footer.appendChild(footerRight);
+            card.appendChild(footer);
 
             return card;
         }
