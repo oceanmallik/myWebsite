@@ -210,15 +210,39 @@
                         </a>
                     </div>
 
-                    <!-- Bottom Status Bar -->
-                    <div class="bento-card-bottom">
-                        <div class="bento-bottom-status" id="bento-bottom-status">
-                            <span class="bento-pulse-dot" aria-hidden="true"></span>
-                            <span id="bento-status-text">Open for software engineering internships</span>
+                    <!-- Bottom Interactive Git Runner Widget -->
+                    <div class="bento-card-bottom bento-runner-slot" id="git-runner-widget">
+                        <div class="git-runner-stage" id="git-runner-stage">
+                            <div class="git-runner-hud">
+                                <span class="git-runner-controls" id="git-runner-controls" aria-hidden="true">AUTO • ↑ Jump • ↓ Duck</span>
+                                <div class="git-runner-hud-right">
+                                    <span class="git-runner-score-group">
+                                        <span class="git-runner-hi" id="git-runner-hi">HI 0000</span>
+                                        <span class="git-runner-score" id="git-runner-score">0000</span>
+                                    </span>
+                                    <button type="button" class="git-runner-close" id="git-runner-close" title="Return to Autopilot" aria-label="Return to Autopilot" hidden>
+                                        <span aria-hidden="true">✕</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="git-runner-canvas-wrap" id="git-runner-canvas-wrap">
+                                <canvas class="git-runner-canvas" id="git-runner-canvas" aria-label="Git Runner endless runner mini-game"></canvas>
+                                <button type="button" class="git-runner-duck-btn" id="git-runner-duck-btn" aria-label="Hold to duck" hidden>
+                                    <span>↓ Duck</span>
+                                </button>
+                                <div class="git-runner-start-overlay" id="git-runner-start-overlay" role="button" tabindex="0" aria-label="Tap or press Space to start Git Runner">
+                                    <span class="btn btn-outline git-runner-start-btn">
+                                        <i class="fas fa-play git-runner-start-icon" aria-hidden="true"></i>
+                                        <span class="git-runner-start-text">Tap or Press Space</span>
+                                    </span>
+                                </div>
+                                <div class="git-runner-overlay" id="git-runner-overlay" hidden>
+                                    <div class="git-runner-overlay-title">MERGE CONFLICT // GAME OVER</div>
+                                    <div class="git-runner-overlay-meta" id="git-runner-final-score">SCORE 0000</div>
+                                    <div class="git-runner-overlay-hint">Press SPACE or TAP to Retry</div>
+                                </div>
+                            </div>
                         </div>
-                        <a href="https://link.oceanmallik.com/" target="_blank" rel="noopener noreferrer" class="bento-arrow-btn" id="bento-arrow-btn" title="Explore All Links" aria-label="Explore All Links">
-                            <i class="fas fa-arrow-up-right-from-square"></i>
-                        </a>
                     </div>
                 </div>
             </div>

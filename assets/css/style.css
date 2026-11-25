@@ -2938,6 +2938,296 @@ body.theme-soft .back-to-top-btn:hover {
     transform: translateY(-1px);
 }
 
+/* Git Runner Mini-Game Widget inside Hero Bento Card */
+.bento-runner-slot {
+    display: block;
+    width: 100%;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-color);
+}
+
+.git-runner-close[hidden],
+.git-runner-duck-btn[hidden],
+.git-runner-start-overlay[hidden],
+.git-runner-overlay[hidden] {
+    display: none !important;
+}
+
+.git-runner-dot {
+    background-color: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.75);
+}
+
+.git-runner-stage {
+    width: 100%;
+    height: 132px;
+    display: flex;
+    flex-direction: column;
+    background: #0d0d0d;
+    border: 1px solid #262626;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 150ms ease;
+}
+
+.git-runner-stage:hover {
+    border-color: #333333;
+}
+
+.git-runner-stage.is-playing {
+    border-color: rgba(34, 197, 94, 0.45);
+}
+
+.git-runner-hud {
+    height: 26px;
+    padding: 0 8px 0 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #111111;
+    border-bottom: 1px solid #1f1f1f;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.68rem;
+    color: #888888;
+}
+
+.git-runner-controls {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.git-runner-hud-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.git-runner-score-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-variant-numeric: tabular-nums;
+}
+
+.git-runner-hi {
+    color: #737373;
+}
+
+.git-runner-score {
+    color: #22c55e;
+    font-weight: 700;
+}
+
+.git-runner-close {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #888888;
+    font-size: 0.7rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+
+.git-runner-close:hover,
+.git-runner-close:focus-visible {
+    outline: none;
+    color: #f5f5f5;
+    background: #1f1f1f;
+    border-color: #262626;
+}
+
+.git-runner-canvas-wrap {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    background: #0d0d0d;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.git-runner-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    touch-action: none;
+}
+
+.git-runner-duck-btn {
+    position: absolute;
+    right: 8px;
+    bottom: 6px;
+    z-index: 2;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border-radius: 5px;
+    background: rgba(20, 20, 20, 0.86);
+    border: 1px solid #262626;
+    color: #d4d4d4;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.64rem;
+    font-weight: 600;
+    cursor: pointer;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.git-runner-duck-btn.is-active,
+.git-runner-duck-btn:active {
+    border-color: #22c55e;
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.14);
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 768px) {
+    .git-runner-duck-btn {
+        display: inline-flex;
+    }
+}
+
+.git-runner-canvas-wrap.has-touch .git-runner-duck-btn {
+    display: inline-flex;
+}
+
+.git-runner-start-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    background: rgba(13, 13, 13, 0.16);
+    cursor: pointer;
+    touch-action: none;
+    transition: background-color 150ms ease;
+}
+
+.git-runner-start-overlay:hover,
+.git-runner-start-overlay:focus-visible {
+    outline: none;
+    background: rgba(13, 13, 13, 0.08);
+}
+
+.git-runner-start-btn {
+    padding: 7px 15px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    gap: 7px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(20, 20, 20, 0.9));
+    background-color: rgba(20, 20, 20, 0.88);
+    border: 1px solid #333333;
+    color: #f5f5f5 !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.36);
+    backdrop-filter: blur(4px);
+}
+
+.git-runner-start-icon {
+    font-size: 0.65rem;
+    color: #22c55e;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.git-runner-start-overlay:hover .git-runner-start-btn,
+.git-runner-start-overlay:focus-visible .git-runner-start-btn {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.18), rgba(20, 20, 20, 0.94));
+    border-color: rgba(34, 197, 94, 0.65);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(34, 197, 94, 0.16);
+    color: #ffffff !important;
+}
+
+.git-runner-start-overlay:hover .git-runner-start-btn::before,
+.git-runner-start-overlay:focus-visible .git-runner-start-btn::before {
+    opacity: 1;
+}
+
+.git-runner-start-overlay:active .git-runner-start-btn {
+    transform: translateY(0) scale(0.985);
+}
+
+.git-runner-start-overlay:hover .git-runner-start-icon {
+    transform: translateX(1px);
+}
+
+.git-runner-start-text {
+    white-space: nowrap;
+}
+
+.git-runner-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 8px;
+    background: rgba(13, 13, 13, 0.88);
+    text-align: center;
+    cursor: pointer;
+}
+
+.git-runner-overlay-title {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #f5f5f5;
+}
+
+.git-runner-overlay-meta {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #22c55e;
+}
+
+.git-runner-overlay-hint {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.64rem;
+    color: #888888;
+    margin-top: 1px;
+}
+
+@keyframes gitRunnerStageIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes gitRunnerFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 /* Light Theme overrides for Bento Card */
 body.theme-white .hero-bento-card,
 body.theme-soft .hero-bento-card {

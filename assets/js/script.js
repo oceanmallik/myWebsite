@@ -1981,23 +1981,6 @@
                     }
                 }
 
-                // Bottom Status Text
-                const statusTextEl = document.getElementById('bento-status-text');
-                if (statusTextEl && bc.statusText) {
-                    statusTextEl.textContent = bc.statusText;
-                }
-
-                // Bottom Arrow Link Button
-                const arrowBtn = document.getElementById('bento-arrow-btn');
-                if (arrowBtn && bc.linkBtn) {
-                    if (bc.linkBtn.url) arrowBtn.href = bc.linkBtn.url;
-                    if (bc.linkBtn.title) {
-                        arrowBtn.title = bc.linkBtn.title;
-                        arrowBtn.setAttribute('aria-label', bc.linkBtn.title);
-                    }
-                    if (bc.linkBtn.target) arrowBtn.target = bc.linkBtn.target;
-                    if (bc.linkBtn.target === '_blank') arrowBtn.rel = 'noopener noreferrer';
-                }
             }
         }).catch((err) => {
             console.warn('Could not load intro.json data:', err);
@@ -2227,6 +2210,956 @@
         }
     }
 
+    /* --- Git Runner Endless Runner Mini-Game Widget --- */
+    function initGitRunner() {
+        const widget = document.getElementById('git-runner-widget');
+        const stage = document.getElementById('git-runner-stage');
+        const controlsEl = document.getElementById('git-runner-controls');
+        const closeBtn = document.getElementById('git-runner-close');
+        const canvasWrap = document.getElementById('git-runner-canvas-wrap');
+        const canvas = document.getElementById('git-runner-canvas');
+        const duckBtn = document.getElementById('git-runner-duck-btn');
+        const scoreEl = document.getElementById('git-runner-score');
+        const hiEl = document.getElementById('git-runner-hi');
+        const startOverlay = document.getElementById('git-runner-start-overlay');
+        const overlay = document.getElementById('git-runner-overlay');
+        const finalScoreEl = document.getElementById('git-runner-final-score');
+
+        if (!widget || !stage || !canvas || !canvasWrap || !startOverlay) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const STORAGE_KEY = 'gitRunnerHighScore';
+        const GRAVITY = 1550;
+        const FAST_FALL_GRAVITY = 3200;
+        const JUMP_VELOCITY = -450;
+        const BASE_SPEED = 205;
+        const MAX_SPEED = 430;
+        const FLYING_SCORE_THRESHOLD = 120;
+
+        const GROUND_OBSTACLE_SPECS = [
+            { kind: 'react', w: 24, h: 24 },
+            { kind: 'ts', w: 22, h: 22 },
+            { kind: 'cpp', w: 26, h: 23 },
+            { kind: 'godot', w: 24, h: 24 },
+            { kind: 'js', w: 22, h: 22 },
+            { kind: 'code', w: 28, h: 20 }
+        ];
+
+        // mode: 'autopilot' | 'playing' | 'gameover'
+        let mode = 'autopilot';
+        let gameOverAt = 0;
+        let rafId = null;
+        let lastTime = 0;
+        let isInViewport = true;
+        let resizeObserver = null;
+        let intersectionObserver = null;
+
+        let viewW = 360;
+        let viewH = 104;
+        let groundY = 88;
+
+        let scoreFloat = 0;
+        let score = 0;
+        let highScore = readHighScore();
+        let isNewHigh = false;
+        let speed = BASE_SPEED;
+        let groundOffset = 0;
+        let animTimer = 0;
+        let animFrame = 0;
+        let spawnGap = 100;
+        let demoSpawnCount = 0;
+        let obstacles = [];
+
+        let keyDuck = false;
+        let touchDuck = false;
+        let swipeDuckTimer = 0;
+        let touchStartY = null;
+
+        const player = {
+            x: 28,
+            y: 88,
+            vy: 0,
+            onGround: true,
+            ducking: false
+        };
+
+        function readHighScore() {
+            try {
+                const raw = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+                return Number.isFinite(raw) && raw > 0 ? raw : 0;
+            } catch (e) {
+                return 0;
+            }
+        }
+
+        function writeHighScore(val) {
+            try {
+                localStorage.setItem(STORAGE_KEY, String(val));
+            } catch (e) {
+                // Ignore storage failures in restricted contexts
+            }
+        }
+
+        function formatScore(val) {
+            return String(Math.max(0, Math.floor(val))).padStart(4, '0');
+        }
+
+        function updateHudScores() {
+            if (scoreEl) scoreEl.textContent = formatScore(score);
+            if (hiEl) hiEl.textContent = `HI ${formatScore(highScore)}`;
+        }
+
+        function syncCanvasSize() {
+            const w = Math.max(220, canvasWrap.clientWidth || 360);
+            const h = Math.max(80, canvasWrap.clientHeight || 104);
+            const dpr = Math.min(window.devicePixelRatio || 1, 3);
+            const targetW = Math.round(w * dpr);
+            const targetH = Math.round(h * dpr);
+
+            if (canvas.width !== targetW || canvas.height !== targetH) {
+                canvas.width = targetW;
+                canvas.height = targetH;
+            }
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            const prevGroundY = groundY;
+            viewW = w;
+            viewH = h;
+            groundY = Math.round(viewH - 16);
+
+            if (player.onGround) {
+                player.y = groundY;
+            } else {
+                player.y += groundY - prevGroundY;
+            }
+        }
+
+        function resetWorld(forAutopilot) {
+            isNewHigh = false;
+            scoreFloat = 0;
+            score = 0;
+            speed = forAutopilot ? BASE_SPEED + 18 : BASE_SPEED;
+            groundOffset = 0;
+            animTimer = 0;
+            animFrame = 0;
+            demoSpawnCount = 0;
+            obstacles = [];
+            spawnGap = forAutopilot
+                ? Math.min(110, viewW * 0.35)
+                : Math.max(170, viewW * 0.52);
+
+            keyDuck = false;
+            touchDuck = false;
+            swipeDuckTimer = 0;
+            if (duckBtn) duckBtn.classList.remove('is-active');
+
+            player.y = groundY;
+            player.vy = 0;
+            player.onGround = true;
+            player.ducking = false;
+
+            if (overlay) overlay.hidden = true;
+            updateHudScores();
+        }
+
+        function triggerJump() {
+            if (mode === 'gameover') return;
+            if (player.onGround) {
+                player.vy = JUMP_VELOCITY;
+                player.onGround = false;
+                player.ducking = false;
+                swipeDuckTimer = 0;
+            }
+        }
+
+        function triggerRetry() {
+            if (mode !== 'gameover') return;
+            if (performance.now() - gameOverAt < 180) return;
+            startPlaying();
+        }
+
+        function spawnObstacle() {
+            const canSpawnFlying = mode === 'autopilot'
+                ? demoSpawnCount >= 2
+                : score >= FLYING_SCORE_THRESHOLD;
+            demoSpawnCount += 1;
+
+            if (canSpawnFlying && Math.random() < 0.34) {
+                const isHigh = Math.random() < 0.58;
+                const h = 15;
+                // High drone passes cleanly above ducking runner (top = groundY - 15) while hitting standing runner (top = groundY - 26)
+                const y = isHigh ? groundY - 33 : groundY - 19;
+                obstacles.push({
+                    type: 'flying',
+                    isHigh: isHigh,
+                    x: viewW + 14,
+                    y: y,
+                    w: 24,
+                    h: h
+                });
+            } else {
+                const spec = GROUND_OBSTACLE_SPECS[Math.floor(Math.random() * GROUND_OBSTACLE_SPECS.length)];
+                obstacles.push({
+                    type: 'ground',
+                    kind: spec.kind,
+                    x: viewW + 14,
+                    y: groundY - spec.h,
+                    w: spec.w,
+                    h: spec.h
+                });
+            }
+
+            const minGap = speed * 0.72 + 44;
+            const maxGap = speed * 1.18 + 96;
+            spawnGap = minGap + Math.random() * (maxGap - minGap);
+        }
+
+        function getAutopilotDecision() {
+            let wantsDuck = false;
+            let nearest = null;
+            let minDist = Infinity;
+
+            for (let i = 0; i < obstacles.length; i++) {
+                const obs = obstacles[i];
+                if (obs.x + obs.w < player.x + 2) continue;
+                const dist = obs.x - (player.x + 22);
+                if (dist < minDist) {
+                    minDist = dist;
+                    nearest = obs;
+                }
+            }
+
+            if (nearest) {
+                if (nearest.type === 'flying' && nearest.isHigh) {
+                    if (minDist < speed * 0.28 && nearest.x + nearest.w > player.x + 2) {
+                        wantsDuck = true;
+                    }
+                } else {
+                    const jumpLead = speed * 0.23;
+                    if (player.onGround && minDist > -4 && minDist <= jumpLead) {
+                        triggerJump();
+                    }
+                }
+            }
+
+            return wantsDuck;
+        }
+
+        function getPlayerHitbox() {
+            if (player.onGround && player.ducking) {
+                return {
+                    x: player.x + 3,
+                    y: groundY - 13,
+                    w: 24,
+                    h: 12
+                };
+            }
+            return {
+                x: player.x + 4,
+                y: player.y - 23,
+                w: 15,
+                h: 21
+            };
+        }
+
+        function boxesOverlap(a, b) {
+            return (
+                a.x < b.x + b.w &&
+                a.x + a.w > b.x &&
+                a.y < b.y + b.h &&
+                a.y + a.h > b.y
+            );
+        }
+
+        function handleGameOver() {
+            mode = 'gameover';
+            gameOverAt = performance.now();
+            stopLoop();
+
+            if (score > highScore) {
+                highScore = score;
+                isNewHigh = true;
+                writeHighScore(highScore);
+            }
+            updateHudScores();
+
+            if (finalScoreEl) {
+                finalScoreEl.textContent = isNewHigh
+                    ? `NEW HI // SCORE ${formatScore(score)}`
+                    : `SCORE ${formatScore(score)}`;
+            }
+            if (overlay) overlay.hidden = false;
+        }
+
+        function update(dt) {
+            let wantsDuck = false;
+            if (mode === 'autopilot') {
+                wantsDuck = getAutopilotDecision();
+            } else {
+                if (swipeDuckTimer > 0) {
+                    swipeDuckTimer = Math.max(0, swipeDuckTimer - dt);
+                }
+                wantsDuck = keyDuck || touchDuck || swipeDuckTimer > 0;
+            }
+            player.ducking = wantsDuck;
+
+            // Player vertical physics
+            if (!player.onGround) {
+                const g = wantsDuck ? FAST_FALL_GRAVITY : GRAVITY;
+                player.vy += g * dt;
+                player.y += player.vy * dt;
+                if (player.y >= groundY) {
+                    player.y = groundY;
+                    player.vy = 0;
+                    player.onGround = true;
+                }
+            }
+
+            // Speed & score progression
+            if (mode === 'playing') {
+                scoreFloat += speed * 0.068 * dt;
+                const nextScore = Math.floor(scoreFloat);
+                if (nextScore !== score) {
+                    score = nextScore;
+                    if (score > highScore) {
+                        highScore = score;
+                        isNewHigh = true;
+                    }
+                    updateHudScores();
+                }
+                speed = Math.min(MAX_SPEED, BASE_SPEED + score * 0.24);
+            }
+
+            // Track scrolling & sprite cycle
+            groundOffset = (groundOffset + speed * dt) % 24;
+            animTimer += dt;
+            const frameInterval = player.ducking ? 0.08 : 0.11;
+            if (animTimer >= frameInterval) {
+                animTimer -= frameInterval;
+                animFrame = 1 - animFrame;
+            }
+
+            // Spawn & advance obstacles
+            spawnGap -= speed * dt;
+            if (spawnGap <= 0) {
+                spawnObstacle();
+            }
+
+            const pBox = getPlayerHitbox();
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
+                obs.x -= speed * dt;
+
+                if (obs.x + obs.w < -20) {
+                    obstacles.splice(i, 1);
+                    continue;
+                }
+
+                if (mode === 'playing') {
+                    const oBox = {
+                        x: obs.x + 3,
+                        y: obs.y + 3,
+                        w: Math.max(6, obs.w - 6),
+                        h: Math.max(6, obs.h - 5)
+                    };
+                    if (boxesOverlap(pBox, oBox)) {
+                        handleGameOver();
+                        return;
+                    }
+                }
+            }
+        }
+
+        function traceRoundedRect(x, y, w, h, r) {
+            const radius = Math.min(r, w / 2, h / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + w - radius, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+            ctx.lineTo(x + w, y + h - radius);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+            ctx.lineTo(x + radius, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        function drawBackground() {
+            ctx.fillStyle = '#0d0d0d';
+            ctx.fillRect(0, 0, viewW, viewH);
+
+            // Subtle distant git branch track
+            ctx.strokeStyle = '#161616';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, 22);
+            ctx.lineTo(viewW, 22);
+            ctx.stroke();
+
+            for (let x = -((groundOffset * 0.4) % 72); x < viewW + 10; x += 72) {
+                ctx.fillStyle = '#1f1f1f';
+                ctx.beginPath();
+                ctx.arc(x, 22, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Ground baseline
+            ctx.strokeStyle = '#262626';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, groundY + 0.5);
+            ctx.lineTo(viewW, groundY + 0.5);
+            ctx.stroke();
+
+            // Scrolling ground pebbles & emerald commit ticks
+            for (let x = -groundOffset; x < viewW + 24; x += 24) {
+                ctx.fillStyle = '#262626';
+                ctx.fillRect(x, groundY + 5, 8, 1.5);
+                ctx.fillStyle = 'rgba(34, 197, 94, 0.35)';
+                ctx.fillRect(x + 14, groundY + 8, 3, 1.5);
+            }
+        }
+
+        function drawInvertocat() {
+            const x = player.x;
+            const y = player.y;
+
+            if (player.onGround && player.ducking) {
+                const top = groundY - 15;
+                // Trailing tail
+                ctx.strokeStyle = '#f5f5f5';
+                ctx.lineWidth = 2.2;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(x + 3, top + 7);
+                ctx.quadraticCurveTo(x - 4, top + (animFrame === 0 ? 4 : 7), x - 6, top + 3);
+                ctx.stroke();
+
+                // Flattened crouching silhouette
+                ctx.fillStyle = '#f5f5f5';
+                traceRoundedRect(x + 2, top + 3, 17, 9, 4.5);
+                ctx.fill();
+
+                // Forward head & flattened ears
+                traceRoundedRect(x + 14, top + 1, 14, 10, 4.5);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(x + 16, top + 2);
+                ctx.lineTo(x + 13, top - 1);
+                ctx.lineTo(x + 20, top + 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(x + 22, top + 2);
+                ctx.lineTo(x + 20, top - 1);
+                ctx.lineTo(x + 26, top + 2);
+                ctx.fill();
+
+                // Emerald collar highlight
+                ctx.fillStyle = '#22c55e';
+                ctx.fillRect(x + 13, top + 10, 4, 1.5);
+
+                // Visor & glowing emerald eyes
+                ctx.fillStyle = '#0d0d0d';
+                traceRoundedRect(x + 19, top + 4, 8, 4.5, 2);
+                ctx.fill();
+                ctx.fillStyle = '#22c55e';
+                ctx.fillRect(x + 21, top + 5.5, 2, 2);
+                ctx.fillRect(x + 24.5, top + 5.5, 2, 2);
+
+                // Scuttling legs
+                ctx.fillStyle = '#f5f5f5';
+                const legShift = animFrame === 0 ? 0 : 3;
+                ctx.fillRect(x + 6 + legShift, groundY - 3, 3, 3);
+                ctx.fillRect(x + 16 - legShift, groundY - 3, 3, 3);
+                return;
+            }
+
+            const bob = player.onGround ? (animFrame === 0 ? 0 : -1) : 0;
+            const top = y - 26 + bob;
+
+            // Tail
+            ctx.strokeStyle = '#f5f5f5';
+            ctx.lineWidth = 2.2;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(x + 5, top + 18);
+            const tailSwing = player.onGround ? (animFrame === 0 ? -2 : 2) : -3;
+            ctx.bezierCurveTo(x - 2, top + 18, x - 3, top + 11 + tailSwing, x + 1, top + 9 + tailSwing);
+            ctx.stroke();
+
+            // Torso
+            ctx.fillStyle = '#f5f5f5';
+            traceRoundedRect(x + 6, top + 12, 12, 10, 4);
+            ctx.fill();
+
+            // Invertocat ears
+            ctx.beginPath();
+            ctx.moveTo(x + 5, top + 5);
+            ctx.lineTo(x + 6, top - 1);
+            ctx.lineTo(x + 11, top + 3);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(x + 19, top + 5);
+            ctx.lineTo(x + 18, top - 1);
+            ctx.lineTo(x + 13, top + 3);
+            ctx.closePath();
+            ctx.fill();
+
+            // Head dome
+            traceRoundedRect(x + 4, top + 2, 16, 12, 5.5);
+            ctx.fill();
+
+            // Emerald ear highlights
+            ctx.fillStyle = '#22c55e';
+            ctx.fillRect(x + 6.5, top + 1.5, 1.8, 1.8);
+            ctx.fillRect(x + 15.8, top + 1.5, 1.8, 1.8);
+
+            // Face visor
+            ctx.fillStyle = '#0d0d0d';
+            traceRoundedRect(x + 7, top + 5.5, 11, 5.5, 2.5);
+            ctx.fill();
+
+            // Glowing emerald eyes
+            ctx.fillStyle = '#22c55e';
+            ctx.fillRect(x + 9, top + 7.2, 2.2, 2.4);
+            ctx.fillRect(x + 14, top + 7.2, 2.2, 2.4);
+
+            // Emerald collar accent
+            ctx.fillRect(x + 8, top + 13.5, 8, 1.6);
+
+            // Legs
+            ctx.fillStyle = '#f5f5f5';
+            if (!player.onGround) {
+                // Static mid-air jump pose
+                ctx.fillRect(x + 7, top + 20, 3, 4.5);
+                ctx.fillRect(x + 14, top + 19, 3, 4.5);
+                // Subtle emerald jump sparks
+                ctx.fillStyle = 'rgba(34, 197, 94, 0.75)';
+                ctx.fillRect(x + 6, top + 25.5, 3, 1.5);
+                ctx.fillRect(x + 14, top + 25, 3, 1.5);
+            } else if (animFrame === 0) {
+                ctx.fillRect(x + 7, top + 20, 3, 6);
+                ctx.fillRect(x + 14, top + 20, 3, 4);
+            } else {
+                ctx.fillRect(x + 7, top + 20, 3, 4);
+                ctx.fillRect(x + 14, top + 20, 3, 6);
+            }
+        }
+
+        function drawGroundObstacle(obs) {
+            const { kind, x, y, w, h } = obs;
+
+            if (kind === 'react') {
+                const cx = x + w / 2;
+                const cy = y + h / 2;
+                ctx.fillStyle = '#141414';
+                ctx.strokeStyle = '#262626';
+                ctx.lineWidth = 1;
+                traceRoundedRect(x, y, w, h, 5);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.strokeStyle = '#f5f5f5';
+                ctx.lineWidth = 1.2;
+                for (let a = 0; a < 3; a++) {
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate((a * Math.PI) / 3);
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, 8.5, 3.2, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+                ctx.fillStyle = '#22c55e';
+                ctx.beginPath();
+                ctx.arc(cx, cy, 2.2, 0, Math.PI * 2);
+                ctx.fill();
+                return;
+            }
+
+            if (kind === 'ts' || kind === 'js') {
+                ctx.fillStyle = '#141414';
+                ctx.strokeStyle = kind === 'ts' ? '#f5f5f5' : '#262626';
+                ctx.lineWidth = 1.2;
+                traceRoundedRect(x, y, w, h, 4);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#22c55e';
+                ctx.fillRect(x + 3, y + 3, kind === 'ts' ? 6 : 3, 2);
+
+                ctx.fillStyle = '#f5f5f5';
+                ctx.font = '700 8.5px "Space Grotesk", monospace';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(kind === 'ts' ? 'TS' : 'JS', x + w - 3, y + h - 2.5);
+                return;
+            }
+
+            if (kind === 'cpp') {
+                const cx = x + w / 2;
+                const cy = y + h / 2;
+                const rx = w / 2 - 1;
+                const ry = h / 2 - 1;
+                ctx.fillStyle = '#141414';
+                ctx.strokeStyle = '#f5f5f5';
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy - ry);
+                ctx.lineTo(cx + rx, cy - ry * 0.45);
+                ctx.lineTo(cx + rx, cy + ry * 0.45);
+                ctx.lineTo(cx, cy + ry);
+                ctx.lineTo(cx - rx, cy + ry * 0.45);
+                ctx.lineTo(cx - rx, cy - ry * 0.45);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#22c55e';
+                ctx.fillRect(cx - 4, y + 3, 8, 1.5);
+
+                ctx.fillStyle = '#f5f5f5';
+                ctx.font = '700 8px "Space Grotesk", monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('C++', cx, cy + 1);
+                return;
+            }
+
+            if (kind === 'godot') {
+                // Sharp vector Godot-style robot silhouette
+                ctx.fillStyle = '#f5f5f5';
+                traceRoundedRect(x + 2, y + 4, w - 4, h - 5, 5);
+                ctx.fill();
+                // Top gear notches
+                ctx.fillRect(x + 4, y + 1, 4, 4);
+                ctx.fillRect(x + w / 2 - 2, y, 4, 5);
+                ctx.fillRect(x + w - 8, y + 1, 4, 4);
+                // Eyes & visor line
+                ctx.fillStyle = '#0d0d0d';
+                ctx.beginPath();
+                ctx.arc(x + 8, y + 11, 2.2, 0, Math.PI * 2);
+                ctx.arc(x + w - 8, y + 11, 2.2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#22c55e';
+                ctx.fillRect(x + 7.2, y + 10.2, 1.6, 1.6);
+                ctx.fillRect(x + w - 8.8, y + 10.2, 1.6, 1.6);
+                // Jaw line
+                ctx.fillStyle = '#0d0d0d';
+                ctx.fillRect(x + 7, y + 17, w - 14, 1.6);
+                return;
+            }
+
+            // Default: '</>' code badge
+            ctx.fillStyle = '#141414';
+            ctx.strokeStyle = '#262626';
+            ctx.lineWidth = 1.2;
+            traceRoundedRect(x, y, w, h, 4);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.font = '700 9px "Space Grotesk", monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            const midX = x + w / 2;
+            const midY = y + h / 2 + 0.5;
+            ctx.fillStyle = '#f5f5f5';
+            ctx.fillText('<', midX - 6, midY);
+            ctx.fillStyle = '#22c55e';
+            ctx.fillText('/', midX, midY);
+            ctx.fillStyle = '#f5f5f5';
+            ctx.fillText('>', midX + 6, midY);
+        }
+
+        function drawFlyingBug(obs) {
+            const { x, y, w, h } = obs;
+            const midY = y + h / 2;
+
+            // 2-frame flapping bat/bug wings
+            ctx.fillStyle = '#f5f5f5';
+            ctx.beginPath();
+            if (animFrame === 0) {
+                // Wings swept up
+                ctx.moveTo(x + 8, midY);
+                ctx.lineTo(x + 14, y - 3);
+                ctx.lineTo(x + 19, midY - 1);
+                ctx.closePath();
+            } else {
+                // Wings swept down
+                ctx.moveTo(x + 8, midY + 1);
+                ctx.lineTo(x + 14, y + h + 3);
+                ctx.lineTo(x + 19, midY + 1);
+                ctx.closePath();
+            }
+            ctx.fill();
+
+            // Drone body
+            ctx.fillStyle = '#141414';
+            ctx.strokeStyle = '#f5f5f5';
+            ctx.lineWidth = 1.2;
+            traceRoundedRect(x + 3, midY - 4, w - 6, 8, 4);
+            ctx.fill();
+            ctx.stroke();
+
+            // Merge-conflict antennae facing left
+            ctx.strokeStyle = '#22c55e';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(x + 4, midY - 2);
+            ctx.lineTo(x, midY - 5);
+            ctx.moveTo(x + 4, midY + 2);
+            ctx.lineTo(x, midY + 5);
+            ctx.stroke();
+
+            // Conflict eye
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(x + 6, midY - 1.5, 3, 3);
+        }
+
+        function render() {
+            drawBackground();
+            for (let i = 0; i < obstacles.length; i++) {
+                const obs = obstacles[i];
+                if (obs.type === 'flying') {
+                    drawFlyingBug(obs);
+                } else {
+                    drawGroundObstacle(obs);
+                }
+            }
+            drawInvertocat();
+        }
+
+        function shouldAnimate() {
+            return mode !== 'gameover' && !document.hidden && isInViewport;
+        }
+
+        function tick(now) {
+            if (!shouldAnimate()) {
+                rafId = null;
+                return;
+            }
+            if (!lastTime) lastTime = now;
+            const dt = Math.min((now - lastTime) / 1000, 0.05);
+            lastTime = now;
+
+            update(dt);
+            render();
+
+            if (shouldAnimate()) {
+                rafId = window.requestAnimationFrame(tick);
+            } else {
+                rafId = null;
+            }
+        }
+
+        function startLoop() {
+            if (rafId !== null || !shouldAnimate()) return;
+            lastTime = 0;
+            rafId = window.requestAnimationFrame(tick);
+        }
+
+        function stopLoop() {
+            if (rafId !== null) {
+                window.cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+        }
+
+        function isEditableTarget(target) {
+            if (!target) return false;
+            const tag = target.tagName;
+            return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable;
+        }
+
+        function isStageInView() {
+            const rect = stage.getBoundingClientRect();
+            return rect.bottom > 0 && rect.top < window.innerHeight;
+        }
+
+        function startPlaying() {
+            mode = 'playing';
+            stage.classList.add('is-playing');
+            startOverlay.hidden = true;
+            if (closeBtn) closeBtn.hidden = false;
+            if (duckBtn) duckBtn.hidden = false;
+            if (controlsEl) controlsEl.textContent = '↑ Jump • ↓ Duck';
+
+            syncCanvasSize();
+            resetWorld(false);
+            render();
+            startLoop();
+        }
+
+        function enterAutopilot() {
+            mode = 'autopilot';
+            stage.classList.remove('is-playing');
+            startOverlay.hidden = false;
+            if (overlay) overlay.hidden = true;
+            if (closeBtn) closeBtn.hidden = true;
+            if (duckBtn) duckBtn.hidden = true;
+            if (controlsEl) controlsEl.textContent = 'AUTO • ↑ Jump • ↓ Duck';
+
+            syncCanvasSize();
+            resetWorld(true);
+            render();
+            startLoop();
+        }
+
+        function onKeyDown(e) {
+            if (isEditableTarget(e.target)) return;
+
+            if (mode === 'autopilot') {
+                if ((e.code === 'Space' || (e.target === startOverlay && e.code === 'Enter')) && isStageInView()) {
+                    e.preventDefault();
+                    if (!e.repeat) startPlaying();
+                }
+                return;
+            }
+
+            if (e.code === 'Escape') {
+                e.preventDefault();
+                enterAutopilot();
+                return;
+            }
+            if (e.code === 'Space' || e.code === 'ArrowUp') {
+                e.preventDefault();
+                if (mode === 'gameover') {
+                    if (!e.repeat) triggerRetry();
+                } else if (!e.repeat) {
+                    triggerJump();
+                }
+                return;
+            }
+            if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                keyDuck = true;
+            }
+        }
+
+        function onKeyUp(e) {
+            if (e.code === 'ArrowDown') {
+                keyDuck = false;
+            }
+        }
+
+        function onWindowResize() {
+            syncCanvasSize();
+            render();
+        }
+
+        function onVisibilityChange() {
+            if (document.hidden) {
+                stopLoop();
+            } else {
+                lastTime = 0;
+                startLoop();
+            }
+        }
+
+        function markTouchDevice() {
+            canvasWrap.classList.add('has-touch');
+        }
+
+        startOverlay.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            if (e.pointerType === 'touch') markTouchDevice();
+            startPlaying();
+        });
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                enterAutopilot();
+            });
+        }
+
+        canvas.addEventListener('pointerdown', (e) => {
+            if (e.pointerType === 'touch') markTouchDevice();
+            if (mode === 'autopilot') {
+                startPlaying();
+            } else if (mode === 'gameover') {
+                triggerRetry();
+            } else {
+                triggerJump();
+            }
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            markTouchDevice();
+            if (e.touches && e.touches.length > 0) {
+                touchStartY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (mode !== 'playing' || touchStartY === null || !e.touches || e.touches.length === 0) return;
+            const dy = e.touches[0].clientY - touchStartY;
+            if (dy > 18) {
+                swipeDuckTimer = 0.6;
+                touchStartY = null;
+            }
+        }, { passive: true });
+
+        canvas.addEventListener('touchend', () => {
+            touchStartY = null;
+        }, { passive: true });
+
+        if (overlay) {
+            overlay.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                if (e.pointerType === 'touch') markTouchDevice();
+                triggerRetry();
+            });
+        }
+
+        if (duckBtn) {
+            const releaseDuck = () => {
+                touchDuck = false;
+                duckBtn.classList.remove('is-active');
+            };
+            duckBtn.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                markTouchDevice();
+                touchDuck = true;
+                duckBtn.classList.add('is-active');
+            });
+            duckBtn.addEventListener('pointerup', releaseDuck);
+            duckBtn.addEventListener('pointercancel', releaseDuck);
+            duckBtn.addEventListener('pointerleave', releaseDuck);
+        }
+
+        window.addEventListener('keydown', onKeyDown, { passive: false });
+        window.addEventListener('keyup', onKeyUp);
+        window.addEventListener('resize', onWindowResize);
+        document.addEventListener('visibilitychange', onVisibilityChange);
+
+        if (window.ResizeObserver) {
+            resizeObserver = new ResizeObserver(onWindowResize);
+            resizeObserver.observe(canvasWrap);
+        }
+
+        if (window.IntersectionObserver) {
+            intersectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    isInViewport = entry.isIntersecting;
+                    if (isInViewport) {
+                        startLoop();
+                    } else {
+                        stopLoop();
+                    }
+                });
+            }, { threshold: 0.05 });
+            intersectionObserver.observe(stage);
+        }
+
+        enterAutopilot();
+    }
+
     /* --- Main App Initialization --- */
     function initSite() {
         initScrollProgress();
@@ -2238,6 +3171,7 @@
         initTypingEffect();
         initHeroPointerLight();
         initIntroFromJson();
+        initGitRunner();
         initProfileFromJson();
         initLinksFromJson();
         initActivitiesFromJson();
