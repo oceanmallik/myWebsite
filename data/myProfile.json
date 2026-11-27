@@ -34,48 +34,6 @@
       "target": "_self"
     }
   ],
-  "telemetry": [
-    {
-      "key": "projects",
-      "id": "stat-projects",
-      "pill": "Works",
-      "label": "Projects Built",
-      "icon": "fas fa-layer-group",
-      "url": "activities.html",
-      "title": "View all projects",
-      "target": "_self"
-    },
-    {
-      "key": "apps",
-      "id": "stat-apps",
-      "pill": "Mobile",
-      "label": "Play Store Apps",
-      "icon": "fab fa-google-play",
-      "url": "https://play.google.com/store/apps/dev?id=5168944414714193607",
-      "title": "View published mobile apps",
-      "target": "_blank"
-    },
-    {
-      "key": "certificates",
-      "id": "stat-certs",
-      "pill": "Verified",
-      "label": "Certifications",
-      "icon": "fas fa-certificate",
-      "url": "certificates.html",
-      "title": "View all certifications",
-      "target": "_self"
-    },
-    {
-      "key": "repos",
-      "id": "stat-repos",
-      "pill": "Git",
-      "label": "Repositories",
-      "icon": "fab fa-github",
-      "url": "mygit.html",
-      "title": "View GitHub repositories",
-      "target": "_self"
-    }
-  ],
   "focusAreas": [
     {
       "title": "Native Mobile Apps",

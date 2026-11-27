@@ -2072,13 +2072,10 @@
 
         const sourcePath = profileContainer.dataset.profileSource || 'data/myProfile.json';
 
-        // Fetch profile JSON with fallbacks and cross-check works/certificates
-        Promise.all([
-            fetchJsonWithFallback([sourcePath, 'data/myProfile.json', './data/myProfile.json', './myProfile.json']),
-            fetchJsonWithFallback(['data/myWorks.json', './data/myWorks.json', 'myWorks.json']).catch(() => null),
-            fetchJsonWithFallback(['data/myCertificates.json', './data/myCertificates.json', 'myCertificates.json']).catch(() => null)
-        ]).then(([profile, worksData, certsData]) => {
-            if (!profile) return;
+        // Fetch profile JSON with fallbacks
+        fetchJsonWithFallback([sourcePath, 'data/myProfile.json', './data/myProfile.json', './myProfile.json'])
+            .then((profile) => {
+                if (!profile) return;
 
             // Heading
             const headingEl = document.getElementById('profile-heading');
@@ -2174,33 +2171,6 @@
                 });
             }
 
-            // Telemetry Cards Grid
-            const telemetryEl = document.getElementById('profile-telemetry-grid');
-            if (telemetryEl && Array.isArray(profile.telemetry)) {
-                telemetryEl.innerHTML = '';
-                profile.telemetry.forEach((item) => {
-                    if (!item) return;
-                    const a = document.createElement('a');
-                    a.href = item.url || '#';
-                    a.className = 'about-telemetry-tile';
-                    if (item.title) a.title = item.title;
-                    if (item.target) a.target = item.target;
-                    if (item.target === '_blank') a.rel = 'noopener noreferrer';
-
-                    const valId = item.id || (item.key ? `stat-${item.key}` : '');
-
-                    a.innerHTML = `
-                        <div class="about-telemetry-top">
-                            <i class="${escapeHtml(item.icon || 'fas fa-chart-simple')}" aria-hidden="true"></i>
-                            <span>${escapeHtml(item.pill || '')}</span>
-                        </div>
-                        <div${valId ? ` id="${escapeHtml(valId)}"` : ''} class="about-telemetry-val">-</div>
-                        <div class="about-telemetry-lbl">${escapeHtml(item.label || '')}</div>
-                    `;
-                    telemetryEl.appendChild(a);
-                });
-            }
-
             // Engineering Focus Pillars
             const focusStripEl = document.getElementById('about-focus-strip');
             if (focusStripEl && Array.isArray(profile.focusAreas)) {
@@ -2245,53 +2215,6 @@
                 hydrateSectionHeader('education', profile.sections.education);
                 hydrateSectionHeader('links', profile.sections.links);
             }
-
-            // Live counts calculated directly from site data sources
-            const worksArray = Array.isArray(worksData) ? worksData : (worksData && worksData.works ? worksData.works : []);
-            const projectCount = worksArray.length;
-            const appsCount = worksArray.filter((w) => (w.category || '').toLowerCase() === 'mobile').length;
-
-            const certsArray = Array.isArray(certsData) ? certsData : [];
-            const certsCount = certsArray.length;
-
-            const statProjectsEl = document.getElementById('stat-projects');
-            if (statProjectsEl && worksData !== null) animateCounter(statProjectsEl, projectCount);
-
-            const statAppsEl = document.getElementById('stat-apps');
-            if (statAppsEl && worksData !== null) animateCounter(statAppsEl, appsCount);
-
-            const statCertsEl = document.getElementById('stat-certs');
-            if (statCertsEl && certsData !== null) animateCounter(statCertsEl, certsCount);
-
-            // Git repo count: dynamically fetched from mygit data cache with GitHub API fallback
-            const statReposEl = document.getElementById('stat-repos');
-            const MYGIT_CACHE_URL = 'https://raw.githubusercontent.com/oceanmallik/github-data-cache/refs/heads/seed/data.json';
-
-            fetch(MYGIT_CACHE_URL)
-                .then((res) => {
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    return res.json();
-                })
-                .then((gitData) => {
-                    const user = gitData && gitData.profile;
-                    const repoCount = user && typeof user.public_repos === 'number'
-                        ? user.public_repos
-                        : (gitData && Array.isArray(gitData.repos) ? gitData.repos.length : null);
-
-                    if (typeof repoCount === 'number' && statReposEl) {
-                        animateCounter(statReposEl, repoCount);
-                    }
-                })
-                .catch(() => {
-                    fetch('https://api.github.com/users/oceanmallik')
-                        .then((res) => res.ok ? res.json() : null)
-                        .then((ghUser) => {
-                            if (ghUser && typeof ghUser.public_repos === 'number' && statReposEl) {
-                                animateCounter(statReposEl, ghUser.public_repos);
-                            }
-                        })
-                        .catch(() => {});
-                });
         }).catch((err) => {
             console.error('Error loading profile from JSON:', err);
         });
@@ -2389,6 +2312,88 @@
         } else {
             reveals.forEach((reveal) => reveal.classList.add('active'));
         }
+    }
+
+    /* --- Shared Mini-Game Stage Helpers (Theme Sync, Storage & Canvas Geometry) --- */
+    function createStageThemeHelper(stageEl, onThemeChange) {
+        const palette = {
+            bg: '#0d0d0d',
+            surface: '#141414',
+            border: '#262626',
+            ink: '#f5f5f5',
+            visor: '#0d0d0d',
+            accent: '#22c55e',
+            accentSoft: 'rgba(34, 197, 94, 0.35)',
+            track: '#161616',
+            trackDot: '#1f1f1f',
+            danger: '#ef4444'
+        };
+
+        const sync = () => {
+            const styles = window.getComputedStyle(stageEl);
+            const pick = (name, fallback) => {
+                const v = styles.getPropertyValue(name);
+                return v ? v.trim() || fallback : fallback;
+            };
+            palette.bg = pick('--gr-bg', '#0d0d0d');
+            palette.surface = pick('--gr-surface', '#141414');
+            palette.border = pick('--gr-border', '#262626');
+            palette.ink = pick('--gr-ink', '#f5f5f5');
+            palette.visor = pick('--gr-visor', palette.bg);
+            palette.accent = pick('--gr-accent', '#22c55e');
+            palette.accentSoft = pick('--gr-accent-soft', 'rgba(34, 197, 94, 0.35)');
+            palette.track = pick('--gr-track', '#161616');
+            palette.trackDot = pick('--gr-track-dot', '#1f1f1f');
+            palette.danger = pick('--gr-danger', '#ef4444');
+        };
+
+        if (window.MutationObserver) {
+            const observer = new MutationObserver(() => {
+                sync();
+                if (typeof onThemeChange === 'function') onThemeChange();
+            });
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-current-theme'] });
+        }
+
+        sync();
+        return { palette, sync };
+    }
+
+    function traceRoundedRectPath(ctx, x, y, w, h, r) {
+        const radius = Math.min(r, w / 2, h / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + w - radius, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+        ctx.lineTo(x + w, y + h - radius);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+        ctx.lineTo(x + radius, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+    }
+
+    function readHighScoreStorage(key) {
+        try {
+            const raw = parseInt(localStorage.getItem(key) || '0', 10);
+            return Number.isFinite(raw) && raw > 0 ? raw : 0;
+        } catch (e) {
+            return 0;
+        }
+    }
+
+    function writeHighScoreStorage(key, val) {
+        try {
+            localStorage.setItem(key, String(val));
+        } catch (e) {
+            // Ignore storage failures in restricted contexts
+        }
+    }
+
+    function formatMiniGameScore(val) {
+        return String(Math.max(0, Math.floor(val))).padStart(4, '0');
     }
 
     /* --- Git Runner Endless Runner Mini-Game Widget --- */
@@ -3383,6 +3388,649 @@
         enterAutopilot();
     }
 
+    /* --- Git Snake Mini-Game Widget (About Profile Card) --- */
+    function initGitSnake() {
+        const widget = document.getElementById('git-snake-widget');
+        const stage = document.getElementById('git-snake-stage');
+        const controlsEl = document.getElementById('git-snake-controls');
+        const closeBtn = document.getElementById('git-snake-close');
+        const canvasWrap = document.getElementById('git-snake-canvas-wrap');
+        const canvas = document.getElementById('git-snake-canvas');
+        const dpadEl = document.getElementById('git-snake-dpad');
+        const scoreEl = document.getElementById('git-snake-score');
+        const hiEl = document.getElementById('git-snake-hi');
+        const startOverlay = document.getElementById('git-snake-start-overlay');
+        const overlay = document.getElementById('git-snake-overlay');
+        const finalScoreEl = document.getElementById('git-snake-final-score');
+
+        if (!widget || !stage || !canvas || !canvasWrap || !startOverlay) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const STORAGE_KEY = 'gitSnakeHighScore';
+        const CELL = 13;
+        const DIRS = {
+            up: { x: 0, y: -1 },
+            down: { x: 0, y: 1 },
+            left: { x: -1, y: 0 },
+            right: { x: 1, y: 0 }
+        };
+
+        let mode = 'autopilot'; // 'autopilot' | 'playing' | 'gameover'
+        let gameOverAt = 0;
+        let rafId = null;
+        let lastTime = 0;
+        let stepAccumulator = 0;
+        let pulsePhase = 0;
+        let isInViewport = true;
+        let resizeObserver = null;
+        let intersectionObserver = null;
+
+        let viewW = 340;
+        let viewH = 158;
+        let cols = 24;
+        let rows = 11;
+        let offsetX = 14;
+        let offsetY = 7;
+
+        let score = 0;
+        let highScore = readHighScoreStorage(STORAGE_KEY);
+        let isNewHigh = false;
+        let snake = [];
+        let dir = DIRS.right;
+        let dirQueue = [];
+        let food = { x: 16, y: 5 };
+        let touchStart = null;
+
+        let themeHelper = null;
+
+        function getPalette() {
+            return themeHelper ? themeHelper.palette : {
+                bg: '#0d0d0d',
+                surface: '#141414',
+                border: '#262626',
+                ink: '#f5f5f5',
+                visor: '#0d0d0d',
+                accent: '#22c55e',
+                accentSoft: 'rgba(34, 197, 94, 0.35)',
+                track: '#161616',
+                trackDot: '#1f1f1f',
+                danger: '#ef4444'
+            };
+        }
+
+        function updateHudScores() {
+            if (scoreEl) scoreEl.textContent = formatMiniGameScore(score);
+            if (hiEl) hiEl.textContent = `HI ${formatMiniGameScore(highScore)}`;
+        }
+
+        function syncCanvasSize() {
+            const w = Math.max(220, canvasWrap.clientWidth || 340);
+            const h = Math.max(100, canvasWrap.clientHeight || 158);
+            const dpr = Math.min(window.devicePixelRatio || 1, 3);
+            const targetW = Math.round(w * dpr);
+            const targetH = Math.round(h * dpr);
+
+            if (canvas.width !== targetW || canvas.height !== targetH) {
+                canvas.width = targetW;
+                canvas.height = targetH;
+            }
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            viewW = w;
+            viewH = h;
+            const nextCols = Math.max(14, Math.floor((viewW - 8) / CELL));
+            const nextRows = Math.max(8, Math.floor((viewH - 8) / CELL));
+            offsetX = Math.floor((viewW - nextCols * CELL) / 2);
+            offsetY = Math.floor((viewH - nextRows * CELL) / 2);
+
+            if (nextCols !== cols || nextRows !== rows) {
+                cols = nextCols;
+                rows = nextRows;
+                if (snake.length > 0) {
+                    const outOfBounds = snake.some((s) => s.x >= cols || s.y >= rows) || food.x >= cols || food.y >= rows;
+                    if (outOfBounds) resetBoard();
+                }
+            }
+        }
+
+        function spawnFood() {
+            const occupied = new Set(snake.map((s) => `${s.x},${s.y}`));
+            const free = [];
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    if (!occupied.has(`${x},${y}`)) free.push({ x, y });
+                }
+            }
+            if (free.length > 0) {
+                food = free[Math.floor(Math.random() * free.length)];
+            }
+        }
+
+        function resetBoard() {
+            isNewHigh = false;
+            score = 0;
+            stepAccumulator = 0;
+            dir = DIRS.right;
+            dirQueue = [];
+
+            const cy = Math.floor(rows / 2);
+            const cx = Math.max(4, Math.floor(cols / 3));
+            snake = [
+                { x: cx, y: cy },
+                { x: cx - 1, y: cy },
+                { x: cx - 2, y: cy }
+            ];
+            spawnFood();
+            if (overlay) overlay.hidden = true;
+            updateHudScores();
+        }
+
+        function queueDirection(nextDir) {
+            if (!nextDir) return;
+            const lastScheduled = dirQueue.length > 0 ? dirQueue[dirQueue.length - 1] : dir;
+            if (nextDir.x + lastScheduled.x === 0 && nextDir.y + lastScheduled.y === 0) return;
+            if (nextDir.x === lastScheduled.x && nextDir.y === lastScheduled.y) return;
+            if (dirQueue.length < 2) {
+                dirQueue.push(nextDir);
+            }
+        }
+
+        function countReachable(startX, startY, blockedSet) {
+            const visited = new Set([`${startX},${startY}`]);
+            const queue = [{ x: startX, y: startY }];
+            let idx = 0;
+            while (idx < queue.length && visited.size < snake.length + 12) {
+                const cur = queue[idx++];
+                const neighbors = [DIRS.up, DIRS.down, DIRS.left, DIRS.right];
+                for (let i = 0; i < neighbors.length; i++) {
+                    const nx = cur.x + neighbors[i].x;
+                    const ny = cur.y + neighbors[i].y;
+                    if (nx < 0 || nx >= cols || ny < 0 || ny >= rows) continue;
+                    const key = `${nx},${ny}`;
+                    if (blockedSet.has(key) || visited.has(key)) continue;
+                    visited.add(key);
+                    queue.push({ x: nx, y: ny });
+                }
+            }
+            return visited.size;
+        }
+
+        function pickAutopilotDir() {
+            const head = snake[0];
+            const tail = snake[snake.length - 1];
+            const bodyBlocked = new Set();
+            for (let i = 0; i < snake.length - 1; i++) {
+                bodyBlocked.add(`${snake[i].x},${snake[i].y}`);
+            }
+
+            const candidates = [DIRS.up, DIRS.down, DIRS.left, DIRS.right].filter((d) => {
+                if (d.x + dir.x === 0 && d.y + dir.y === 0) return false;
+                const nx = head.x + d.x;
+                const ny = head.y + d.y;
+                if (nx < 0 || nx >= cols || ny < 0 || ny >= rows) return false;
+                return !bodyBlocked.has(`${nx},${ny}`);
+            });
+
+            if (candidates.length === 0) return null;
+
+            // BFS shortest path to food
+            const queue = [];
+            const visited = new Set([`${head.x},${head.y}`]);
+            for (let i = 0; i < candidates.length; i++) {
+                const d = candidates[i];
+                const nx = head.x + d.x;
+                const ny = head.y + d.y;
+                const key = `${nx},${ny}`;
+                visited.add(key);
+                queue.push({ x: nx, y: ny, firstDir: d });
+            }
+
+            let bfsDir = null;
+            let qi = 0;
+            while (qi < queue.length) {
+                const cur = queue[qi++];
+                if (cur.x === food.x && cur.y === food.y) {
+                    bfsDir = cur.firstDir;
+                    break;
+                }
+                const steps = [DIRS.up, DIRS.down, DIRS.left, DIRS.right];
+                for (let i = 0; i < steps.length; i++) {
+                    const nx = cur.x + steps[i].x;
+                    const ny = cur.y + steps[i].y;
+                    if (nx < 0 || nx >= cols || ny < 0 || ny >= rows) continue;
+                    const key = `${nx},${ny}`;
+                    if (bodyBlocked.has(key) || visited.has(key)) continue;
+                    visited.add(key);
+                    queue.push({ x: nx, y: ny, firstDir: cur.firstDir });
+                }
+            }
+
+            if (bfsDir) {
+                const nx = head.x + bfsDir.x;
+                const ny = head.y + bfsDir.y;
+                const nextBlocked = new Set(bodyBlocked);
+                nextBlocked.add(`${head.x},${head.y}`);
+                if (nx !== tail.x || ny !== tail.y) {
+                    const space = countReachable(nx, ny, nextBlocked);
+                    if (space >= Math.min(snake.length, 10)) {
+                        return bfsDir;
+                    }
+                }
+            }
+
+            // Fallback: pick safe direction with largest open space & nearest to food
+            let bestDir = candidates[0];
+            let bestScore = -Infinity;
+            for (let i = 0; i < candidates.length; i++) {
+                const d = candidates[i];
+                const nx = head.x + d.x;
+                const ny = head.y + d.y;
+                const space = countReachable(nx, ny, bodyBlocked);
+                const dist = Math.abs(nx - food.x) + Math.abs(ny - food.y);
+                const heuristic = space * 10 - dist;
+                if (heuristic > bestScore) {
+                    bestScore = heuristic;
+                    bestDir = d;
+                }
+            }
+            return bestDir;
+        }
+
+        function handleGameOver() {
+            mode = 'gameover';
+            gameOverAt = performance.now();
+            stopLoop();
+
+            if (score > highScore) {
+                highScore = score;
+                isNewHigh = true;
+                writeHighScoreStorage(STORAGE_KEY, highScore);
+            }
+            updateHudScores();
+
+            if (finalScoreEl) {
+                finalScoreEl.textContent = isNewHigh
+                    ? `NEW HI // SCORE ${formatMiniGameScore(score)}`
+                    : `SCORE ${formatMiniGameScore(score)}`;
+            }
+            if (overlay) overlay.hidden = false;
+        }
+
+        function stepGame() {
+            if (mode === 'autopilot') {
+                const autoDir = pickAutopilotDir();
+                if (!autoDir) {
+                    resetBoard();
+                    return;
+                }
+                dir = autoDir;
+            } else if (dirQueue.length > 0) {
+                dir = dirQueue.shift();
+            }
+
+            const head = snake[0];
+            const next = { x: head.x + dir.x, y: head.y + dir.y };
+            const ateFood = next.x === food.x && next.y === food.y;
+
+            const hitWall = next.x < 0 || next.x >= cols || next.y < 0 || next.y >= rows;
+            const checkLimit = ateFood ? snake.length : snake.length - 1;
+            let hitSelf = false;
+            for (let i = 0; i < checkLimit; i++) {
+                if (snake[i].x === next.x && snake[i].y === next.y) {
+                    hitSelf = true;
+                    break;
+                }
+            }
+
+            if (hitWall || hitSelf) {
+                if (mode === 'autopilot') {
+                    resetBoard();
+                } else {
+                    handleGameOver();
+                }
+                return;
+            }
+
+            snake.unshift(next);
+            if (ateFood) {
+                if (mode === 'playing') {
+                    score += 10;
+                    if (score > highScore) {
+                        highScore = score;
+                        isNewHigh = true;
+                    }
+                    updateHudScores();
+                } else if (snake.length > Math.floor((cols * rows) * 0.35)) {
+                    resetBoard();
+                    return;
+                }
+                spawnFood();
+            } else {
+                snake.pop();
+            }
+        }
+
+        function render() {
+            const p = getPalette();
+            ctx.fillStyle = p.bg;
+            ctx.fillRect(0, 0, viewW, viewH);
+
+            // Subtle board border & grid dots
+            ctx.strokeStyle = p.track;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(offsetX + 0.5, offsetY + 0.5, cols * CELL - 1, rows * CELL - 1);
+
+            ctx.fillStyle = p.trackDot;
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    const cx = offsetX + x * CELL + CELL * 0.5;
+                    const cy = offsetY + y * CELL + CELL * 0.5;
+                    ctx.fillRect(cx - 0.75, cy - 0.75, 1.5, 1.5);
+                }
+            }
+
+            // Food (pulsing git commit target)
+            const fx = offsetX + food.x * CELL + CELL * 0.5;
+            const fy = offsetY + food.y * CELL + CELL * 0.5;
+            const pulse = 0.85 + Math.sin(pulsePhase) * 0.15;
+            const foodR = (CELL * 0.33) * pulse;
+
+            ctx.fillStyle = p.accentSoft;
+            ctx.beginPath();
+            ctx.arc(fx, fy, foodR + 2.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = p.danger;
+            ctx.beginPath();
+            ctx.arc(fx, fy, foodR, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = p.ink;
+            ctx.beginPath();
+            ctx.arc(fx - foodR * 0.25, fy - foodR * 0.25, Math.max(1, foodR * 0.28), 0, Math.PI * 2);
+            ctx.fill();
+
+            // Snake body & head
+            for (let i = snake.length - 1; i >= 0; i--) {
+                const seg = snake[i];
+                const isHead = i === 0;
+                const isTail = i === snake.length - 1;
+                const pad = isHead ? 1 : (isTail ? 2.5 : 1.5);
+                const sx = offsetX + seg.x * CELL + pad;
+                const sy = offsetY + seg.y * CELL + pad;
+                const size = CELL - pad * 2;
+
+                ctx.fillStyle = isHead ? p.accent : p.ink;
+                if (!isHead && i % 2 === 1) {
+                    ctx.globalAlpha = 0.85;
+                }
+                traceRoundedRectPath(ctx, sx, sy, size, size, isHead ? 3.5 : 2.5);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+
+                if (isHead) {
+                    // Directional eyes
+                    ctx.fillStyle = p.visor;
+                    const ex1 = dir.x === 1 ? sx + size - 3.5 : (dir.x === -1 ? sx + 1.8 : sx + 2);
+                    const ey1 = dir.y === 1 ? sy + size - 3.5 : (dir.y === -1 ? sy + 1.8 : sy + 2);
+                    const ex2 = dir.x === 0 ? sx + size - 3.8 : ex1;
+                    const ey2 = dir.y === 0 ? sy + size - 3.8 : ey1;
+                    ctx.fillRect(ex1, ey1, 2, 2);
+                    ctx.fillRect(ex2, ey2, 2, 2);
+                }
+            }
+        }
+
+        function shouldAnimate() {
+            return mode !== 'gameover' && !document.hidden && isInViewport;
+        }
+
+        function tick(now) {
+            if (!shouldAnimate()) {
+                rafId = null;
+                return;
+            }
+            if (!lastTime) lastTime = now;
+            const dt = Math.min((now - lastTime) / 1000, 0.05);
+            lastTime = now;
+
+            pulsePhase += dt * 5;
+            const stepInterval = mode === 'autopilot'
+                ? 0.11
+                : Math.max(0.072, 0.128 - (score / 10) * 0.0022);
+
+            stepAccumulator += dt;
+            if (stepAccumulator >= stepInterval) {
+                stepAccumulator -= stepInterval;
+                stepGame();
+            }
+
+            render();
+
+            if (shouldAnimate()) {
+                rafId = window.requestAnimationFrame(tick);
+            } else {
+                rafId = null;
+            }
+        }
+
+        function startLoop() {
+            if (rafId !== null || !shouldAnimate()) return;
+            lastTime = 0;
+            rafId = window.requestAnimationFrame(tick);
+        }
+
+        function stopLoop() {
+            if (rafId !== null) {
+                window.cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+        }
+
+        function isEditableTarget(target) {
+            if (!target) return false;
+            const tag = target.tagName;
+            return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable;
+        }
+
+        function isStageInView() {
+            const rect = stage.getBoundingClientRect();
+            return rect.bottom > 0 && rect.top < window.innerHeight;
+        }
+
+        function startPlaying() {
+            mode = 'playing';
+            stage.classList.add('is-playing');
+            startOverlay.hidden = true;
+            if (closeBtn) closeBtn.hidden = false;
+            if (dpadEl) dpadEl.hidden = false;
+            if (controlsEl) controlsEl.textContent = 'Arrows / WASD • Swipe';
+
+            syncCanvasSize();
+            resetBoard();
+            render();
+            startLoop();
+        }
+
+        function enterAutopilot() {
+            mode = 'autopilot';
+            stage.classList.remove('is-playing');
+            startOverlay.hidden = false;
+            if (overlay) overlay.hidden = true;
+            if (closeBtn) closeBtn.hidden = true;
+            if (dpadEl) dpadEl.hidden = true;
+            if (controlsEl) controlsEl.textContent = 'AUTO • Arrows / Swipe';
+
+            syncCanvasSize();
+            resetBoard();
+            render();
+            startLoop();
+        }
+
+        function triggerRetry() {
+            if (mode !== 'gameover') return;
+            if (performance.now() - gameOverAt < 180) return;
+            startPlaying();
+        }
+
+        function markTouchDevice() {
+            canvasWrap.classList.add('has-touch');
+        }
+
+        function onKeyDown(e) {
+            if (isEditableTarget(e.target)) return;
+
+            if (mode === 'autopilot') {
+                if ((e.code === 'Space' || (e.target === startOverlay && e.code === 'Enter')) && isStageInView()) {
+                    e.preventDefault();
+                    if (!e.repeat) startPlaying();
+                }
+                return;
+            }
+
+            if (e.code === 'Escape') {
+                e.preventDefault();
+                enterAutopilot();
+                return;
+            }
+
+            if (mode === 'gameover') {
+                if (e.code === 'Space' || e.code === 'Enter') {
+                    e.preventDefault();
+                    if (!e.repeat) triggerRetry();
+                }
+                return;
+            }
+
+            const keyToDir = {
+                ArrowUp: DIRS.up,
+                KeyW: DIRS.up,
+                ArrowDown: DIRS.down,
+                KeyS: DIRS.down,
+                ArrowLeft: DIRS.left,
+                KeyA: DIRS.left,
+                ArrowRight: DIRS.right,
+                KeyD: DIRS.right
+            };
+            const mapped = keyToDir[e.code];
+            if (mapped) {
+                e.preventDefault();
+                queueDirection(mapped);
+            } else if (e.code === 'Space') {
+                e.preventDefault();
+            }
+        }
+
+        startOverlay.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            if (e.pointerType === 'touch') markTouchDevice();
+            startPlaying();
+        });
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                enterAutopilot();
+            });
+        }
+
+        if (overlay) {
+            overlay.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                if (e.pointerType === 'touch') markTouchDevice();
+                triggerRetry();
+            });
+        }
+
+        if (dpadEl) {
+            dpadEl.addEventListener('pointerdown', (e) => {
+                const btn = e.target.closest('.git-snake-dpad-btn');
+                if (!btn) return;
+                e.stopPropagation();
+                e.preventDefault();
+                markTouchDevice();
+                if (mode === 'playing') {
+                    queueDirection(DIRS[btn.dataset.dir]);
+                }
+            });
+        }
+
+        canvas.addEventListener('pointerdown', (e) => {
+            if (e.pointerType === 'touch') markTouchDevice();
+            if (mode === 'autopilot') {
+                startPlaying();
+            } else if (mode === 'gameover') {
+                triggerRetry();
+            }
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            markTouchDevice();
+            if (e.touches && e.touches.length > 0) {
+                touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+        }, { passive: true });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (mode !== 'playing' || !touchStart || !e.touches || e.touches.length === 0) return;
+            const dx = e.touches[0].clientX - touchStart.x;
+            const dy = e.touches[0].clientY - touchStart.y;
+            if (Math.abs(dx) < 16 && Math.abs(dy) < 16) return;
+
+            if (Math.abs(dx) > Math.abs(dy)) {
+                queueDirection(dx > 0 ? DIRS.right : DIRS.left);
+            } else {
+                queueDirection(dy > 0 ? DIRS.down : DIRS.up);
+            }
+            touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }, { passive: true });
+
+        canvas.addEventListener('touchend', () => {
+            touchStart = null;
+        }, { passive: true });
+
+        const onWindowResize = () => {
+            syncCanvasSize();
+            render();
+        };
+
+        const onVisibilityChange = () => {
+            if (document.hidden) {
+                stopLoop();
+            } else {
+                lastTime = 0;
+                startLoop();
+            }
+        };
+
+        window.addEventListener('keydown', onKeyDown, { passive: false });
+        window.addEventListener('resize', onWindowResize);
+        document.addEventListener('visibilitychange', onVisibilityChange);
+
+        if (window.ResizeObserver) {
+            resizeObserver = new ResizeObserver(onWindowResize);
+            resizeObserver.observe(canvasWrap);
+        }
+
+        if (window.IntersectionObserver) {
+            intersectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    isInViewport = entry.isIntersecting;
+                    if (isInViewport) {
+                        startLoop();
+                    } else {
+                        stopLoop();
+                    }
+                });
+            }, { threshold: 0.05 });
+            intersectionObserver.observe(stage);
+        }
+
+        themeHelper = createStageThemeHelper(stage, render);
+        enterAutopilot();
+    }
+
     /* --- Main App Initialization --- */
     function initSite() {
         initScrollProgress();
@@ -3395,6 +4043,7 @@
         initHeroPointerLight();
         initIntroFromJson();
         initGitRunner();
+        initGitSnake();
         initProfileFromJson();
         initLinksFromJson();
         initActivitiesFromJson();

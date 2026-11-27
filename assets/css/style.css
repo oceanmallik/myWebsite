@@ -4683,63 +4683,68 @@ body.theme-white .video-modal-close:hover {
     color: var(--primary-color);
 }
 
-.about-telemetry-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+/* About Profile Card Snake Mini-Game Slot */
+.about-snake-slot {
+    width: 100%;
+    padding-top: 14px;
+    border-top: 1px solid var(--bento-card-border);
 }
 
-.about-telemetry-tile {
-    background: var(--bento-card-badge-bg);
-    border: 1px solid var(--bento-card-badge-border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+.git-snake-stage {
+    height: 184px;
 }
 
-.about-telemetry-tile:hover {
-    border-color: var(--bento-card-border-hover);
-    transform: translateY(-2px);
-    text-decoration: none;
+.git-snake-dpad[hidden] {
+    display: none !important;
 }
 
-.about-telemetry-top {
-    display: flex;
+.git-snake-dpad {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    z-index: 2;
+    display: none;
+    grid-template-columns: repeat(3, 24px);
+    grid-template-rows: repeat(2, 22px);
+    gap: 3px;
+}
+
+.git-snake-dpad-btn {
+    padding: 0;
+    border-radius: 5px;
+    background: var(--gr-btn-bg);
+    border: 1px solid var(--gr-border);
+    color: var(--gr-ink);
+    font-size: 0.58rem;
+    line-height: 1;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    font-size: 0.68rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--bento-card-desc);
+    justify-content: center;
+    cursor: pointer;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-.about-telemetry-top i {
-    font-size: 0.85rem;
-    color: var(--bento-card-icon);
-    transition: color 150ms ease;
+.git-snake-dpad-btn:active {
+    border-color: var(--gr-accent);
+    color: var(--gr-accent);
+    background: var(--gr-accent-glow);
 }
 
-.about-telemetry-tile:hover .about-telemetry-top i {
-    color: var(--primary-color);
+.git-snake-dpad-btn.up { grid-column: 2; grid-row: 1; }
+.git-snake-dpad-btn.left { grid-column: 1; grid-row: 2; }
+.git-snake-dpad-btn.down { grid-column: 2; grid-row: 2; }
+.git-snake-dpad-btn.right { grid-column: 3; grid-row: 2; }
+
+@media (hover: none), (pointer: coarse), (max-width: 768px) {
+    .git-snake-dpad {
+        display: grid;
+    }
 }
 
-.about-telemetry-val {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.45rem;
-    font-weight: 700;
-    color: var(--bento-card-title);
-    line-height: 1.15;
-    font-variant-numeric: tabular-nums;
-}
-
-.about-telemetry-lbl {
-    font-size: 0.74rem;
-    color: var(--bento-card-desc);
+.git-runner-canvas-wrap.has-touch .git-snake-dpad {
+    display: grid;
 }
 
 /* Band 2: Engineering Focus Strip */
@@ -5190,12 +5195,6 @@ body.theme-white .about-timeline .timeline-result-pill {
 
     .about-hero-actions .btn {
         width: 100%;
-    }
-}
-
-@media (max-width: 400px) {
-    .about-telemetry-grid {
-        grid-template-columns: 1fr;
     }
 }
 

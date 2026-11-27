@@ -183,42 +183,41 @@
                         </div>
                     </div>
 
-                    <div id="profile-telemetry-grid" class="about-telemetry-grid">
-                        <a href="activities.html" class="about-telemetry-tile" title="View all projects">
-                            <div class="about-telemetry-top">
-                                <i class="fas fa-layer-group" aria-hidden="true"></i>
-                                <span>Works</span>
+                    <div class="about-snake-slot" id="git-snake-widget">
+                        <div class="git-runner-stage git-snake-stage" id="git-snake-stage">
+                            <div class="git-runner-hud">
+                                <span class="git-runner-controls" id="git-snake-controls" aria-hidden="true">AUTO • Arrows / Swipe</span>
+                                <div class="git-runner-hud-right">
+                                    <span class="git-runner-score-group">
+                                        <span class="git-runner-hi" id="git-snake-hi">HI 0000</span>
+                                        <span class="git-runner-score" id="git-snake-score">0000</span>
+                                    </span>
+                                    <button type="button" class="git-runner-close" id="git-snake-close" title="Return to Autopilot" aria-label="Return to Autopilot" hidden>
+                                        <span aria-hidden="true">✕</span>
+                                    </button>
+                                </div>
                             </div>
-                            <div id="stat-projects" class="about-telemetry-val">-</div>
-                            <div class="about-telemetry-lbl">Projects Built</div>
-                        </a>
-
-                        <a href="https://play.google.com/store/apps/dev?id=5168944414714193607" target="_blank" rel="noopener noreferrer" class="about-telemetry-tile" title="View published mobile apps">
-                            <div class="about-telemetry-top">
-                                <i class="fab fa-google-play" aria-hidden="true"></i>
-                                <span>Mobile</span>
+                            <div class="git-runner-canvas-wrap" id="git-snake-canvas-wrap">
+                                <canvas class="git-runner-canvas" id="git-snake-canvas" aria-label="Git Snake mini-game"></canvas>
+                                <div class="git-snake-dpad" id="git-snake-dpad" aria-label="Touch direction controls" hidden>
+                                    <button type="button" class="git-snake-dpad-btn up" data-dir="up" aria-label="Move up">▲</button>
+                                    <button type="button" class="git-snake-dpad-btn left" data-dir="left" aria-label="Move left">◀</button>
+                                    <button type="button" class="git-snake-dpad-btn down" data-dir="down" aria-label="Move down">▼</button>
+                                    <button type="button" class="git-snake-dpad-btn right" data-dir="right" aria-label="Move right">▶</button>
+                                </div>
+                                <div class="git-runner-start-overlay" id="git-snake-start-overlay" role="button" tabindex="0" aria-label="Tap or press Space to start Git Snake">
+                                    <span class="btn btn-outline git-runner-start-btn">
+                                        <i class="fas fa-play git-runner-start-icon" aria-hidden="true"></i>
+                                        <span class="git-runner-start-text">Tap or Press Space</span>
+                                    </span>
+                                </div>
+                                <div class="git-runner-overlay" id="git-snake-overlay" hidden>
+                                    <div class="git-runner-overlay-title">STACK OVERFLOW // GAME OVER</div>
+                                    <div class="git-runner-overlay-meta" id="git-snake-final-score">SCORE 0000</div>
+                                    <div class="git-runner-overlay-hint">Press SPACE or TAP to Retry</div>
+                                </div>
                             </div>
-                            <div id="stat-apps" class="about-telemetry-val">-</div>
-                            <div class="about-telemetry-lbl">Play Store Apps</div>
-                        </a>
-
-                        <a href="certificates.html" class="about-telemetry-tile" title="View all certifications">
-                            <div class="about-telemetry-top">
-                                <i class="fas fa-certificate" aria-hidden="true"></i>
-                                <span>Verified</span>
-                            </div>
-                            <div id="stat-certs" class="about-telemetry-val">-</div>
-                            <div class="about-telemetry-lbl">Certifications</div>
-                        </a>
-
-                        <a href="mygit.html" class="about-telemetry-tile" title="View GitHub repositories">
-                            <div class="about-telemetry-top">
-                                <i class="fab fa-github" aria-hidden="true"></i>
-                                <span>Git</span>
-                            </div>
-                            <div id="stat-repos" class="about-telemetry-val">-</div>
-                            <div class="about-telemetry-lbl">Repositories</div>
-                        </a>
+                        </div>
                     </div>
                 </aside>
             </section>
